@@ -24,7 +24,10 @@ function setup() {
 
 function paint(e) {
   let pixel = e.target;
-  pixel.style.backgroundColor = 'white';
+  let r = Math.floor(Math.random() * 256);
+  let g = Math.floor(Math.random() * 256);
+  let b = Math.floor(Math.random() * 256);
+  pixel.style.backgroundColor = rgb(r, g, b);
   setTimeout(resetPixel, 1000, pixel);
 }
 
