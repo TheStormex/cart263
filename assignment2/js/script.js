@@ -19,6 +19,19 @@ const UPDATE_FREQUENCY = 500;
 // A place to store the jQuery selection of all spans
 let $spans;
 
+// How many redactable spans
+let redactables;
+
+// Store the secret spans
+let $secretSpans;
+
+// Secrets found and total
+let secretsFound = 0;
+let secretsTotal = 0;
+
+// Variable for the reveal interval
+let revealTimer
+
 // When the document is loaded we call the setup function
 $(document).ready(setup);
 
@@ -26,12 +39,24 @@ $(document).ready(setup);
 //
 // Sets the click handler and starts the time loop
 function setup() {
-  // Save the selection of all spans (since we do stuff to them multiple times)
-  $spans = $('span');
+  // Save the selection of all redacted spans (since we do stuff to them multiple times)
+  $spans = $('.redacted');
+  // Remember how many redactable spans we have
+  redactables = $('.redacted').length;
   // Set a click handler on the spans (so we know when they're clicked)
   $spans.on('click', spanClicked);
   // Set an interval of 500 milliseconds to update the state of the page
-  setInterval(update, UPDATE_FREQUENCY);
+  revealTimer = setInterval(update, UPDATE_FREQUENCY);
+  // Set secret spans variable
+  $secretSpans = $('.secret');
+  // Update the secrets found if mouseovered
+  $secretSpans.on('mouseover', secretReveal);
+  // Show the amount of secrets found and total
+  $('#found').text(`${secretsFound}`);
+  // Find out how many secrets total
+  secretsTotal = $('.secret').length;
+  // Show the total amount of secrets
+  $('#total').text(`${secretsTotal}`);
 };
 
 // spanClicked()
@@ -62,26 +87,27 @@ function updateSpan() {
   if (r < REVEAL_POSSIBILITY) {
     $(this).removeClass('redacted');
     $(this).addClass('revealed');
+    // If all are revealed, lose the game
+    if ($('.revealed').length === redactables) {
+      clearInterval(revealTimer);
+      $spans.off('click');
+      $secretSpans.off('mouseover');
+      $('body').append('<p id="ending"> You let everything leak! You lose! </p>')
+    }
   }
 }
 
-// A version using anonymous functions if you're interested:
-
-// $(document).ready(function () {
-//   $spans = $('span');
+// secretReveal
 //
-//   $spans.on('click',function () {
-//     $(this).removeClass('revealed');
-//     $(this).addClass('redacted');
-//   });
-//
-//   setInterval(function () {
-//     $spans.each(function () {
-//       let r = Math.random();
-//       if (r < REVEAL_POSSIBILITY) {
-//         $(this).removeClass('redacted');
-//         $(this).addClass('revealed');
-//       }
-//     });
-//   },UPDATE_FREQUENCY);
-// });
+// When mouseover, secret is revealed
+function secretReveal() {
+//  if ($(this).css('color') === 'black') {
+    $(this).css('color', 'orange');
+    secretsFound++;
+    $('#found').text(`${secretsFound}`);
+    $(this).off('mouseover');
+//  }
+  if (secretsFound === secretsTotal) {
+    $('body').append('<p id="ending"> You found all the secrets! </p>')
+  }
+}
