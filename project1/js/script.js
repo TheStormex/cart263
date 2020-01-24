@@ -2,11 +2,10 @@
 
 /********************************************************************
 
-Title of Project
-Author Name
+Get Happiness Here!
+Che Tan
 
-This is a template. Fill in the title, author, and this description
-to match your project! Write JavaScript to do amazing things below!
+Work and pay off life's expenses to buy happiness! Or can you?
 
 *********************************************************************/
 
