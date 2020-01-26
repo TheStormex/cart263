@@ -1,26 +1,45 @@
-This interactive project is a clicker game on a webpage. The user / player's goal is to buy happiness by clicking on the 
+This interactive project is a clicker game on a webpage. The user / player's goal is to buy happiness by clicking on the
 'Buy!' button. To achieve this task, the player must accumulate wealth through clicking on jobs that appear temporarily
-to get a set amount of cash per click. There are problems in life and living expenses that come up and drain one's money 
-away which will appear on the bottom. The player must click on them to pay and make them go away. 
-Doing so they are spending time not on accumulating money so the problems are an obstacle that hinders
+to get a set amount of cash per click. There are dues in life and living expenses that come up and drain one's money
+away which will appear on the bottom. The player must pay them off before the timer disappears.
+Doing so they are spending time not on accumulating money so the dues are an obstacle that hinders
 the player's progress. To emulate the story of Sisyphus, it is impossible for the player to actually win and buy happiness.
 If they ever get close to afford it, the price will go up. This symbolises how people are greedy and are not satisfied with their
 financial situation, thus those that believe more money will make them happier will discover that it is never enough.
-There are many ways the player can lose. 
+There are many ways the player can lose.
 
--If the player clicks on work way too quickly, they die of exhaustion.
+-If the player clicks on work way too quickly and the stamina runs out, they die of exhaustion.
 -If the player does not pay off the costs before the timer runs out, they go broke from debts.
 -If the player plays for a minute straight without losing due to any other reason, they die of old age.
 
 When the player loses, they get a rude remark that is based on the cold insensitive things society tell people who are suffering the
 issues the player lose from. If they lose from old age, they instead are asked if they lived a happy life, since they worked all their life
-and was not able to buy happiness, making this a rhetorical question. 
+and was not able to buy happiness, making this a rhetorical question.
 
 The game is meant to teach the player that money cannot buy happiness and that they should consider looking for happiness elsewhere.
 From interesting life experiences, to meeting nice people to interact with, to be immersed in a hobby, etc.
 Money is important for survival and one should definitely pay the bills but the game's message is that happiness is not found
 through wealth and it cannot be bought. Even if one can buy things which make them happy, they will soon want more after getting what they want now.
 
-The music is 
+The music is
 
 (ask if this amount is enough)
+
+All text:
+jobs
+each have 30% chance of appearing every half second. if none, timer starts, if by 1 second there are none, spawn a big one.
+spawn chance decreases by 10% for each one have
+1 per click / lasts 10 seconds / 50% spawn chance
+2 per click / lasts 8 seconds / 25%
+3 / lasts 6 seconds / 12.5%
+4 / 4 / 7.5%
+5 / 2 / 5%
+
+dues (pay 2 per click)
+each of the 3 have 10% chance of appearing every half second. If none, a timer starts, if by 2 seconds there are none, create a big one
+spawn rate decreases by 2% for each one have
+4 / 2 seconds / 40%
+6 / 2.5 seconds / 30%
+8 / 3 / 15%
+10 / 3.5 / 9%
+12 / 4 / 6%
