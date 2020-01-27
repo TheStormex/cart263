@@ -1,5 +1,5 @@
 body {
-
+  font-family: 'Roboto Slab', serif;
   font-size: 30px;
 }
 
@@ -10,11 +10,28 @@ div {
   border: 0.5vw solid #000000;
 }
 
-#buy {
+#buyDiv {
   font-size: 40px;
   text-align: center;
+  background-color: #ffff99;
 }
 
-#stats {
+#statsDiv {
   text-align: center;
+  background-color: #99ff66;
+}
+
+#jobsDiv {
+  text-align: center;
+  background-color: #66ccff;
+}
+
+#duesDiv {
+  text-align: center;
+  background-color: #ff9999;
+}
+
+.option {
+  display: inline-block;
+  width: 30%
 }

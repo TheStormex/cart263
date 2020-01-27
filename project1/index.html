@@ -6,7 +6,7 @@
 
     <!-- CSS stylesheet(s) -->
     <link rel="stylesheet" type="text/css" href="css/style.css" />
-
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab&display=swap" rel="stylesheet">
     <!-- Library script(s) -->
     <!-- Add your required libraries here either as local files or CDN-hosted files -->
     <script
@@ -18,25 +18,37 @@
   </head>
 
   <body>
-    <div id="buy">
+    <div id="buyDiv">
       <p id="buyText">
-        Get Happiness Here! <strong> Price: </strong> <span id="happinessCost"> 100 </span>
+        Get Happiness Here! <strong> Only </strong> <span id="happinessCost"> 100 </span> $! <button onclick="buyHappiness()"> Buy! </button>
       </p>
     </div>
-    <div id="stats">
+    <div id="statsDiv">
       <p>
-        Your wealth: <span id="playerWealth"> 0 </span> | Your stamina: <span id="stamina"> 10 </span>
+        Your wealth: <span id="playerWealth"> 0 </span>$ | Your stamina: <span id="stamina"> 10 </span>
       </p>
     </div>
-    <div id="jobs">
+    <div id="jobsDiv">
       <p>
         Jobs Available | Work Towards Happiness!
       </p>
+      <div class="option job">
+      </div>
+      <div class="option job">
+      </div>
+      <div class="option job">
+      </div>
     </div>
-    <div id="costs">
+    <div id="duesDiv">
       <p>
         Dues | Remember To Pay Your Dues!
       </p>
+      <div class="option due">
+      </div>
+      <div class="option due">
+      </div>
+      <div class="option due">
+      </div>
     </div>
   </body>
 

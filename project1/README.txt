@@ -24,7 +24,6 @@ through wealth and it cannot be bought. Even if one can buy things which make th
 The music is
 
 (ask if this amount is enough)
-
 All text:
 jobs
 each have 30% chance of appearing every half second. if none, timer starts, if by 1 second there are none, spawn a big one.
