@@ -48,13 +48,20 @@ const GAME_OVER_TEXT = [
 
 let wealthCurrent = 0;
 let staminaCurrent = 0;
-const STAMINA_MAX = 10;
+const STAMINA_MAX = 100;
+
+let happinessPriceCurrent = 100;
 
 
-// Current jobs
-let jobsCurrent;
+// Current jobs ()
+let jobsCurrent = [];
 // Current dues
-let duesCurrent;
+let duesCurrent = [];
+
+// All timers (to make game over stop all timers at the same time without naming each one)
+let timers = [];
+let staminaTimer = [];
+
 
 $(document).ready(setup);
 
@@ -62,6 +69,12 @@ function setup() {
   console.log("ready");
   // There are nothing in the options at the beginning
   $(".option").append(NOTHING);
+  // Start with no money
+  $("#playerWealth").append(wealthCurrent);
+  // Start with maximum stamina
+  $("#stamina").append(STAMINA_MAX);
+  // Happiness costs 100 at the beginning
+  $("#happinessCost").append(happinessPriceCurrent);
 }
 
 // If the player tries to buy happiness
@@ -70,3 +83,15 @@ function buyHappiness() {
 }
 
 // Gradual recovery of stamina
+
+// Increase happiness price if reach the current amount
+function priceIncrease() {
+  happinessPriceCurrent += 50;
+}
+
+// End the game due to a game over condition being met
+// Which alert showing depends on which condition
+function gameOver(condition) {
+  let endCondition = condition;
+  alert(GAME_OVER_TEXT[endCondition]);
+}

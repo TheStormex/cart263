@@ -35,3 +35,9 @@ div {
   display: inline-block;
   width: 30%
 }
+
+#buyButton {
+  border: 0.2vw solid #000000;
+  font-size: 50px;
+  margin: 1%;
+}
