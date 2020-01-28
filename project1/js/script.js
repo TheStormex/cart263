@@ -49,6 +49,7 @@ const GAME_OVER_TEXT = [
 let wealthCurrent = 0;
 let staminaCurrent = 0;
 const STAMINA_MAX = 100;
+const STAMINA_RATE = 100;
 
 let happinessPriceCurrent = 100;
 
@@ -60,7 +61,12 @@ let duesCurrent = [];
 
 // All timers (to make game over stop all timers at the same time without naming each one)
 let timers = [];
-let staminaTimer = [];
+let staminaTimer;
+let jobsTimer;
+const JOB_RATE = 500;
+let duesTimer;
+const DUES_RATE = 500;
+
 
 
 $(document).ready(setup);
@@ -75,6 +81,10 @@ function setup() {
   $("#stamina").append(STAMINA_MAX);
   // Happiness costs 100 at the beginning
   $("#happinessCost").append(happinessPriceCurrent);
+  // Set stamina timer
+  staminaTimer = setInterval(staminaRecovery, STAMINA_RATE);
+  // Set jobs appearing timer
+  jobsTimer = setInterval(jobsAppear, JOB_RATE);
 }
 
 // If the player tries to buy happiness
@@ -83,6 +93,22 @@ function buyHappiness() {
 }
 
 // Gradual recovery of stamina
+function staminaRecovery() {
+  staminaCurrent += 1;
+  if (staminaCurrent > STAMINA_MAX) {
+    staminaCurrent = STAMINA_MAX;
+  }
+}
+
+// Jobs randomly spawning
+function jobsAppear() {
+
+}
+
+// Dues randomly spawning
+function duesAppear() {
+  
+}
 
 // Increase happiness price if reach the current amount
 function priceIncrease() {
