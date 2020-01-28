@@ -21,24 +21,11 @@ From interesting life experiences, to meeting nice people to interact with, to b
 Money is important for survival and one should definitely pay the bills but the game's message is that happiness is not found
 through wealth and it cannot be bought. Even if one can buy things which make them happy, they will soon want more after getting what they want now.
 
-The music is
-
 (ask if this amount is enough)
 All text:
 jobs
 each have 30% chance of appearing every half second. if none, timer starts, if by 1 second there are none, spawn a big one.
 spawn chance decreases by 10% for each one have
-1 per click / lasts 10 seconds / 50% spawn chance
-2 per click / lasts 8 seconds / 25%
-3 / lasts 6 seconds / 12.5%
-4 / 4 / 7.5%
-5 / 2 / 5%
-
 dues (pay 2 per click)
 each of the 3 have 10% chance of appearing every half second. If none, a timer starts, if by 2 seconds there are none, create a big one
 spawn rate decreases by 2% for each one have
-4 / 2 seconds / 40%
-6 / 2.5 seconds / 30%
-8 / 3 / 15%
-10 / 3.5 / 9%
-12 / 4 / 6%
