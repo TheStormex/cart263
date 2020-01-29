@@ -11,11 +11,14 @@ class Jobs {
 
   countdown() {
     this.availability-=1;
+    if (this.availability <= 0) {
+      $(this).remove;
+    }
     $(this.id).find(".availabilityLeft").html(this.availability);
   }
 
   work() {
-    
+
   }
 
 

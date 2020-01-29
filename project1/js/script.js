@@ -18,31 +18,31 @@ const AUDIO_WORK = 0;
 // Sound of losing
 const AUDIO_LOSE = 0;
 
-// All possible jobs, their name, duration, money per click, chance of appearing
+// All possible jobs, their name, duration, money per click
 const JOBS_LIST = [
-['Waiter', 10, 1, 50],
-['Cashier', 10, 1, 50],
-['Janitor', 8, 2, 25],
-['Mover', 8, 2, 25],
-['Customer Service', 6, 3, 12.5],
-['Garbageman', 6, 3, 12.5],
-['Taxi Driver', 4, 4, 7.5],
-['Tour Guide', 4, 4, 7.5],
-['Game Tester', 2, 4, 5],
-['Web Designer', 2, 4, 5]
+['Waiter', 10, 1],
+['Cashier', 10, 1],
+['Janitor', 8, 2],
+['Mover', 8, 2],
+['Customer Service', 6, 3],
+['Garbageman', 6, 3],
+['Taxi Driver', 4, 4],
+['Tour Guide', 4, 4],
+['Game Tester', 2, 4],
+['Web Designer', 2, 4]
 ];
-// All possible dues, their name, time limit, total to pay, chance of appearing
+// All possible dues, their name, time limit, total to pay
 const DUES_LIST = [
-['Food', 2, 4, 40],
-['Relationship Costs', 2, 4, 40],
-['Internet Fees', 2.5, 6, 30],
-['Car Fees', 2.5, 6, 30],
-['Robbery', 3, 8, 15],
-['Insurance', 3, 8, 15],
-['Home Repair', 3.5, 10, 9],
-['Hospital Bills', 3.5, 10, 9],
-['Market Crash', 4, 12, 6],
-['Psych Fees', 4, 12, 6]
+['Food', 2, 4],
+['Relationship Costs', 2, 4],
+['Internet Fees', 2.5, 6],
+['Car Fees', 2.5, 6],
+['Robbery', 3, 8],
+['Insurance', 3, 8],
+['Home Repair', 3.5, 10],
+['Hospital Bills', 3.5, 10],
+['Market Crash', 4, 12],
+['Psych Fees', 4, 12]
 ];
 
 // All possible defeat messages
@@ -80,18 +80,11 @@ $(document).ready(setup);
 function setup() {
   console.log("ready");
   // There are nothing in the options at the beginning
-  for (var i = 0; i < 3; i++) {
-    let newJob = new Jobs(JOBS_LIST[1], i);
-    jobsCurrent.push(newJob);
-  }
-  for (var i = 0; i < 3; i++) {
-    let newDue = new Dues(DUES_LIST[1], i);
-    duesCurrent.push(newDue);
-  }
   // Start with no money
   $("#playerWealth").append(wealthCurrent);
   // Start with maximum stamina
-  $("#stamina").html(0);
+  staminaCurrent = STAMINA_MAX;
+  $("#stamina").html(STAMINA_MAX);
   // Happiness costs 100 at the beginning
   $("#happinessCost").append(happinessPriceCurrent);
   // Set stamina timer
@@ -128,14 +121,24 @@ function staminaRecovery() {
 function jobsAppear() {
   if (jobsCurrent.length < 3) {
     if (Math.random() * 101 <= 30 - jobsCurrent.length * 10) {
-    //  let newJob = new Jobs()
+      let whichJob = Math.floor(Math.random() * 10);
+      console.log(whichJob);
+      let newJob = new Jobs(JOBS_LIST[whichJob], jobsCurrent.length);
+      jobsCurrent.push(newJob);
     }
   }
 }
 
 // Dues randomly spawning
 function duesAppear() {
-
+  if (duesCurrent.length < 3) {
+    if (Math.random() * 101 <= 10 - duesCurrent.length * 2) {
+      let whichDue = Math.floor(Math.random() * 10);
+      let newDue = new Dues(DUES_LIST[whichDue], duesCurrent.length);
+      console.log(newDue);
+      duesCurrent.push(newDue);
+    }
+  }
 }
 
 // Increase happiness price if reach the current amount
@@ -153,4 +156,9 @@ function gameOver(condition) {
   for (var i = 0; i < timers.length; i++) {
     clearInterval(timers[i]);
   }
+}
+
+// Run the code for each
+function workButtonPressed(index) {
+
 }
