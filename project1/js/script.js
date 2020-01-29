@@ -20,31 +20,29 @@ const AUDIO_LOSE = 0;
 
 // All possible jobs, their name, duration, money per click, chance of appearing
 const JOBS_LIST = [
-['Nothing', 'n/A', 'n/A', undefined],
-['Waiter', 10000, 1, 50],
-['Cashier', 10000, 1, 50],
-['Janitor', 8000, 2, 25],
-['Mover', 8000, 2, 25],
-['Customer Service', 6000, 3, 12.5],
-['Garbageman', 6000, 3, 12.5],
-['Taxi Driver', 4000, 4, 7.5],
-['Tour Guide', 4000, 4, 7.5],
-['Game Tester', 2000, 4, 5],
-['Web Designer', 2000, 4, 5]
+['Waiter', 10, 1, 50],
+['Cashier', 10, 1, 50],
+['Janitor', 8, 2, 25],
+['Mover', 8, 2, 25],
+['Customer Service', 6, 3, 12.5],
+['Garbageman', 6, 3, 12.5],
+['Taxi Driver', 4, 4, 7.5],
+['Tour Guide', 4, 4, 7.5],
+['Game Tester', 2, 4, 5],
+['Web Designer', 2, 4, 5]
 ];
 // All possible dues, their name, time limit, total to pay, chance of appearing
 const DUES_LIST = [
-['Nothing', 'n/A', 'n/A', undefined],
-['Food', 2000, 4, 40],
-['Relationship Costs', 2000, 4, 40],
-['Internet Fees', 2500, 6, 30],
-['Car Fees', 2500, 6, 30],
-['Robbery', 3000, 8, 15],
-['Insurance', 3000, 8, 15],
-['Home Repair', 3500, 10, 9],
-['Hospital Bills', 3500, 10, 9],
-['Market Crash', 4000, 12, 6],
-['Psych Fees', 4000, 12, 6]
+['Food', 2, 4, 40],
+['Relationship Costs', 2, 4, 40],
+['Internet Fees', 2.5, 6, 30],
+['Car Fees', 2.5, 6, 30],
+['Robbery', 3, 8, 15],
+['Insurance', 3, 8, 15],
+['Home Repair', 3.5, 10, 9],
+['Hospital Bills', 3.5, 10, 9],
+['Market Crash', 4, 12, 6],
+['Psych Fees', 4, 12, 6]
 ];
 
 // All possible defeat messages
@@ -82,10 +80,13 @@ $(document).ready(setup);
 function setup() {
   console.log("ready");
   // There are nothing in the options at the beginning
-  $(".due").html(`<span> Nothing </span> | Time Limit: <span> n/A </span> | To Pay: <span> n/A </span> <button> Pay </button>`);
   for (var i = 0; i < 3; i++) {
     let newJob = new Jobs(JOBS_LIST[1], i);
     jobsCurrent.push(newJob);
+  }
+  for (var i = 0; i < 3; i++) {
+    let newDue = new Dues(DUES_LIST[1], i);
+    duesCurrent.push(newDue);
   }
   // Start with no money
   $("#playerWealth").append(wealthCurrent);
@@ -106,7 +107,6 @@ function setup() {
   // Add jobs to the array
   // jobsCurrent = $('.jobs');
   // Add dues to the array
-  duesCurrent = $('.dues');
   console.log(jobsCurrent);
 }
 
