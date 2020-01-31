@@ -10,13 +10,10 @@ Work and pay off life's expenses to buy happiness! Or can you?
 *********************************************************************/
 
 // Sound of paying dues
-const AUDIO_PAY = 0;
+const AUDIO_PAY = new Audio("assets/sounds/Money.wav");
 
 // Sound of working
-const AUDIO_WORK = 0;
-
-// Sound of losing
-const AUDIO_LOSE = 0;
+const AUDIO_WORK = new Audio("assets/sounds/Sigh.wav");;
 
 // All possible jobs, their name, duration, money per click
 const JOBS_LIST = [
@@ -33,16 +30,16 @@ const JOBS_LIST = [
 ];
 // All possible dues, their name, time limit, total to pay
 const DUES_LIST = [
-['Food', 2, 4],
-['Relationship Costs', 2, 4],
-['Internet Fees', 2.5, 6],
-['Car Fees', 2.5, 6],
-['Robbery', 3, 8],
-['Insurance', 3, 8],
-['Home Repair', 3.5, 10],
-['Hospital Bills', 3.5, 10],
-['Market Crash', 4, 12],
-['Psych Fees', 4, 12]
+['Food', 3, 4],
+['Relationship Costs', 3, 4],
+['Internet Fees', 4, 6],
+['Car Fees', 4, 6],
+['Robbery', 4.5, 8],
+['Insurance', 4.5, 8],
+['Home Repair', 5, 10],
+['Hospital Bills', 5, 10],
+['Market Crash', 6, 12],
+['Psych Fees', 6, 12]
 ];
 
 // All possible defeat messages
@@ -69,10 +66,14 @@ let duesCurrent = [];
 let timers = [];
 let staminaTimer;
 let jobsTimer;
-const JOBS_RATE = 500;
+const JOBS_RATE = 1000;
 let duesTimer;
-const DUES_RATE = 500;
+const DUES_RATE = 4000;
 let priceCheckTimer;
+// Every millisecond, remove 1/1000 for each active option timer
+let optionsTimer
+let oldAgeTimer;
+let age = 0;
 
 
 $(document).ready(setup);
@@ -95,12 +96,13 @@ function setup() {
   duesTimer = setInterval(duesAppear, DUES_RATE);
   // Set price increase timer
   priceCheckTimer = setInterval(priceIncrease, 10);
+  // Options availability and time limit ticking down timer
+  optionsTimer = setInterval(optionsTicksDown, 10);
+  // Die of old age timer
+  oldAgeTimer = setInterval(oldAge, 1000);
   // Add all timers to the timers array
-  timers = [jobsTimer, duesTimer];
-  // Add jobs to the array
-  // jobsCurrent = $('.jobs');
-  // Add dues to the array
-  console.log(jobsCurrent);
+  timers = [jobsTimer, duesTimer, staminaTimer, priceCheckTimer, optionsTimer];
+
 }
 
 // If the player tries to buy happiness
@@ -119,46 +121,89 @@ function staminaRecovery() {
 
 // Jobs randomly spawning
 function jobsAppear() {
-  if (jobsCurrent.length < 3) {
-    if (Math.random() * 101 <= 30 - jobsCurrent.length * 10) {
+  let index = jobsCurrent.length;
+    if (Math.random() * 101 <= 50) {
       let whichJob = Math.floor(Math.random() * 10);
-      console.log(whichJob);
-      let newJob = new Jobs(JOBS_LIST[whichJob], jobsCurrent.length);
+      let newJob = new Jobs(JOBS_LIST[whichJob], index);
       jobsCurrent.push(newJob);
+      $(`#workButton${index}`).on('click', function() {
+        staminaCurrent -= 10;
+        if (staminaCurrent <= 0) {
+          gameOver(0);
+        }
+        wealthCurrent += jobsCurrent[index].salary;
+        $('#playerWealth').html(wealthCurrent);
+        AUDIO_WORK.play();
+      });
     }
-  }
 }
 
 // Dues randomly spawning
 function duesAppear() {
-  if (duesCurrent.length < 3) {
-    if (Math.random() * 101 <= 10 - duesCurrent.length * 2) {
-      let whichDue = Math.floor(Math.random() * 10);
-      let newDue = new Dues(DUES_LIST[whichDue], duesCurrent.length);
-      console.log(newDue);
-      duesCurrent.push(newDue);
-    }
-  }
+  let index = duesCurrent.length;
+    let whichDue = Math.floor(Math.random() * 10);
+    let newDue = new Dues(DUES_LIST[whichDue], duesCurrent.length);
+    duesCurrent.push(newDue);
+    $(`#payButton${index}`).on('click', function() {
+      if (wealthCurrent - duesCurrent[index].totalCost >= 0) {
+        wealthCurrent -= duesCurrent[index].totalCost;
+        $('#playerWealth').html(wealthCurrent);
+        $(`#due${index}`).remove();
+        duesCurrent[index].there = false;
+        AUDIO_PAY.play();
+      }
+    });
 }
 
 // Increase happiness price if reach the current amount
 function priceIncrease() {
   if (wealthCurrent >= happinessPriceCurrent) {
     happinessPriceCurrent += 50;
+    $('#happinessCost').html(happinessPriceCurrent);
   }
 }
 
 // End the game due to a game over condition being met
 // Which alert showing depends on which condition
 function gameOver(condition) {
-  let endCondition = condition;
-  alert(GAME_OVER_TEXT[endCondition]);
+  let endCondition = GAME_OVER_TEXT[condition];
+  $(`div`).remove();
   for (var i = 0; i < timers.length; i++) {
     clearInterval(timers[i]);
   }
+  $(document.body).append(`<p> ${endCondition} </p>`);
 }
 
-// Run the code for each
-function workButtonPressed(index) {
+function optionsTicksDown() {
+  for (var i = 0; i < jobsCurrent.length; i++) {
+    let oldAvailability = jobsCurrent[i].availability;
+    jobsCurrent[i].availability -= 0.01;
+    let newAvailability = jobsCurrent[i].availability;
+    if (Math.floor(newAvailability <= 0)) {
+      $(`#job${i}`).remove();
+   } else if (Math.floor(newAvailability) < Math.floor(oldAvailability)) {
+        $(`#availabilityLeft${i}`).html(Math.floor(jobsCurrent[i].availability));
+    }
+  }
+  for (var i = 0; i < duesCurrent.length; i++) {
+    // If this due is has not been paid off
+    if (duesCurrent[i].there === true) {
+      let oldTimeLimit = duesCurrent[i].timeLimit;
+      duesCurrent[i].timeLimit -= 0.01;
+      let newTimeLimit = duesCurrent[i].timeLimit;
+      if (Math.floor(newTimeLimit <= 0)) {
+        gameOver(1);
+    } else if (Math.floor(newTimeLimit) < Math.floor(oldTimeLimit)) {
+          $(`#timeLimitLeft${i}`).html(Math.floor(duesCurrent[i].timeLimit));
+      }
+    }
+  }
+}
 
+// If the game goes on for a minute, the player loses by dying of old age
+function oldAge() {
+  age += 1;
+  if (age >= 60) {
+    gameOver(2);
+  }
 }

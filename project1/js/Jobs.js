@@ -1,25 +1,10 @@
 class Jobs {
   constructor(input, index) {
-    console.log(input);
+    this.index = index;
     this.name = input[0];
     this.availability = input[1];
     this.salary = input[2];
-    $("#jobsDiv").append(`<div class='option' id='job${index}'> <span class='jobName'> ${this.name} </span> | Availability: <span class='availabilityLeft'> ${this.availability} </span> | Salary: <span> ${this.salary} </span> <button onclick='workButtonPressed(${index})'> Work </button>`);
-    this.timer = setInterval(this.countdown, 1000);
+    $("#jobsDiv").append(`<div class='option' id='job${this.index}'> <span class='jobName'> ${this.name} </span> | Availability: <span id='availabilityLeft${this.index}'> ${this.availability} </span> | Salary: <span> ${this.salary} </span> <button id='workButton${this.index}' class='workButton'> Work </button>`);
     this.id = "#job"+index;
   }
-
-  countdown() {
-    this.availability-=1;
-    if (this.availability <= 0) {
-      $(this).remove;
-    }
-    $(this.id).find(".availabilityLeft").html(this.availability);
-  }
-
-  work() {
-
-  }
-
-
 }
