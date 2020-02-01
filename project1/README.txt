@@ -4,7 +4,7 @@ to get a set amount of cash per click. There are dues in life and living expense
 away which will appear on the bottom. The player must pay them off before the timer disappears.
 Doing so they are spending time not on accumulating money so the dues are an obstacle that hinders
 the player's progress. To emulate the story of Sisyphus, it is impossible for the player to actually win and buy happiness.
-If they ever get close to afford it, the price will go up. This symbolises how people are greedy and are not satisfied with their
+If they ever get close to afford it, the price will go up. This symbolizes how people are greedy and are not satisfied with their
 financial situation, thus those that believe more money will make them happier will discover that it is never enough.
 There are many ways the player can lose.
 
@@ -20,12 +20,3 @@ The game is meant to teach the player that money cannot buy happiness and that t
 From interesting life experiences, to meeting nice people to interact with, to be immersed in a hobby, etc.
 Money is important for survival and one should definitely pay the bills but the game's message is that happiness is not found
 through wealth and it cannot be bought. Even if one can buy things which make them happy, they will soon want more after getting what they want now.
-
-(ask if this amount is enough)
-All text:
-jobs
-each have 30% chance of appearing every half second. if none, timer starts, if by 1 second there are none, spawn a big one.
-spawn chance decreases by 10% for each one have
-dues (pay 2 per click)
-each of the 3 have 10% chance of appearing every half second. If none, a timer starts, if by 2 seconds there are none, create a big one
-spawn rate decreases by 2% for each one have

@@ -49,6 +49,7 @@ const GAME_OVER_TEXT = [
 ['You died of old age! Was that a happy life?'],
 ];
 
+// Current stats
 let wealthCurrent = 0;
 let staminaCurrent = 0;
 const STAMINA_MAX = 100;
@@ -64,15 +65,21 @@ let duesCurrent = [];
 
 // All timers (to make game over stop all timers at the same time without naming each one)
 let timers = [];
+// For stamina coming back
 let staminaTimer;
+// For job spawning
 let jobsTimer;
 const JOBS_RATE = 1000;
+// For dues spawning
 let duesTimer;
 const DUES_RATE = 4000;
+// For seeing if the current wealth is equal to the current price
 let priceCheckTimer;
 // Every millisecond, remove 1/1000 for each active option timer
 let optionsTimer
+// If the player has been there for 1 minute, they lose
 let oldAgeTimer;
+// Count seconds until 60
 let age = 0;
 
 
@@ -101,7 +108,7 @@ function setup() {
   // Die of old age timer
   oldAgeTimer = setInterval(oldAge, 1000);
   // Add all timers to the timers array
-  timers = [jobsTimer, duesTimer, staminaTimer, priceCheckTimer, optionsTimer];
+  timers = [jobsTimer, duesTimer, staminaTimer, priceCheckTimer, optionsTimer, oldAgeTimer];
 
 }
 
@@ -174,6 +181,8 @@ function gameOver(condition) {
   $(document.body).append(`<p> ${endCondition} </p>`);
 }
 
+// Every 1/100 of a second, remove avaiability / time limit from the jobs and dues
+// if is 0, remove the div, if a due is at 0, lose the game
 function optionsTicksDown() {
   for (var i = 0; i < jobsCurrent.length; i++) {
     let oldAvailability = jobsCurrent[i].availability;
