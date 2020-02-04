@@ -54,8 +54,12 @@ let wealthCurrent = 0;
 let staminaCurrent = 0;
 const STAMINA_MAX = 100;
 const STAMINA_RATE = 100;
+const STAMINA_RECOVERY = 1;
 
+// How much happiness costs right now
 let happinessPriceCurrent = 100;
+// How much the price increases when the player has enough
+let happinessIncrease = 50;
 
 
 // Current jobs ()
@@ -79,8 +83,10 @@ let priceCheckTimer;
 let optionsTimer
 // If the player has been there for 1 minute, they lose
 let oldAgeTimer;
-// Count seconds until 60
+// Count seconds until old age
 let age = 0;
+// old age second at which the player loses
+let oldAgeNumber = 60;
 
 
 $(document).ready(setup);
@@ -119,7 +125,7 @@ function buyHappiness() {
 
 // Gradual recovery of stamina
 function staminaRecovery() {
-  staminaCurrent += 1;
+  staminaCurrent += STAMINA_RECOVERY;
   if (staminaCurrent > STAMINA_MAX) {
     staminaCurrent = STAMINA_MAX;
   }
@@ -129,8 +135,8 @@ function staminaRecovery() {
 // Jobs randomly spawning
 function jobsAppear() {
   let index = jobsCurrent.length;
-    if (Math.random() * 101 <= 50) {
-      let whichJob = Math.floor(Math.random() * 10);
+    if (Math.random() * 2 <= 1) {
+      let whichJob = Math.floor(Math.random() * JOBS_LIST.length);
       let newJob = new Jobs(JOBS_LIST[whichJob], index);
       jobsCurrent.push(newJob);
       $(`#workButton${index}`).on('click', function() {
@@ -148,7 +154,7 @@ function jobsAppear() {
 // Dues randomly spawning
 function duesAppear() {
   let index = duesCurrent.length;
-    let whichDue = Math.floor(Math.random() * 10);
+    let whichDue = Math.floor(Math.random() * DUES_LIST.length);
     let newDue = new Dues(DUES_LIST[whichDue], duesCurrent.length);
     duesCurrent.push(newDue);
     $(`#payButton${index}`).on('click', function() {
@@ -165,7 +171,7 @@ function duesAppear() {
 // Increase happiness price if reach the current amount
 function priceIncrease() {
   if (wealthCurrent >= happinessPriceCurrent) {
-    happinessPriceCurrent += 50;
+    happinessPriceCurrent += happinessIncrease;
     $('#happinessCost').html(happinessPriceCurrent);
   }
 }
@@ -212,7 +218,7 @@ function optionsTicksDown() {
 // If the game goes on for a minute, the player loses by dying of old age
 function oldAge() {
   age += 1;
-  if (age >= 60) {
+  if (age >= oldAgeNumber) {
     gameOver(2);
   }
 }
