@@ -1,0 +1,22 @@
+body {
+  font-family: 'Roboto Slab', serif;
+  font-size: 20px;
+  background-color: rgb(200, 230, 255);
+}
+
+div {
+  margin: 0.5%;
+  padding: 0.1%;
+  border: 0.1vw solid #000000;
+  text-align: center;
+}
+
+.imageArea {
+  width: 30%;
+  display: inline-block;
+}
+
+#videoSection {
+  width: 30%;
+  display: inline-block;
+}

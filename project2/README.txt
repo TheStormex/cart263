@@ -22,14 +22,14 @@ Child's Mindscape (the whole page)
 Next video (overlaps the mindscape in the middle of the screen):
 table with names of videos the user can click on, an autoplay timer of 5 seconds
 mindscape starts off empty, first 10 or so videos are innocent and
-add trees, ponies, smiling sun, houses, etc. after the first 10, the bad
+add trees, ponies, smiling sun, houses, etc. after the first 5, the bad
 keywords starts to be added in the choices, the player can avoid them by clicking
 on the not bad ones. With each choice after the 10th choice, the chance of bad keywords
 increase
 
-by the 20th choice, all choices include bad keywords. by 30th choice, all words in the
+by the 10th choice, all choices include bad keywords. by last choice, all words in the
 titles are bad.
-When the last object (10th) becomes bad, all stops, disappears after 2 seconds
+When the last object (8th) becomes bad, all stops, disappears after 2 seconds
 go to the final screen
 
 the mindscape has its good contents be replaced by the bad contents and the
