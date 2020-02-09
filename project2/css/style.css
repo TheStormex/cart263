@@ -1,13 +1,12 @@
 body {
-  font-family: 'Roboto Slab', serif;
-  font-size: 20px;
+  font-family: 'Luckiest Guy', cursive;
+  font-size: 30px;
   background-color: rgb(200, 230, 255);
 }
 
 div {
-  margin: 0.5%;
+  margin: 0.1%;
   padding: 0.1%;
-  border: 0.1vw solid #000000;
   text-align: center;
 }
 
@@ -19,4 +18,20 @@ div {
 #videoSection {
   width: 30%;
   display: inline-block;
+  border: 1px solid black;
+}
+
+#title {
+  color: #FF00FF;
+  font-size: 50px;
+}
+
+.videoChoice {
+  border: 1px solid black;
+}
+
+button {
+  background-color: red;
+  font-size: 30px;
+  margin: 1%;
 }

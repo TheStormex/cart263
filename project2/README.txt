@@ -7,33 +7,16 @@ use Phaser to code
 the string of the spoken phrase is an array of words.
 Max 5 words. Speak out, then wait 1 second before the next one. Loop.
 
-3 screens: title, game, end
-
-simulates child viewing videos
-input: clicking, 3 options for videos
-timer for auto selecting the first option
-user can choose by themselves
 starts off nice looking, as more interactions, page gets corrupted
 disturbing noises, glitching looks, eventually all breaks down leading to ending
 ending with text advising parents caution regarding their children online
 
 'Child-Friendly Videos Simulation 2020'
-Child's Mindscape (the whole page)
-Next video (overlaps the mindscape in the middle of the screen):
-table with names of videos the user can click on, an autoplay timer of 5 seconds
-mindscape starts off empty, first 10 or so videos are innocent and
-add trees, ponies, smiling sun, houses, etc. after the first 5, the bad
-keywords starts to be added in the choices, the player can avoid them by clicking
-on the not bad ones. With each choice after the 10th choice, the chance of bad keywords
-increase
 
 by the 10th choice, all choices include bad keywords. by last choice, all words in the
 titles are bad.
 When the last object (8th) becomes bad, all stops, disappears after 2 seconds
 go to the final screen
-
-the mindscape has its good contents be replaced by the bad contents and the
-voice has the learnt phrases by turned into the low pitched bad phrases
 
 sound of old computer boot up, static, reversed or distorted music replaces the
 Show and Tell song (from the animation)

@@ -16,10 +16,11 @@ const AUDIO_STATIC = 0;
 const AUDIO_CRY = 0;
 const AUDIO_BOOTUP = 0;
 
+const AUDIO_SONG = 0;
 
 // Images: 20
 // good
-const IMAGE_FLOWER = 0;
+const IMAGE_FLOWER = new Image;
 const IMAGE_SUN = 0;
 const IMAGE_HAPPY = 0;
 const IMAGE_HEART = 0;
@@ -42,29 +43,49 @@ const IMAGE_MONSTER = 0;
 const IMAGE_DESTROY = 0;
 // array
 const GOOD_WORDS = [
-`friends`,
-`love`,
-`happy`,
-`kind`,
-`cartoon`,
-`lesson`,
-`nursery`,
-`song`,
-`dancing`,
-`birthday`
+`Friends `,
+`Love `,
+`Happy `,
+`Kind `,
+`Cartoon `,
+`Lesson `,
+`Nursery `,
+`Song `,
+`Dancing `,
+`Birthday `,
+`Cute `,
+`Kittens `,
+`Puppies `,
+`Birds `,
+`Spelling `,
+`Counting `,
+`Singing `,
+`Magical `,
+`Learning `,
+`Playing `
 ]
 
 const BAD_WORDS = [
-`hate`,
-`death`,
-`suicide`,
-`torture`,
-`kill`,
-`war crime`,
-`genocide`,
-`pain`,
-`decapitation`,
-`gore`
+`Hate `,
+`Death `,
+`Suicide `,
+`Torture `,
+`Kill `,
+`War `,
+`Genocide `,
+`Pain `,
+`Decapitation `,
+`Gore `,
+`Sexual `,
+`Brutal `,
+`Fatality `,
+`Inflation `,
+`Blood `,
+`Screaming `,
+`Violent `,
+`Disembowel `,
+`Execution `,
+`Crucifixion `
 ]
 
 let usedGoodWords = [];
@@ -72,15 +93,72 @@ let usedBadWords = [];
 let videoNumber = 0;
 let emptyAreas = [];
 let goodAreas = [];
+let currentVideos = [];
+let videoName = [];
 
 // Timers
 
-let timerAutoplay = 0;
-const AUTOPLAY_AMOUNT = 5000;
+let timerAutoplay;
+let autoplayTimerText = 5;
 
 $(document).ready(setup);
 
 function setup() {
   console.log("ready");
-  //     make 3   <div class="videoChoice"> </div>
+  nextGoodVideos();
+  timerAutoplay = setInterval(timerAutoplayCountdown, 1000)
+  autoplayTimerText = 5;
+}
+
+function timerAutoplayCountdown() {
+  autoplayTimerText -= 1;
+  $(`#autoplayCount`).html(autoplayTimerText);
+  if (autoplayTimerText <= 0) {
+    autoplayTimerText = 5;
+    playVideo('0');
+  }
+}
+
+function playVideo(id) {
+  let videoId = id;
+  clearInterval(timerAutoplay);
+  timerAutoplay = setInterval(timerAutoplayCountdown, 1000)
+  autoplayTimerText = 5;
+  $(`#autoplayCount`).html(autoplayTimerText);
+  videoNumber += 1;
+  if (currentVideos[videoId].effect === 'good') {
+    console.log('good effect');
+  } else {
+
+  }
+  if (videoNumber < 4) {
+    nextGoodVideos();
+  }
+  else if (videoNumber < 8) {
+    nextGoodVideos();
+  } else {
+    nextGoodVideos();
+  }
+}
+
+function nextGoodVideos() {
+  $(`.videoChoice`).remove();
+  currentVideos = [];
+  for (var i = 0; i < 3; i++) {
+    videoName = [];
+    for (var i2 = 0; i2 < 4; i2++) {
+      let number = Math.floor(Math.random() * 20);
+      let word = GOOD_WORDS[number];
+      videoName.push(word);
+    }
+    let videoNameString = videoName.join('');
+    let newVideo = new Video(videoNameString, 'good', i);
+    currentVideos.push(newVideo);
+    $(`#videoSection`).append(`<div class="videoChoice" id="video${i}"> <p> ${currentVideos[i].name} <button id="button${i}"> &#x25B6; </button> </p>  </div>`);
+    $(`#button${i}`).on('click', function() {
+      let id = $(this).attr('id');
+      id = id.replace('button', '');
+      playVideo(id);
+    });
+  }
 }
