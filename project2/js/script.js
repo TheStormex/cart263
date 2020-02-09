@@ -95,6 +95,8 @@ let emptyAreas = [];
 let goodAreas = [];
 let currentVideos = [];
 let videoName = [];
+let area1Number = 0;
+let area2Number = 0;
 
 // Timers
 
@@ -127,9 +129,21 @@ function playVideo(id) {
   $(`#autoplayCount`).html(autoplayTimerText);
   videoNumber += 1;
   if (currentVideos[videoId].effect === 'good') {
-    console.log('good effect');
+    let thisImage = 0;
+    // choose a random not used one from the good list
   } else {
-
+    // choose a random not used one from the bad list
+  }
+  if (area1Number < 4) {
+    $(`#area1`).append(`<div> <img src="assets/images/clown.png" alt="good image"> </div>`);
+    area1Number += 1;
+  } else
+  if (area1Number >= 4 && area2Number < 4) {
+    $(`#area2`).append(`<div> <img src="assets/images/clown.png" alt="good image"> </div>`);
+    area2Number += 1;
+  } else {
+    console.log('too many');
+    // remove the first good one in the list of images currently on screen, replace it 
   }
   if (videoNumber < 4) {
     nextGoodVideos();
@@ -139,6 +153,7 @@ function playVideo(id) {
   } else {
     nextGoodVideos();
   }
+
 }
 
 function nextGoodVideos() {
