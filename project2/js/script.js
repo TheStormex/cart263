@@ -143,7 +143,7 @@ function playVideo(id) {
     area2Number += 1;
   } else {
     console.log('too many');
-    // remove the first good one in the list of images currently on screen, replace it 
+    // remove the first good one in the list of images currently on screen, replace it
   }
   if (videoNumber < 4) {
     nextGoodVideos();
@@ -176,4 +176,9 @@ function nextGoodVideos() {
       playVideo(id);
     });
   }
+}
+
+function ending() {
+  clearInterval(timerAutoplay);
+
 }
