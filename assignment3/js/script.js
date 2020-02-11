@@ -148,11 +148,24 @@ let animals = [
 ];
 let correctAnimal;
 let answers = [];
+let score = 0;
 const NUM_OPTIONS = 5;
+// annyang
+let speechRepeat;
+let speechSurrender;
+let speechGuess;
 
 $(document).ready(setup);
 
 function setup() {
+  $('body').append(`<p id="theScore"> Score: ${score} </p>`)
+  speechRepeat = {"Say it again": repeat};
+  speechSurrender = {"I give up": surrender};
+  speechGuess = {"The answer is *animal": guess};
+  annyang.addCommands(speechRepeat);
+  annyang.addCommands(speechSurrender);
+  annyang.addCommands(speechGuess);
+  annyang.start({autoRestart: false});
   newRound();
 }
 
@@ -165,6 +178,7 @@ function addButton(label) {
 
 function newRound() {
   answers = [];
+  $(`div`).remove();
   for (var i = 0; i < NUM_OPTIONS; i++) {
     let theAnswer = animals[Math.floor(Math.random() * animals.length)];
     addButton(theAnswer);
@@ -177,11 +191,9 @@ function newRound() {
 function handleGuess() {
   let name = $(this).text();
   if (name === correctAnimal) {
-    $(`.guess`).remove();
-    setTimeout(newRound, 1000);
+    correct();
   } else {
-    $(this).effect(`shake`);
-    sayBackward(correctAnimal);
+    incorrect();
   }
 }
 
@@ -192,4 +204,39 @@ function sayBackward(text) {
     pitch: Math.random()
   }
   responsiveVoice.speak(backwardText, "UK English Male", options);
+}
+
+function correct() {
+  $(`.guess`).remove();
+  setTimeout(newRound, 1000);
+  score += 1;
+  $(`#theScore`).text(`Score: ${score}`);
+}
+
+function incorrect() {
+  $(this).effect(`shake`);
+  $(this).remove();
+  sayBackward(correctAnimal);
+  score = 0;
+  $(`#theScore`).text(`Score: ${score}`);
+}
+
+function repeat() {
+  responsiveVoice.speak("Listen closely now!", "UK English Male");
+  sayBackward(correctAnimal);
+}
+
+function surrender() {
+  score = 0;
+  $(`#theScore`).text(`Score: ${score}`);
+  responsiveVoice.speak("Try harder you donkey!", "UK English Male");
+  newRound();
+}
+
+function guess(animal) {
+  if (animal === correctAnimal) {
+    correct();
+  } else {
+    incorrect();
+  }
 }
