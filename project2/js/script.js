@@ -87,7 +87,7 @@ let badImages = [
 'dead',
 'noose',
 'anger',
-''
+'sick'
 ]
 
 let usedGoodWords = [];
