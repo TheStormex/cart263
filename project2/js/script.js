@@ -17,30 +17,6 @@ const AUDIO_CRY = 0;
 const AUDIO_BOOTUP = 0;
 
 const AUDIO_SONG = 0;
-
-// Images: 20
-// good
-const IMAGE_FLOWER = new Image;
-const IMAGE_SUN = 0;
-const IMAGE_HAPPY = 0;
-const IMAGE_HEART = 0;
-const IMAGE_BOY = 0;
-const IMAGE_GIRL = 0;
-const IMAGE_BOOK = 0;
-const IMAGE_VEGETABLE = 0;
-const IMAGE_FRUIT = 0;
-const IMAGE_SCHOOL = 0;
-// bad
-const IMAGE_CORPSE = 0;
-const IMAGE_KNIFE = 0;
-const IMAGE_GUN = 0;
-const IMAGE_BLOOD = 0;
-const IMAGE_BULLY = 0;
-const IMAGE_HATE = 0;
-const IMAGE_ANGRY = 0;
-const IMAGE_CRY = 0;
-const IMAGE_MONSTER = 0;
-const IMAGE_DESTROY = 0;
 // array
 const GOOD_WORDS = [
 `Friends `,
@@ -86,6 +62,32 @@ const BAD_WORDS = [
 `Disembowel `,
 `Execution `,
 `Crucifixion `
+]
+
+let goodImages = [
+'happy',
+'friend',
+'heart',
+'book',
+'school',
+'vegetable',
+'fruit',
+'teddy',
+'parents',
+'music'
+];
+
+let badImages = [
+'gun',
+'blood',
+'bully',
+'knife',
+'cry',
+'monster',
+'dead',
+'noose',
+'anger',
+''
 ]
 
 let usedGoodWords = [];
@@ -135,11 +137,11 @@ function playVideo(id) {
     // choose a random not used one from the bad list
   }
   if (area1Number < 4) {
-    $(`#area1`).append(`<div> <img src="assets/images/clown.png" alt="good image"> </div>`);
+    $(`#area1`).append(`<div id="image${area1Number}"> <img src="assets/images/clown.png" alt="good image"> </div>`);
     area1Number += 1;
   } else
   if (area1Number >= 4 && area2Number < 4) {
-    $(`#area2`).append(`<div> <img src="assets/images/clown.png" alt="good image"> </div>`);
+    $(`#area2`).append(`<div id="image${area1Number+area2Number}"> <img src="assets/images/clown.png" alt="good image"> </div>`);
     area2Number += 1;
   } else {
     console.log('too many');

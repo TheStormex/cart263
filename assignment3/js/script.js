@@ -230,6 +230,7 @@ function surrender() {
   score = 0;
   $(`#theScore`).text(`Score: ${score}`);
   responsiveVoice.speak("Try harder you donkey!", "UK English Male");
+  responsiveVoice.speak(correctAnimal, "UK English Male");
   newRound();
 }
 
