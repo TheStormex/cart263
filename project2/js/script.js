@@ -144,7 +144,6 @@ function playVideo(id) {
     $(`#area2`).append(`<div id="image${area1Number+area2Number}"> <img src="assets/images/clown.png" alt="good image"> </div>`);
     area2Number += 1;
   } else {
-    console.log('too many');
     // remove the first good one in the list of images currently on screen, replace it
   }
   if (videoNumber < 4) {
