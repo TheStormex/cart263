@@ -32,3 +32,5 @@ the bad choices will start to replace the good ones randomly
 the background starts as light blue, with each bad choice, black with red lightning sprite or static
 gets spawned in at random locations with a random size (within limits). They are drawn before the objects so
 not overlap the objects
+
+All images are found online to allow non commercial reuse.

@@ -12,9 +12,9 @@ online entertinament? Let's find out!
 *********************************************************************/
 
 // Sounds:
-const AUDIO_STATIC = 0;
-const AUDIO_CRY = 0;
-const AUDIO_BOOTUP = 0;
+const AUDIO_STATIC = new Audio("assets/sounds/static.wav");
+const AUDIO_CRY = new Audio("assets/sounds/cry.wav");
+const AUDIO_BOOTUP = new Audio("assets/sounds/bootup.wav");
 
 const AUDIO_SONG = 0;
 // array
@@ -99,6 +99,7 @@ let currentVideos = [];
 let videoName = [];
 let area1Number = 0;
 let area2Number = 0;
+let badImageNumber = 0;
 
 // Timers
 
@@ -109,7 +110,7 @@ $(document).ready(setup);
 
 function setup() {
   console.log("ready");
-  nextGoodVideos();
+  nextVideos('good');
   timerAutoplay = setInterval(timerAutoplayCountdown, 1000)
   autoplayTimerText = 5;
 }
@@ -130,45 +131,81 @@ function playVideo(id) {
   autoplayTimerText = 5;
   $(`#autoplayCount`).html(autoplayTimerText);
   videoNumber += 1;
+  let thisImage;
+  let thisImageIndex;
   if (currentVideos[videoId].effect === 'good') {
-    let thisImage = 0;
     // choose a random not used one from the good list
+    thisImageIndex = Math.floor(Math.random() * goodImages.length);
+    thisImage = goodImages[thisImageIndex];
+    goodImages.splice(thisImageIndex, 1);
   } else {
     // choose a random not used one from the bad list
+    thisImageIndex = Math.floor(Math.random() * badImages.length);
+    thisImage = badImages[thisImageIndex];
+    badImages.splice(thisImageIndex, 1);
   }
   if (area1Number < 4) {
-    $(`#area1`).append(`<div id="image${area1Number}"> <img src="assets/images/clown.png" alt="good image"> </div>`);
+    $(`#area1`).append(`<div id="image${area1Number}"> <img src="assets/images/${thisImage}.png" alt="${thisImage}"> </div>`);
     area1Number += 1;
   } else
   if (area1Number >= 4 && area2Number < 4) {
-    $(`#area2`).append(`<div id="image${area1Number+area2Number}"> <img src="assets/images/clown.png" alt="good image"> </div>`);
+    $(`#area2`).append(`<div id="image${area1Number+area2Number}"> <img src="assets/images/${thisImage}.png" alt="${thisImage}"> </div>`);
     area2Number += 1;
   } else {
-    // remove the first good one in the list of images currently on screen, replace it
+    // remove the first good one in the list of images currently on screen, replace it with a bad image
+    if (badImageNumber < 8) {
+      $(`#image${badImageNumber}`).html(`<img src="assets/images/${thisImage}.png" alt="${thisImage}">`);
+      badImageNumber++;
+    }
+    console.log('done');
   }
+  let type;
   if (videoNumber < 4) {
-    nextGoodVideos();
+    type = 'good'
   }
   else if (videoNumber < 8) {
-    nextGoodVideos();
+    type = 'mixed'
   } else {
-    nextGoodVideos();
+    type = 'bad'
   }
-
+  nextVideos(type);
 }
 
-function nextGoodVideos() {
+function nextVideos(type) {
   $(`.videoChoice`).remove();
   currentVideos = [];
+  let goodBadChance;
+  switch (type) {
+    case 'good':
+      goodBadChance = 1;
+      break;
+    case 'mixed':
+      goodBadChance = 0.8;
+      break;
+    case 'bad':
+      goodBadChance = 0;
+      break;
+    default: console.log('error');
+  }
   for (var i = 0; i < 3; i++) {
     videoName = [];
+    let videoEffect;
     for (var i2 = 0; i2 < 4; i2++) {
       let number = Math.floor(Math.random() * 20);
-      let word = GOOD_WORDS[number];
+      let word;
+      // videos are good by default
+      videoEffect = 'good';
+      if (Math.random() < goodBadChance) {
+        word = GOOD_WORDS[number];
+      } else {
+        word = BAD_WORDS[number];
+        // if there is one or more bad words, the video is bad
+        videoEffect = 'bad';
+      }
       videoName.push(word);
     }
     let videoNameString = videoName.join('');
-    let newVideo = new Video(videoNameString, 'good', i);
+    let newVideo = new Video(videoNameString, videoEffect, i);
     currentVideos.push(newVideo);
     $(`#videoSection`).append(`<div class="videoChoice" id="video${i}"> <p> ${currentVideos[i].name} <button id="button${i}"> &#x25B6; </button> </p>  </div>`);
     $(`#button${i}`).on('click', function() {

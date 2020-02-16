@@ -36,3 +36,8 @@ button {
   margin: 1%;
   border-radius: 10px;
 }
+
+img {
+  width: 150px;
+  height: 150px;
+}
