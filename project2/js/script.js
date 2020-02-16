@@ -16,7 +16,7 @@ const AUDIO_STATIC = new Audio("assets/sounds/static.wav");
 const AUDIO_CRY = new Audio("assets/sounds/cry.wav");
 const AUDIO_BOOTUP = new Audio("assets/sounds/bootup.wav");
 
-const AUDIO_SONG = 0;
+const AUDIO_SONG = new Audio("assets/sounds/song.wav");
 // array
 const GOOD_WORDS = [
 `Friends `,
@@ -100,6 +100,7 @@ let videoName = [];
 let area1Number = 0;
 let area2Number = 0;
 let badImageNumber = 0;
+let mixedRate = 0.9;
 // With each bad video, the title and background color changes
 let backgroundDarkness = 89;
 let titleColor = 300;
@@ -113,9 +114,19 @@ $(document).ready(setup);
 
 function setup() {
   console.log("ready");
+  $(`#videoSection`).css("opacity", "0%");
+}
+
+function startGame() {
+  $(`#videoSection`).css("opacity", "100%");
+  $(`#start`).remove();
   nextVideos('good');
   timerAutoplay = setInterval(timerAutoplayCountdown, 1000)
   autoplayTimerText = 5;
+  AUDIO_SONG.play();
+  AUDIO_SONG.loop = true;
+  AUDIO_SONG.preservesPitch = false;
+  AUDIO_SONG.volume = 0.5;
 }
 
 function timerAutoplayCountdown() {
@@ -141,6 +152,7 @@ function playVideo(id) {
     thisImageIndex = Math.floor(Math.random() * goodImages.length);
     thisImage = goodImages[thisImageIndex];
     goodImages.splice(thisImageIndex, 1);
+    AUDIO_STATIC.play();
   } else {
     // choose a random not used one from the bad list
     thisImageIndex = Math.floor(Math.random() * badImages.length);
@@ -155,6 +167,9 @@ function playVideo(id) {
       titleColor += 10;
       $(`#title`).css("color", `hsl(${titleColor}, 100%, 50%)`)
     }
+    badImageNumber++;
+    AUDIO_BOOTUP.play();
+    AUDIO_SONG.playbackRate -= 0.1;
   }
   if (area1Number < 4) {
     $(`#area1`).append(`<div id="image${area1Number}"> <img src="assets/images/${thisImage}.png" alt="${thisImage}"> </div>`);
@@ -167,7 +182,6 @@ function playVideo(id) {
     // remove the first good one in the list of images currently on screen, replace it with a bad image
     if (badImageNumber < 8) {
       $(`#image${badImageNumber}`).html(`<img src="assets/images/${thisImage}.png" alt="${thisImage}">`);
-      badImageNumber++;
     } else {
         ending();
     }
@@ -176,10 +190,8 @@ function playVideo(id) {
   if (videoNumber < 4) {
     type = 'good'
   }
-  else if (videoNumber < 8) {
+  else {
     type = 'mixed'
-  } else {
-    type = 'bad'
   }
   nextVideos(type);
 }
@@ -193,21 +205,21 @@ function nextVideos(type) {
       goodBadChance = 1;
       break;
     case 'mixed':
-      goodBadChance = 0.9;
-      break;
-    case 'bad':
-      goodBadChance = 0;
+      goodBadChance = mixedRate;
+      mixedRate -= 0.05;
+      console.log(mixedRate);
       break;
     default: console.log('error');
   }
   for (var i = 0; i < 3; i++) {
     videoName = [];
     let videoEffect;
+    // videos are good by default
+    videoEffect = 'good';
     for (var i2 = 0; i2 < 4; i2++) {
       let number = Math.floor(Math.random() * 20);
       let word;
-      // videos are good by default
-      videoEffect = 'good';
+      console.log(goodBadChance);
       if (Math.random() < goodBadChance) {
         word = GOOD_WORDS[number];
       } else {
@@ -220,7 +232,7 @@ function nextVideos(type) {
     let videoNameString = videoName.join('');
     let newVideo = new Video(videoNameString, videoEffect, i);
     currentVideos.push(newVideo);
-    $(`#videoSection`).append(`<div class="videoChoice" id="video${i}"> <p> ${currentVideos[i].name} <button id="button${i}"> &#x25B6; </button> </p>  </div>`);
+    $(`#videoSection`).append(`<div class="videoChoice" id="video${i}"> <p> ${currentVideos[i].name} <button class="videoButton" id="button${i}"> &#x25B6; </button> </p>  </div>`);
     $(`#button${i}`).on('click', function() {
       let id = $(this).attr('id');
       id = id.replace('button', '');
@@ -230,9 +242,12 @@ function nextVideos(type) {
 }
 
 function ending() {
+  AUDIO_BOOTUP.pause();
+  AUDIO_SONG.pause();
   clearInterval(timerAutoplay);
   $(`#title`).css("color", `hsl(${titleColor}, 100%, 50%)`)
   console.log(titleColor);
   $(`body`).html(`<span id="title"> Please pay attention to what your children watch and do not take for granted that it would be
     appropriate. It could traumatise them and give more ad money to these content farms that exploit children for a quick profit. </span>`);
+  AUDIO_CRY.play();
 }
