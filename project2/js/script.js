@@ -127,6 +127,10 @@ function startGame() {
   AUDIO_SONG.loop = true;
   AUDIO_SONG.preservesPitch = false;
   AUDIO_SONG.volume = 0.5;
+  // Set a timer to repeat the happy and sad every second, change to sad if bad video, happy if good. For each bad, the sad is lower pitched
+  responsiveVoice.speak("happy", "UK English Female", {
+    pitch: 1.5
+  });
 }
 
 function timerAutoplayCountdown() {
@@ -207,7 +211,6 @@ function nextVideos(type) {
     case 'mixed':
       goodBadChance = mixedRate;
       mixedRate -= 0.05;
-      console.log(mixedRate);
       break;
     default: console.log('error');
   }
@@ -219,7 +222,6 @@ function nextVideos(type) {
     for (var i2 = 0; i2 < 4; i2++) {
       let number = Math.floor(Math.random() * 20);
       let word;
-      console.log(goodBadChance);
       if (Math.random() < goodBadChance) {
         word = GOOD_WORDS[number];
       } else {
@@ -246,7 +248,6 @@ function ending() {
   AUDIO_SONG.pause();
   clearInterval(timerAutoplay);
   $(`#title`).css("color", `hsl(${titleColor}, 100%, 50%)`)
-  console.log(titleColor);
   $(`body`).html(`<span id="title"> Please pay attention to what your children watch and do not take for granted that it would be
     appropriate. It could traumatise them and give more ad money to these content farms that exploit children for a quick profit. </span>`);
   AUDIO_CRY.play();
