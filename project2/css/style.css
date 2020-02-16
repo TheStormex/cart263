@@ -1,7 +1,7 @@
 body {
   font-family: 'Luckiest Guy', cursive;
   font-size: 30px;
-  background-color: rgb(200, 230, 255);
+  background-color: hsl(207, 100%, 89%);
 }
 
 div {
@@ -22,7 +22,7 @@ div {
 }
 
 #title {
-  color: #FF00FF;
+  color: hsl(300, 100%, 50%);;
   font-size: 50px;
 }
 

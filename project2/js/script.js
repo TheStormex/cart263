@@ -100,6 +100,9 @@ let videoName = [];
 let area1Number = 0;
 let area2Number = 0;
 let badImageNumber = 0;
+// With each bad video, the title and background color changes
+let backgroundDarkness = 89;
+let titleColor = 300;
 
 // Timers
 
@@ -143,6 +146,15 @@ function playVideo(id) {
     thisImageIndex = Math.floor(Math.random() * badImages.length);
     thisImage = badImages[thisImageIndex];
     badImages.splice(thisImageIndex, 1);
+    // With each bad video, the background darkens
+    if (backgroundDarkness > 20) {
+      backgroundDarkness -= 10;
+      $(`body`).css("background-color", `hsl(207, 100%, ${backgroundDarkness}%)`)
+    }
+    if (titleColor < 360) {
+      titleColor += 10;
+      $(`#title`).css("color", `hsl(${titleColor}, 100%, 50%)`)
+    }
   }
   if (area1Number < 4) {
     $(`#area1`).append(`<div id="image${area1Number}"> <img src="assets/images/${thisImage}.png" alt="${thisImage}"> </div>`);
@@ -156,8 +168,9 @@ function playVideo(id) {
     if (badImageNumber < 8) {
       $(`#image${badImageNumber}`).html(`<img src="assets/images/${thisImage}.png" alt="${thisImage}">`);
       badImageNumber++;
+    } else {
+        ending();
     }
-    console.log('done');
   }
   let type;
   if (videoNumber < 4) {
@@ -180,7 +193,7 @@ function nextVideos(type) {
       goodBadChance = 1;
       break;
     case 'mixed':
-      goodBadChance = 0.8;
+      goodBadChance = 0.9;
       break;
     case 'bad':
       goodBadChance = 0;
@@ -218,5 +231,8 @@ function nextVideos(type) {
 
 function ending() {
   clearInterval(timerAutoplay);
-
+  $(`#title`).css("color", `hsl(${titleColor}, 100%, 50%)`)
+  console.log(titleColor);
+  $(`body`).html(`<span id="title"> Please pay attention to what your children watch and do not take for granted that it would be
+    appropriate. It could traumatise them and give more ad money to these content farms that exploit children for a quick profit. </span>`);
 }
