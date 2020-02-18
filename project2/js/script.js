@@ -90,32 +90,42 @@ let badImages = [
 'anger',
 'sick'
 ]
-//
+// How many videos have been watched
 let videoNumber = 0;
-let emptyAreas = [];
-let goodAreas = [];
+// Each of the 8 areas, if they are filled, if so with good video or bad
+let emptyAreas = [
+
+];
+// All 3 videos currently available
 let currentVideos = [];
+// Name of a newly spawning video
 let videoName = [];
+// Number of images in left area
 let area1Number = 0;
+// Number of images in right area
 let area2Number = 0;
+// Number of bad images currently screen
 let badImageNumber = 0;
+// Chance of a word in title being good or bad
 let mixedRate = 0.9;
 // With each bad video, the title and background color changes
 let backgroundDarkness = 89;
 let titleColor = 300;
 
 // Timers
-
 let timerAutoplay;
 let autoplayTimerText = 5;
 
+// Setup the page when it loads
 $(document).ready(setup);
 
+// When start, hide the video section
 function setup() {
   console.log("ready");
   $(`#videoSection`).css("opacity", "0%");
 }
 
+// When the start button is clicked, begin the simulation
 function startGame() {
   $(`#videoSection`).css("opacity", "100%");
   $(`#start`).remove();
@@ -128,6 +138,8 @@ function startGame() {
   AUDIO_SONG.volume = 0.5;
 }
 
+// Every second, count down the autoplay timer and its display text
+// If it gets to zero, play the first video in the list
 function timerAutoplayCountdown() {
   autoplayTimerText -= 1;
   $(`#autoplayCount`).html(autoplayTimerText);
@@ -137,6 +149,11 @@ function timerAutoplayCountdown() {
   }
 }
 
+// When a video's play button clicked, if the video is good then say happy,
+// make a good image appear that has not appeared yet, then play the static sound.
+// If it is bad, say sad, darken background, redden title, slow down song,
+// soawn a bad image, if all slots are taken, replace a good image. If there are
+// Eight bad images, end the simulation.
 function playVideo(id) {
   let videoId = id;
   clearInterval(timerAutoplay);
@@ -205,6 +222,8 @@ function playVideo(id) {
   nextVideos(type);
 }
 
+// When a video has been clicked, the list of videos
+// is removed and a new list of three are spawned
 function nextVideos(type) {
   $(`.videoChoice`).remove();
   currentVideos = [];
@@ -219,6 +238,7 @@ function nextVideos(type) {
       break;
     default: console.log('error');
   }
+  // Spawn 3 new videos
   for (var i = 0; i < 3; i++) {
     videoName = [];
     let videoEffect;
@@ -242,8 +262,10 @@ function nextVideos(type) {
       }
       videoName.push(word);
     }
+    // Make the name by combining the 4 random words and make the video object
     let videoNameString = videoName.join('');
     let newVideo = new Video(videoNameString, videoEffect, i);
+    // Add the video to the list of new videos then display it on screen
     currentVideos.push(newVideo);
     $(`#videoSection`).append(`<div class="videoChoice" id="video${i}"> <p> ${currentVideos[i].name} <button class="videoButton" id="button${i}"> &#x25B6; </button> </p>  </div>`);
     $(`#button${i}`).on('click', function() {
@@ -254,6 +276,7 @@ function nextVideos(type) {
   }
 }
 
+// When the simulation ends, end all sounds, play the crying and give the message
 function ending() {
   AUDIO_BOOTUP.pause();
   AUDIO_SONG.pause();
