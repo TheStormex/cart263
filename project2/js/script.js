@@ -15,9 +15,10 @@ online entertinament? Let's find out!
 const AUDIO_STATIC = new Audio("assets/sounds/static.wav");
 const AUDIO_CRY = new Audio("assets/sounds/cry.wav");
 const AUDIO_BOOTUP = new Audio("assets/sounds/bootup.wav");
-
+// Song
 const AUDIO_SONG = new Audio("assets/sounds/song.wav");
-// array
+// Arrays
+// Good words that can appear in titles
 const GOOD_WORDS = [
 `Friends `,
 `Love `,
@@ -40,7 +41,7 @@ const GOOD_WORDS = [
 `Learning `,
 `Playing `
 ]
-
+// Bad words that can appear in titles
 const BAD_WORDS = [
 `Hate `,
 `Death `,
@@ -63,7 +64,7 @@ const BAD_WORDS = [
 `Execution `,
 `Crucifixion `
 ]
-
+// Images that can spawn if watch a good video
 let goodImages = [
 'happy',
 'friend',
@@ -76,7 +77,7 @@ let goodImages = [
 'parents',
 'music'
 ];
-
+// Images that can appear if watch a bad video
 let badImages = [
 'gun',
 'blood',
@@ -89,9 +90,7 @@ let badImages = [
 'anger',
 'sick'
 ]
-
-let usedGoodWords = [];
-let usedBadWords = [];
+//
 let videoNumber = 0;
 let emptyAreas = [];
 let goodAreas = [];
@@ -225,13 +224,19 @@ function nextVideos(type) {
     let videoEffect;
     // videos are good by default
     videoEffect = 'good';
+    let unusedGoodWords = [...GOOD_WORDS];
+    let unusedBadWords = [...BAD_WORDS];
     for (var i2 = 0; i2 < 4; i2++) {
-      let number = Math.floor(Math.random() * 20);
+      let number;
       let word;
       if (Math.random() < goodBadChance) {
-        word = GOOD_WORDS[number];
+        number = Math.floor(Math.random() * unusedGoodWords.length);
+        word = unusedGoodWords[number];
+        unusedGoodWords.splice(number, 1);
       } else {
-        word = BAD_WORDS[number];
+        number = Math.floor(Math.random() * unusedBadWords.length);
+        word = unusedBadWords[number];
+        unusedBadWords.splice(number, 1);
         // if there is one or more bad words, the video is bad
         videoEffect = 'bad';
       }
