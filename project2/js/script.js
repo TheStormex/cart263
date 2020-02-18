@@ -127,10 +127,6 @@ function startGame() {
   AUDIO_SONG.loop = true;
   AUDIO_SONG.preservesPitch = false;
   AUDIO_SONG.volume = 0.5;
-  // Set a timer to repeat the happy and sad every second, change to sad if bad video, happy if good. For each bad, the sad is lower pitched
-  responsiveVoice.speak("happy", "UK English Female", {
-    pitch: 1.5
-  });
 }
 
 function timerAutoplayCountdown() {
@@ -157,6 +153,11 @@ function playVideo(id) {
     thisImage = goodImages[thisImageIndex];
     goodImages.splice(thisImageIndex, 1);
     AUDIO_STATIC.play();
+    // Good videos make the child's inner voice say happy
+    responsiveVoice.speak('happy', "UK English Female", {
+      pitch: 1.8,
+      rate: 1.2
+    })
   } else {
     // choose a random not used one from the bad list
     thisImageIndex = Math.floor(Math.random() * badImages.length);
@@ -174,6 +175,11 @@ function playVideo(id) {
     badImageNumber++;
     AUDIO_BOOTUP.play();
     AUDIO_SONG.playbackRate -= 0.1;
+    // Bad videos make the child's inner voice say sad
+    responsiveVoice.speak('sad', "UK English Female", {
+      pitch: 0.3,
+      rate: 0.5
+    })
   }
   if (area1Number < 4) {
     $(`#area1`).append(`<div id="image${area1Number}"> <img src="assets/images/${thisImage}.png" alt="${thisImage}"> </div>`);

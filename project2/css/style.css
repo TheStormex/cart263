@@ -43,6 +43,8 @@ div {
   width: 40%;
   height: 20%;
   font-size: 50px;
+  border-radius: 10px;
+  border-style: solid;
 }
 
 img {
