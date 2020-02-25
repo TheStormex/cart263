@@ -92,10 +92,8 @@ let badImages = [
 ]
 // How many videos have been watched
 let videoNumber = 0;
-// Each of the 8 areas, if they are filled, if so with good video or bad
-let emptyAreas = [
-
-];
+// Each of the 8 areas whether the video is good or bad
+let allAreas = [];
 // All 3 videos currently available
 let currentVideos = [];
 // Name of a newly spawning video
@@ -189,6 +187,7 @@ function playVideo(id) {
       $(`#title`).css("color", `hsl(${titleColor}, 100%, 50%)`)
     }
     badImageNumber++;
+    console.log(badImageNumber);
     AUDIO_BOOTUP.play();
     AUDIO_SONG.playbackRate -= 0.1;
     // Bad videos make the child's inner voice say sad
@@ -200,16 +199,26 @@ function playVideo(id) {
   if (area1Number < 4) {
     $(`#area1`).append(`<div id="image${area1Number}"> <img src="assets/images/${thisImage}.png" alt="${thisImage}"> </div>`);
     area1Number += 1;
+    allAreas.push(currentVideos[videoId].effect);
   } else
   if (area1Number >= 4 && area2Number < 4) {
     $(`#area2`).append(`<div id="image${area1Number+area2Number}"> <img src="assets/images/${thisImage}.png" alt="${thisImage}"> </div>`);
     area2Number += 1;
+    allAreas.push(currentVideos[videoId].effect);
   } else {
-    // remove the first good one in the list of images currently on screen, replace it with a bad image
-    if (badImageNumber < 8) {
-      $(`#image${badImageNumber}`).html(`<img src="assets/images/${thisImage}.png" alt="${thisImage}">`);
-    } else {
-        ending();
+    // If the video is bad, then replace the good ones, if it is a good video, nothing happens
+    if (currentVideos[videoId].effect === 'bad') {
+      // remove the first good one in the list of images currently on screen, replace it with a bad image
+      if (badImageNumber < 8) {
+        let checkAreaGoodness = 0;
+        while (allAreas[checkAreaGoodness] === 'bad') {
+          checkAreaGoodness++;
+        }
+        $(`#image${checkAreaGoodness}`).html(`<img src="assets/images/${thisImage}.png" alt="${thisImage}">`);
+        allAreas[checkAreaGoodness] = 'bad';
+      } else {
+          ending();
+      }
     }
   }
   let type;
