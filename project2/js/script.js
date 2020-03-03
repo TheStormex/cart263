@@ -292,6 +292,8 @@ function ending() {
   clearInterval(timerAutoplay);
   $(`#title`).css("color", `hsl(${titleColor}, 100%, 50%)`)
   $(`body`).html(`<span id="title"> Please pay attention to what your children watch and do not take for granted that it would be
-    appropriate. It could traumatise them and give more ad money to these content farms that exploit children for a quick profit. </span>`);
+    appropriate. It could traumatise them and give more ad money to these content farms that exploit children for a quick profit. </span>
+    <div> <img src="assets/images/baby.png" alt="crying baby"> </div>`);
   AUDIO_CRY.play();
+  AUDIO_CRY.loop = true;
 }
