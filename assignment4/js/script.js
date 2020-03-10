@@ -10,6 +10,7 @@ How to describe a sauce? Like this!
 *********************************************************************/
 $(document).ready(setup);
 
+// list of vowels to replace a with an
 let vowels =
 ["a", "e", "i", "o", "u", "A", "E", "I", "O", "U"];
 
@@ -31,12 +32,13 @@ function dataLoaded(theData) {
 }
 
 function makeSentence() {
+  // clear the body of text
   $('body').html("");
   let condiment = getRandomElement(data.condiments);
   let verb = "is";
-  let a = "a";
-  let a2 = "a";
-  let a3 = "a";
+  let determiner1 = "a";
+  let determiner2 = "a";
+  let determiner3 = "a";
   let cat = getRandomElement(data.cats);
   let room = getRandomElement(data.rooms);
   let game = getRandomElement(data.games);
@@ -44,22 +46,24 @@ function makeSentence() {
   let plantType = getRandomElement(data.plants);
   let genre = getRandomElement(data.genres);
   let plant = plantType.name;
+  // check for s and vowels to make the needed changes
   if (condiment.charAt(condiment.length-1) === "s") {
     verb = "are";
   }
   for (var i = 0; i < vowels.length; i++) {
     if (cat.charAt(0) === vowels[i]) {
-      a = "an";
+      determiner1 = "an";
     }
     if (room.charAt(0) === vowels[i]) {
-      a2 = "an";
+      determiner2 = "an";
     }
     if (nationality.charAt(0) === vowels[i]) {
-      a3 = "an";
+      determiner3 = "an";
     }
   }
-   let description = condiment + " " + verb + " like " + a + " " + cat + " in " + a2 + " " + room
-   + " playing " + game + " with " + a3 + " " + nationality + " " + plant + " dancing to " + genre + ".";
+   let description = condiment + " " + verb + " like " + determiner1 + " " + cat + " in " + determiner2 + " " + room
+   + " playing " + game + " with " + determiner3 + " " + nationality + " " + plant + " dancing to " + genre + ".";
+   // add new text to the body
    $('body').append(description)
 }
 
@@ -67,6 +71,7 @@ function dataError(request, text, error) {
   console.error(error);
 }
 
+// get a random element from the chosen array
 function getRandomElement(array) {
   let element = array[Math.floor(Math.random() * array.length)];
 
