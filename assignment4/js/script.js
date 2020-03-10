@@ -13,19 +13,33 @@ $(document).ready(setup);
 let vowels =
 ["a", "e", "i", "o", "u"];
 
+let data;
+
 function setup() {
   $.getJSON("assets/data/data.json")
     .done(dataLoaded)
     .fail(dataError);
 }
 
-function dataLoaded(data) {
-  console.log(data);
+function dataLoaded(theData) {
+  data = theData;
+  $('body').on("click", makeSentence);
+  makeSentence();
+}
+
+function makeSentence() {
+  $('body').html("");
   let condiment = getRandomElement(data.condiments);
   let verb = "is";
   let a = "a";
+  let a2 = "a";
   let cat = getRandomElement(data.cats);
   let room = getRandomElement(data.rooms);
+  let game = getRandomElement(data.games);
+  let nationality = getRandomElement(data.nationalities);
+  let plantType = getRandomElement(data.plants);
+  let genre = getRandomElement(data.genres);
+  let plant = plantType.name;
   if (condiment.charAt(condiment.length-1) === "s") {
     verb = "are";
   }
@@ -34,9 +48,9 @@ function dataLoaded(data) {
       a = "an";
     }
   }
-  let description = condiment + " " + verb + " like " + a + " " + cat + " in a " + room
-  + " playing " ;
-  $('body').append(description);
+   let description = condiment + " " + verb + " like " + a + " " + cat + " in a " + room
+   + " playing " + game + " with " + a2 + " " + nationality + " " + plant + " dancing to " + genre + ".";
+   $('body').append(description)
 }
 
 function dataError(request, text, error) {
