@@ -2,88 +2,49 @@
 
 /*****************
 
-Music box
-Che Tan
+Title of Project
+Author Name
 
-Play a randomly generated song
+This is a template. You must fill in the title,
+author, and this description to match your project!
 
 ******************/
 
-const FREQUENCIES = [
-  440.00,
-  493.88,
-  554.37,
-  587.33,
-  659.25,
-  739.99,
-  830.61
-];
+// preload()
+//
+// Description of preload
 
-let pattern = [
-  'x',
-  '*',
-  '*',
-  'o',
-  'x',
-  '*',
-  'o',
-  'o',
-  'x',
-  '*',
-  'o',
-  '*',
-  'x',
-  'o',
-  '*',
-  'o'
-];
+let jokes; // A place to store the jokes
 
-let beat = 0;
+function preload() {
+  // Load the jokes by accessing the API endpoint
+  // Jokes will contain an OBJECT with ten jokes in it
+  jokes = loadJSON("https://official-joke-api.appspot.com/jokes/programming/ten");
+}
 
-let kick = new Pizzicato.Sound({
-  source: 'file',
-  options: {path: './assets/sounds/kick.wav'}
-});
-let hihat = new Pizzicato.Sound({
-  source: 'file',
-  options: {path: './assets/sounds/hihat.wav'}
-});
-let snare = new Pizzicato.Sound({
-  source: 'file',
-  options: {path: './assets/sounds/snare.wav'}
-});
-let synth = new Pizzicato.Sound({
-  source: 'wave',
-  options: {
-    type: 'sine',
-    frequency: FREQUENCIES[0]
-  }
-})
 function setup() {}
-function draw() {}
-function playNote() {
-  synth.frequency = FREQUENCIES[Math.floor(Math.random() * FREQUENCIES.length)];
-  synth.play();
-}
+
 function mousePressed() {
-  setInterval(playNote, 500);
-  setInterval(playDrum, 125);
+  // Tell a joke when they click
+  tellJoke();
 }
 
-function playDrum() {
-  let symbols = pattern[beat];
-  if (symbols.includes('x')) {
-    kick.play();
-  }
-  if (symbols.includes('*')) {
-    hihat.play();
-  }
-  if (symbols.includes('o')) {
-    snare.play();
-  }
-  if (beat >= pattern.length-1) {
-    beat = 0;
-  } else {
-    beat++;
-  }
+function tellJoke() {
+  // Get an array with the name of each property in the jokes object
+  let keys = Object.keys(jokes);
+  // Choose a random property name (they're actually just numbers, yet it's not an array)
+  let randomKey = random(keys);
+  // Get the joke with that property name
+  let joke = jokes[randomKey];
+  // Get the setup part
+  let jokeSetup = joke.setup;
+  // And the punchline part
+  let jokePunchline = joke.punchline;
+  // Display the setup
+  console.log(jokeSetup);
+  // After a delay of two seconds...
+  setTimeout(function() {
+    // ... display the punchline
+    console.log(jokePunchline);
+  }, 2000);
 }
