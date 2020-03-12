@@ -26,7 +26,7 @@ D4B0lt
 Logic Bomb - throw ball, hit wall or enemy, damage
 Backdoor - dashes in direction of mouse, reducing enemy power if hit
 Cleanup Protocol - heal target char
-Ramp - give target 3 energy
+Signal Boost - give target 3 energy
 Bit rot Worm - large beam of damage
 
 Nuttz
@@ -58,3 +58,23 @@ respawn on random side or corner
 shoot javelins at player, move noise,
 teleport afterwards switching
 place with other enemy
+
+sound of impact changes pitch and distortion based on
+situation.
+
+Instructions:
+reduce the 2 enemies' health to 0 through combat!
+Click one of the two hackers to give commands in their menu!
+Choose which of the two hackers to use as the front line fighter by clicking the
+"Front line" button in their menu!
+Spend energy to use support skills here in the planning phase and to use
+combat skills in the battle phase!
+Using skills and dealing damage increases the ultimate meter!
+Once it is full, that hacker can unleash either a powerful combat skill or
+support skill!
+In combat, dodge enemy projectiles, shoot projectiles at them with the mouse
+and activate skills with shift, space and ctrl!
+Each hacker gains energy at the beginning of turn, if it did not do anything last
+turn, it gets more!
+Switch between each hacker as the front line often to prevent one from becoming tired!
+Good luck! The fate of humanity rests on your fingertips!
