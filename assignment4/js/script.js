@@ -27,7 +27,7 @@ function setup() {
 // Make a sentence and allow the user to click to make a new sentence
 function dataLoaded(theData) {
   data = theData;
-  $('body').on("click", makeSentence);
+  $('html').on("click", makeSentence);
   makeSentence();
 }
 
