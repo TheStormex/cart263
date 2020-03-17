@@ -76,12 +76,33 @@ const END_STATE = new EndState();
 
 // variables
 let frontline = "bolt";
+let currentChar;
 let whichScreen;
 // players and enemy objects
 let bolt;
 let nuts;
 let serpent;
 let agent;
+
+// nuts and bolt's abilities
+let ab_logicBomb;
+let ab_backdoor;
+let ab_cleanupProtocol;
+let ab_signalBoost;
+let ab_ult_bitRotWorm;
+let ab_firewall;
+let ab_targetExploits;
+let ab_DDOS;
+let ab_bruteForce;
+let ab_ult_vpn;
+
+// enemies abilities
+let ab_e_wallStraight;
+let ab_e_inOut;
+let ab_e_circle;
+let ab_e_shoot;
+let ab_e_absorb;
+let ab_e_teleport;
 
 let enemiesList = [];
 let playersList = [];
@@ -106,7 +127,7 @@ function preload() {
 function setup() {
   let canvas = createCanvas(windowWidth, windowHeight);
   canvas.style('display', 'block');
-  background(0);
+  background(100);
   // create the player characters and enemy characters
   bolt = new Player("Bolt", 20, 3);
   nuts = new Player("Nuts", 30, 2);
@@ -115,13 +136,16 @@ function setup() {
   playersList = [bolt, nuts];
   enemiesList = [agent, serpent];
   // create the player and enemies's abilities
+
+  frontline = bolt;
+  currentChar = "none";
   whichScreen = PLAN_STATE;
 }
 
 // p5 draw
 function draw() {
   clear();
-  background(0);
+  background(100);
   whichScreen.draw();
 
 }
@@ -130,7 +154,35 @@ function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 }
 
-// draw current character name, head, health bar, energy, ult charge
-function drawCommonUI(frontline) {
+// draw current character name, head, health bar, energy, ult charge if there is one
+function drawCommonUI(currentChar) {
+  if (currentChar != "none") {
+    push();
+    // make the menu box
+    rectMode(CENTER, CENTER);
+    noStroke();
+    fill(255);
+    rect(width/2, height-height/6, width, height/3);
+    // name of char, health bar, energy, ult charge
+    textSize(width/30+height/60);
+    textAlign(CENTER);
+    fill(0);
+    // name
+    text(currentChar.name, width/20, height-height/4);
+    fill(255);
+    strokeWeight(5);
+    stroke(0);
+    // health bar
+    rect(width/2.8, height-height/3.63, width/2, height/20);
+    noStroke();
+    fill(255, 0 , 0);
+    rectMode(CORNER);
+    rect(width/2.8-width/4, height-height/3.63-height/40, width/2, height/20);
+    pop();
+  }
+}
 
+// p5 mouse is pressed
+function mousePressed() {
+  whichScreen.mouseDown();
 }

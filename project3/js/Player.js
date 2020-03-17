@@ -8,6 +8,8 @@ class Player {
     this.frontlineTurns = 0;
     this.tired = false;
     this.energyTurn = energyTurn;
+    // this is image, before this is locations of rect
+    this.avatar = [];
   }
 
 }

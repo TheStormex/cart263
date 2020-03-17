@@ -12,6 +12,6 @@ class FightState {
   }
   drawUI() {
     // draw player head, name, health, energy, ultcharge;
-    drawCommonUI();
+    drawCommonUI(frontline);
   }
 }
