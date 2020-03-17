@@ -83,6 +83,12 @@ let nuts;
 let serpent;
 let agent;
 
+let enemiesList = [];
+let playersList = [];
+
+let enemyBullets = [];
+let playerBullets = [];
+
 let gameScreen;
 
 $(document).ready(start);
@@ -106,7 +112,10 @@ function setup() {
   nuts = new Player("Nuts", 30, 2);
   agent = new Enemy("Hackshield Agent", 50);
   serpent = new Enemy("Serverspy Serpent", 60);
-  whichScreen = TITLE_STATE;
+  playersList = [bolt, nuts];
+  enemiesList = [agent, serpent];
+  // create the player and enemies's abilities
+  whichScreen = PLAN_STATE;
 }
 
 // p5 draw
@@ -119,4 +128,9 @@ function draw() {
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
+}
+
+// draw current character name, head, health bar, energy, ult charge
+function drawCommonUI(frontline) {
+
 }

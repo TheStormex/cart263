@@ -9,5 +9,5 @@ class Player {
     this.tired = false;
     this.energyTurn = energyTurn;
   }
-  
+
 }

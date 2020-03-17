@@ -1,5 +1,6 @@
 class Enemy {
-  constructor(maxHp) {
+  constructor(name, maxHp) {
+    this.name = name;
     this.hp = maxHp;
     this.maxHp = maxHp;
 
