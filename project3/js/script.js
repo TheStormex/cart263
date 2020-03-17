@@ -57,12 +57,6 @@ const S_LOGO = 0;
 const S_NAME = 0;
 
 // non changing values
-const V_BOLT_MAXHP = 20;
-const V_NUTS_MAXHP = 30;
-const V_AGENT_MAXHP = 50;
-const V_SERPENT_MAXHP = 60;
-const V_BOLT_ENERGY_TURN = 2;
-const V_NUTS_ENERGY_TURN = 2;
 const V_INSTRUCTIONS = [
   "Reduce the 2 enemies' health to 0 through combat!",
   "Click one of the two hackers to give commands in their menu!",
@@ -75,21 +69,19 @@ const V_INSTRUCTIONS = [
   "Switch between each hacker as the front line often to prevent one from becoming tired!",
   "Good luck! The fate of humanity rests on your fingertips!",
 ];
+const TITLE_STATE = new TitleState();
+const PLAN_STATE = new PlanState();
+const FIGHT_STATE = new FightState();
+const END_STATE = new EndState();
 
 // variables
-let boltHP = 20;
-let boltEnergy = 0;
-let boltUltCharge = 0;
-let boltFrontlineTurns = 0;
-let boltTired = false;
-let nutsHP = 30;
-let nutsEnergy = 0;
-let nutsUltChange = 0;
-let nutsFrontlineTurns = 0;
-let nutsTired = false;
 let frontline = "bolt";
-let agentHP = 50;
-let serpentHP = 60;
+let whichScreen;
+// players and enemy objects
+let bolt;
+let nuts;
+let serpent;
+let agent;
 
 let gameScreen;
 
@@ -99,13 +91,32 @@ function start() {
   console.log("ready");
 }
 
+// p5 preload
+function preload() {
+
+}
+
 // p5 setup
 function setup() {
-  createCanvas(500, 500);
-  gameScreen = createGraphics(100, 100);
+  let canvas = createCanvas(windowWidth, windowHeight);
+  canvas.style('display', 'block');
+  background(0);
+  // create the player characters and enemy characters
+  bolt = new Player("Bolt", 20, 3);
+  nuts = new Player("Nuts", 30, 2);
+  agent = new Enemy("Hackshield Agent", 50);
+  serpent = new Enemy("Serverspy Serpent", 60);
+  whichScreen = TITLE_STATE;
 }
 
 // p5 draw
 function draw() {
+  clear();
+  background(0);
+  whichScreen.draw();
 
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
 }
