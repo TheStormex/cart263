@@ -85,16 +85,16 @@ let serpent;
 let agent;
 
 // nuts and bolt's abilities
-let ab_logicBomb;
-let ab_backdoor;
-let ab_cleanupProtocol;
-let ab_signalBoost;
-let ab_ult_bitRotWorm;
-let ab_firewall;
-let ab_targetExploits;
-let ab_DDOS;
-let ab_bruteForce;
-let ab_ult_vpn;
+let ab_logicBomb = new PlayerAbility("Logic Bomb", "combat", 3, [["damage", 5]], 32, "none", false);
+let ab_backdoor = new PlayerAbility("Backdoor", "combat", 2, [["damage", 2], ["dash", "# added to speed"]], 32, "none", false);
+let ab_cleanupProtocol = new PlayerAbility("Cleanup Protocol", "support", 3, [["heal", 5]], 32, "none", false);
+let ab_signalBoost = new PlayerAbility("Signal Boost", "support", 2, [["ramp", 5]], 32, "none", false);
+let ab_ult_bitRotWorm = new PlayerAbility("Bitrot Worm", "combat", 3, [["damage", 5]], 32, "none", true);
+let ab_firewall = new PlayerAbility("Firewall", "support", 3, [["damage", 5]], 32, "none", false);
+let ab_targetExploits = new PlayerAbility("Target Exploits", "support", 3, [["damage", 5]], 32, "none", false);
+let ab_DDOS = new PlayerAbility("DDoS", "combat", 3, [["damage", 5]], 32, "none", false);
+let ab_bruteForce = new PlayerAbility("Brute Force Attack", "combat", 3, [["damage", 5]], 32, "none", false);
+let ab_ult_vpn = new PlayerAbility("Activate VPN", "support", 3, [["damage", 5]], 32, "none", true);
 
 // enemies abilities
 let ab_e_wallStraight;
@@ -111,6 +111,9 @@ let enemyBullets = [];
 let playerBullets = [];
 
 let gameScreen;
+
+// keycodes:
+// w - 87 / a - 65/ s - 83/ d - 68 / space -32 / shift - 16 / control - 17
 
 $(document).ready(start);
 
@@ -129,14 +132,13 @@ function setup() {
   canvas.style('display', 'block');
   background(100);
   // create the player characters and enemy characters
-  bolt = new Player("Bolt", 20, 3);
-  nuts = new Player("Nuts", 30, 2);
+  bolt = new Player("Bolt", 20, 5, [[ab_cleanupProtocol, ab_signalBoost],[],[ab_logicBomb, ab_backdoor], [ab_ult_bitRotWorm]]);
+  nuts = new Player("Nuts", 30, 4, [[ab_firewall, ab_targetExploits], [ab_ult_vpn], [ab_DDOS, ab_bruteForce], []]);
   agent = new Enemy("Hackshield Agent", 50);
   serpent = new Enemy("Serverspy Serpent", 60);
   playersList = [bolt, nuts];
   enemiesList = [agent, serpent];
   // create the player and enemies's abilities
-
   frontline = bolt;
   currentChar = "none";
   whichScreen = PLAN_STATE;
@@ -155,7 +157,7 @@ function windowResized() {
 }
 
 // draw current character name, head, health bar, energy, ult charge if there is one
-function drawCommonUI(currentChar) {
+function drawCommonUI() {
   if (currentChar != "none") {
     push();
     // make the menu box
@@ -178,6 +180,17 @@ function drawCommonUI(currentChar) {
     fill(255, 0 , 0);
     rectMode(CORNER);
     rect(width/2.8-width/4, height-height/3.63-height/40, width/2, height/20);
+    // energy
+    let energyText = "Energy: " + currentChar.energy;
+    fill(0);
+    textSize(width/60+height/60)
+    text(energyText, width-width/3.2, height-height/4);
+    // ult charge
+    let ultChargeText = "Ult Charge: " + currentChar.ultCharge + "%";
+    text(ultChargeText, width-width/8, height-height/4);
+    // character head image
+    rectMode(CENTER, CENTER);
+    rect(width/18, height-height/7, width/10, height/6);
     pop();
   }
 }

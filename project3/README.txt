@@ -22,14 +22,14 @@ and through this project, I want to test out if this combination of game ideas c
 use Pizzicato and p5 for game
 
 game elements list:
-D4B0lt
+bolt
 Logic Bomb - throw ball, hit wall or enemy, damage
 Backdoor - dashes in direction of mouse, reducing enemy power if hit
 Cleanup Protocol - heal target char
 Signal Boost - give target 3 energy
 Bit rot Worm - large beam of damage
 
-Nuttz
+nuts
 Firewall - reduce incoming damage
 Target Exploits - buff char's next damage
 DDOS - rectangular projectile, stun enemy hit
