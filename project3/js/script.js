@@ -128,8 +128,9 @@ function preload() {
 
 // p5 setup
 function setup() {
-  let canvas = createCanvas(windowWidth, windowHeight);
-  canvas.style('display', 'block');
+  gameScreen = createCanvas(windowWidth, windowHeight);
+  gameScreen.style('display', 'block');
+  gameScreen.style('display', 'none');
   background(100);
   // create the player characters and enemy characters
   bolt = new Player("Bolt", 20, 5, [[ab_cleanupProtocol, ab_signalBoost],[],[ab_logicBomb, ab_backdoor], [ab_ult_bitRotWorm]]);
@@ -197,5 +198,6 @@ function drawCommonUI() {
 
 // p5 mouse is pressed
 function mousePressed() {
-  whichScreen.mouseDown();
+  gameScreen.style('display', 'block');
+//  whichScreen.mouseDown();
 }
