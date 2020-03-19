@@ -11,50 +11,52 @@ and free the world from tyranny?
 *********************************************************************/
 
 // constants
-// sounds
-const A_SONG = 0;
-const A_BOLT_BASIC = 0;
-const A_NUTS_BASIC = 0;
-const A_AGENT_BALL = 0;
-const A_AGENT_SPEAR = 0;
-const A_AGENT_WAVE = 0;
-const A_AGENT_ABSORB = 0;
-const A_HIT_PLAYER = 0;
-const A_HIT_ENEMY = 0;
-const A_SERPENT_SSS = 0;
-const A_SERPENT_BALL = 0;
-const A_SERPENT_RECT = 0;
-const A_SUPPORT = 0;
-const A_SUPPORT_ULT = 0;
-const A_COMBAT_ULT = 0;
-// images
-const S_BOLT_FACE = 0;
-const S_BOLT_FRONT = 0;
-const S_BOLT_LEFT = 0;
-const S_BOLT_RIGHT = 0;
-const S_NUTS_FACE = 0;
-const S_NUTS_FRONT = 0;
-const S_NUTS_LEFT = 0;
-const S_NUTS_RIGHT = 0;
-const S_AGENT_FRONT = 0;
-const S_AGENT_LEFT = 0;
-const S_AGENT_RIGHT = 0;
-const S_SERPENT_FRONT = 0;
-const S_SERPENT_LEFT = 0;
-const S_SERPENT_RIGHT = 0;
-const S_SERPENT_CIRCLE = 0;
-const S_LOGIC_BOMB = 0;
-const S_LOGIC_BOMB_EXPLOSION = 0;
-const S_BACK_DOOR = 0;
-const S_CLEANUP = 0;
-const S_SIGNAL = 0;
-const S_BEAM = 0;
-const S_FIREWALL = 0;
-const S_EXPLOITS = 0;
-const S_STUN = 0;
-const S_BRUTE_FORCE = 0;
-const S_LOGO = 0;
-const S_NAME = 0;
+// sounds for P5 part
+let A_SONG;
+let A_BOLT_BASIC;
+let A_NUTS_BASIC;
+let A_AGENT_BALL;
+let A_AGENT_SPEAR;
+let A_AGENT_WAVE;
+let A_AGENT_ABSORB;
+let A_HIT_PLAYER;
+let A_HIT_ENEMY;
+let A_SERPENT_SSS;
+let A_SERPENT_BALL;
+let A_SERPENT_RECT;
+let A_SUPPORT;
+let A_SUPPORT_ULT;
+let A_COMBAT_ULT;
+// images for P5 part
+let S_BOLT_FACE;
+let S_BOLT_FRONT;
+let S_BOLT_LEFT;
+let S_BOLT_RIGHT;
+let S_NUTS_FACE;
+let S_NUTS_FRONT;
+let S_NUTS_LEFT;
+let S_NUTS_RIGHT;
+let S_AGENT_FRONT;
+let S_AGENT_LEFT;
+let S_AGENT_RIGHT;
+let S_SERPENT_FRONT;
+let S_SERPENT_LEFT;
+let S_SERPENT_RIGHT;
+let S_SERPENT_CIRCLE;
+let S_LOGIC_BOMB;
+let S_LOGIC_BOMB_EXPLOSION;
+let S_BACK_DOOR;
+let S_CLEANUP;
+let S_SIGNAL;
+let S_BEAM;
+let S_FIREWALL;
+let S_EXPLOITS;
+let S_STUN;
+let S_BRUTE_FORCE;
+let S_LOGO;
+let S_NAME;
+// images for jquery part
+const S_OMNISYT_LOGO = 0;
 
 // non changing values
 const V_INSTRUCTIONS = [
@@ -85,16 +87,16 @@ let serpent;
 let agent;
 
 // nuts and bolt's abilities
-let ab_logicBomb = new PlayerAbility("Logic Bomb", "combat", 3, [["damage", 5]], 32, "none", false);
-let ab_backdoor = new PlayerAbility("Backdoor", "combat", 2, [["damage", 2], ["dash", "# added to speed"]], 32, "none", false);
-let ab_cleanupProtocol = new PlayerAbility("Cleanup Protocol", "support", 3, [["heal", 5]], 32, "none", false);
-let ab_signalBoost = new PlayerAbility("Signal Boost", "support", 2, [["ramp", 5]], 32, "none", false);
-let ab_ult_bitRotWorm = new PlayerAbility("Bitrot Worm", "combat", 3, [["damage", 5]], 32, "none", true);
-let ab_firewall = new PlayerAbility("Firewall", "support", 3, [["damage", 5]], 32, "none", false);
-let ab_targetExploits = new PlayerAbility("Target Exploits", "support", 3, [["damage", 5]], 32, "none", false);
-let ab_DDOS = new PlayerAbility("DDoS", "combat", 3, [["damage", 5]], 32, "none", false);
-let ab_bruteForce = new PlayerAbility("Brute Force Attack", "combat", 3, [["damage", 5]], 32, "none", false);
-let ab_ult_vpn = new PlayerAbility("Activate VPN", "support", 3, [["damage", 5]], 32, "none", true);
+let ab_logicBomb = new PlayerAbility("Logic Bomb", "combat", 3, [["damage", 5]], 32, "none", false, [[5, "hit"]], "enemy");
+let ab_backdoor = new PlayerAbility("Backdoor", "combat", 2, [["damage", 2], ["dash", "# added to speed"]], 32, "none", false, [[5, "hit"], [2, "use"]], "enemy");
+let ab_cleanupProtocol = new PlayerAbility("Cleanup Protocol", "support", 3, [["heal", 6]], 32, "none", false, [[10, "heal"]], "player");
+let ab_signalBoost = new PlayerAbility("Signal Boost", "support", 2, [["ramp", 5]], 32, "none", false, [[10, "use"]], "player");
+let ab_ult_bitRotWorm = new PlayerAbility("Bitrot Worm", "combat", 3, [["damage", 5]], 32, "none", true, [[5, "hit"]], "enemy");
+let ab_firewall = new PlayerAbility("Firewall", "support", 3, [["damage", 5]], 32, "none", false, [[10, "use"]], "player");
+let ab_targetExploits = new PlayerAbility("Target Exploits", "support", 3, [["damage", 5]], 32, "none", false, [[10, "use"]], "player");
+let ab_DDOS = new PlayerAbility("DDoS", "combat", 3, [["damage", 5]], 32, "none", false, [[5, "hit"]], "enemy");
+let ab_bruteForce = new PlayerAbility("Brute Force Attack", "combat", 3, [["damage", 5]], 32, "none", false, [[5, "hit"], [2, "use"]], "enemy");
+let ab_ult_vpn = new PlayerAbility("Activate VPN", "support", 3, [["damage", 5]], 32, "none", true, [[10, "use"]], "player");
 
 // enemies abilities
 let ab_e_wallStraight;
@@ -121,16 +123,42 @@ function start() {
   console.log("ready");
 }
 
-// p5 preload
+// p5 preload, load image sprites
 function preload() {
-
+  S_BOLT_FACE = loadImage(`assets/images/clown.png`);
+  S_BOLT_FRONT = loadImage(`assets/images/clown.png`);
+  S_BOLT_LEFT = loadImage(`assets/images/clown.png`);
+  S_BOLT_RIGHT = loadImage(`assets/images/clown.png`);
+  S_NUTS_FACE = loadImage(`assets/images/clown.png`);
+  S_NUTS_FRONT = loadImage(`assets/images/clown.png`);
+  S_NUTS_LEFT = loadImage(`assets/images/clown.png`);
+  S_NUTS_RIGHT = loadImage(`assets/images/clown.png`);
+  S_AGENT_FRONT = loadImage(`assets/images/clown.png`);
+  S_AGENT_LEFT = loadImage(`assets/images/clown.png`);
+  S_AGENT_RIGHT = loadImage(`assets/images/clown.png`);
+  S_SERPENT_FRONT = loadImage(`assets/images/clown.png`);
+  S_SERPENT_LEFT = loadImage(`assets/images/clown.png`);
+  S_SERPENT_RIGHT = loadImage(`assets/images/clown.png`);
+  S_SERPENT_CIRCLE = loadImage(`assets/images/clown.png`);
+  S_LOGIC_BOMB = loadImage(`assets/images/clown.png`);
+  S_LOGIC_BOMB_EXPLOSION = loadImage(`assets/images/clown.png`);
+  S_BACK_DOOR = loadImage(`assets/images/clown.png`);
+  S_CLEANUP = loadImage(`assets/images/clown.png`);
+  S_SIGNAL = loadImage(`assets/images/clown.png`);
+  S_BEAM = loadImage(`assets/images/clown.png`);
+  S_FIREWALL = loadImage(`assets/images/clown.png`);
+  S_EXPLOITS = loadImage(`assets/images/clown.png`);
+  S_STUN = loadImage(`assets/images/clown.png`);
+  S_BRUTE_FORCE = loadImage(`assets/images/clown.png`);
+  S_LOGO = loadImage(`assets/images/clown.png`);
+  S_NAME = loadImage(`assets/images/clown.png`);
 }
 
-// p5 setup
+// p5 setup, load sounds,
 function setup() {
   gameScreen = createCanvas(windowWidth, windowHeight);
   gameScreen.style('display', 'block');
-  gameScreen.style('display', 'none');
+  // gameScreen.style('display', 'none');
   background(100);
   // create the player characters and enemy characters
   bolt = new Player("Bolt", 20, 5, [[ab_cleanupProtocol, ab_signalBoost],[],[ab_logicBomb, ab_backdoor], [ab_ult_bitRotWorm]]);
@@ -142,7 +170,25 @@ function setup() {
   // create the player and enemies's abilities
   frontline = bolt;
   currentChar = "none";
-  whichScreen = PLAN_STATE;
+  // load sounds
+  A_SONG = loadSound(`assets/sounds/bark.wav`);
+  A_BOLT_BASIC = loadSound(`assets/sounds/bark.wav`);
+  A_NUTS_BASIC = loadSound(`assets/sounds/bark.wav`);
+  A_AGENT_BALL = loadSound(`assets/sounds/bark.wav`);
+  A_AGENT_SPEAR = loadSound(`assets/sounds/bark.wav`);
+  A_AGENT_WAVE = loadSound(`assets/sounds/bark.wav`);
+  A_AGENT_ABSORB = loadSound(`assets/sounds/bark.wav`);
+  A_HIT_PLAYER = loadSound(`assets/sounds/bark.wav`);
+  A_HIT_ENEMY = loadSound(`assets/sounds/bark.wav`);
+  A_SERPENT_SSS = loadSound(`assets/sounds/bark.wav`);
+  A_SERPENT_BALL = loadSound(`assets/sounds/bark.wav`);
+  A_SERPENT_RECT = loadSound(`assets/sounds/bark.wav`);
+  A_SUPPORT = loadSound(`assets/sounds/bark.wav`);
+  A_SUPPORT_ULT = loadSound(`assets/sounds/bark.wav`);
+  A_COMBAT_ULT = loadSound(`assets/sounds/bark.wav`);
+  // enter the title state and starts the first turn
+  whichScreen = FIGHT_STATE;
+  newTurn();
 }
 
 // p5 draw
@@ -181,14 +227,20 @@ function drawCommonUI() {
     fill(255, 0 , 0);
     rectMode(CORNER);
     rect(width/2.8-width/4, height-height/3.63-height/40, width/2, height/20);
+    // health text
+    fill(0);
+    let healthText = currentChar.hp + " " + "/" + " " + currentChar.maxHp;
+    textAlign(CENTER, CENTER);
+    textSize(width/70+height/70);
+    text(healthText, width/3, height-height/3.63);
     // energy
     let energyText = "Energy: " + currentChar.energy;
     fill(0);
     textSize(width/60+height/60)
-    text(energyText, width-width/3.2, height-height/4);
+    text(energyText, width-width/3.2, height-height/3.6);
     // ult charge
     let ultChargeText = "Ult Charge: " + currentChar.ultCharge + "%";
-    text(ultChargeText, width-width/8, height-height/4);
+    text(ultChargeText, width-width/8, height-height/3.6);
     // character head image
     rectMode(CENTER, CENTER);
     rect(width/18, height-height/7, width/10, height/6);
@@ -196,8 +248,15 @@ function drawCommonUI() {
   }
 }
 
+// when returning to PlanState, give player characters new energy
+function newTurn() {
+  for (var i = 0; i < playersList.length; i++) {
+    playersList[i].energy += playersList[i].energyTurn + playersList[i].energyBoost;
+  }
+}
+
 // p5 mouse is pressed
 function mousePressed() {
-  gameScreen.style('display', 'block');
-//  whichScreen.mouseDown();
+  // gameScreen.style('display', 'block');
+  whichScreen.mouseDown();
 }

@@ -3,6 +3,7 @@ class PlanState {
     // if the mouse is over a player character, get that character's name
     this.mouseOver = 0;
     this.useAbility = 0;
+    this.situation = "choose";
   }
   draw() {
     // draw players, enemies, selected player stats on bottom, click on support skills to use it, mouse over to see what it does
@@ -15,6 +16,20 @@ class PlanState {
   // if the mouse is over an player avatar, that player character becomes the selected character, if not using an ability, then that character becomes the current character
   mouseOverPlayer() {
     this.mouseOver = 0;
+    // draw depending on the situation: choose, ability, happen
+    switch (this.situation) {
+      case "choose":
+
+        break;
+      case "choose":
+
+        break;
+      case "choose":
+
+        break;
+      default:
+        console.log("error");
+    }
     for (var i = 0; i < playersList.length; i++) {
       if (mouseX > width*(i+1)/(playersList.length+1)-width/12 && mouseX < width*(i+1)/(playersList.length+1)-width/12+width/6  && mouseY > height/2-height/6 && mouseY < height/2-height/6+height/3) {
         this.mouseOver = playersList[i];
