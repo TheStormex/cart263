@@ -86,17 +86,22 @@ let nuts;
 let serpent;
 let agent;
 
+let enemiesList = [];
+let playersList = [];
+
 // nuts and bolt's abilities
-let ab_logicBomb = new PlayerAbility("Logic Bomb", "combat", 3, [["damage", 5]], 32, "none", false, [[5, "hit"]], "enemy");
-let ab_backdoor = new PlayerAbility("Backdoor", "combat", 2, [["damage", 2], ["dash", "# added to speed"]], 32, "none", false, [[5, "hit"], [2, "use"]], "enemy");
-let ab_cleanupProtocol = new PlayerAbility("Cleanup Protocol", "support", 3, [["heal", 6]], 32, "none", false, [[10, "heal"]], "player");
-let ab_signalBoost = new PlayerAbility("Signal Boost", "support", 2, [["ramp", 5]], 32, "none", false, [[10, "use"]], "player");
-let ab_ult_bitRotWorm = new PlayerAbility("Bitrot Worm", "combat", 3, [["damage", 5]], 32, "none", true, [[5, "hit"]], "enemy");
-let ab_firewall = new PlayerAbility("Firewall", "support", 3, [["damage", 5]], 32, "none", false, [[10, "use"]], "player");
-let ab_targetExploits = new PlayerAbility("Target Exploits", "support", 3, [["damage", 5]], 32, "none", false, [[10, "use"]], "player");
-let ab_DDOS = new PlayerAbility("DDoS", "combat", 3, [["damage", 5]], 32, "none", false, [[5, "hit"]], "enemy");
-let ab_bruteForce = new PlayerAbility("Brute Force Attack", "combat", 3, [["damage", 5]], 32, "none", false, [[5, "hit"], [2, "use"]], "enemy");
-let ab_ult_vpn = new PlayerAbility("Activate VPN", "support", 3, [["damage", 5]], 32, "none", true, [[10, "use"]], "player");
+let ab_logicBomb = new PlayerAbility("Logic Bomb", "combat", 3, [["damage", 5]], "Throw a projectile", 32, "none", false, [[5, "hit"]], enemiesList);
+let ab_backdoor = new PlayerAbility("Backdoor", "combat", 2, [["damage", 2],  ["dash", "# added to speed"], ["offense_down", 2]], "Dash and weaken enemies", 32, "none", false, [[5, "hit"], [2, "use"]], enemiesList);
+let ab_cleanupProtocol = new PlayerAbility("Cleanup Protocol", "support", 3, [["heal", 6]], "Heal a friendly character", 32, "none", false, [[10, "heal"]], playersList);
+let ab_signalBoost = new PlayerAbility("Signal Boost", "support", 4, [["ramp", 5]], "Give 5 energy to a friendly character", 32, "none", false, [[10, "use"]], playersList);
+let ab_ult_bitRotWorm = new PlayerAbility("Bitrot Worm", "combat", 3, [["damage", 12]], "Shoot a powerful beam", 32, "none", true, [[5, "hit"]], enemiesList);
+let ab_firewall = new PlayerAbility("Firewall", "support", 3, [["defense_up", 5]], "Boost defenses", 32, "none", false, [[10, "use"]], playersList);
+let ab_targetExploits = new PlayerAbility("Target Exploits", "support", 3, [["offense_up", 25]], "Increase friendly character's power", 32, "none", false, [[10, "use"]], playersList);
+let ab_DDOS = new PlayerAbility("DDoS", "combat", 3, [["stun", 3]], "Stun enemies hit", 32, "none", false, [[5, "hit"]], enemiesList);
+let ab_bruteForce = new PlayerAbility("Brute Force Attack", "combat", 3, [["damage", 2], ["dash", 5], ["defense_down", 2]], "Dash and make enemies frail", 32, "none", false, [[5, "hit"], [2, "use"]], enemiesList);
+let ab_ult_vpn = new PlayerAbility("Activate VPN", "support", 3, [["heal", 5], ["defense_up", 2], ["offense_up", 2]], "Heal all friendly characters and boost stats", 32, "none", true, [[10, "use"]], playersList);
+// the ability that is being activated right now
+let currentAbility;
 
 // enemies abilities
 let ab_e_wallStraight;
@@ -105,9 +110,6 @@ let ab_e_circle;
 let ab_e_shoot;
 let ab_e_absorb;
 let ab_e_teleport;
-
-let enemiesList = [];
-let playersList = [];
 
 let enemyBullets = [];
 let playerBullets = [];
@@ -161,9 +163,9 @@ function setup() {
   // gameScreen.style('display', 'none');
   background(100);
   // create the player characters and enemy characters
-  bolt = new Player("Bolt", 20, 5, [[ab_cleanupProtocol, ab_signalBoost],[],[ab_logicBomb, ab_backdoor], [ab_ult_bitRotWorm]]);
-  nuts = new Player("Nuts", 30, 4, [[ab_firewall, ab_targetExploits], [ab_ult_vpn], [ab_DDOS, ab_bruteForce], []]);
-  agent = new Enemy("Hackshield Agent", 50);
+  bolt = new Player("Bolt", 20, 5, 10, [[ab_cleanupProtocol, ab_signalBoost],[],[ab_logicBomb, ab_backdoor], [ab_ult_bitRotWorm]]);
+  nuts = new Player("Nuts", 30, 4, 12, [[ab_firewall, ab_targetExploits], [ab_ult_vpn], [ab_DDOS, ab_bruteForce], []]);
+  agent = new Enemy("Hackshield Agent", 50, width/20+height/20, [ab_e_shoot, ab_e_absorb, ab_e_teleport]);
   serpent = new Enemy("Serverspy Serpent", 60);
   playersList = [bolt, nuts];
   enemiesList = [agent, serpent];
@@ -187,7 +189,7 @@ function setup() {
   A_SUPPORT_ULT = loadSound(`assets/sounds/bark.wav`);
   A_COMBAT_ULT = loadSound(`assets/sounds/bark.wav`);
   // enter the title state and starts the first turn
-  whichScreen = FIGHT_STATE;
+  whichScreen = PLAN_STATE;
   newTurn();
 }
 
@@ -231,12 +233,12 @@ function drawCommonUI() {
     fill(0);
     let healthText = currentChar.hp + " " + "/" + " " + currentChar.maxHp;
     textAlign(CENTER, CENTER);
-    textSize(width/70+height/70);
+    textSize(width/70+height/100);
     text(healthText, width/3, height-height/3.63);
     // energy
-    let energyText = "Energy: " + currentChar.energy;
+    let energyText = "Energy: " + currentChar.energy + "/" + currentChar.maxEnergy;
     fill(0);
-    textSize(width/60+height/60)
+    textSize(width/80+height/60)
     text(energyText, width-width/3.2, height-height/3.6);
     // ult charge
     let ultChargeText = "Ult Charge: " + currentChar.ultCharge + "%";

@@ -19,24 +19,38 @@ class PlanState {
     // draw depending on the situation: choose, ability, happen
     switch (this.situation) {
       case "choose":
+        for (var i = 0; i < playersList.length; i++) {
+          if (mouseX > width*(i+1)/(playersList.length+1)-width/12 && mouseX < width*(i+1)/(playersList.length+1)-width/12+width/6  && mouseY > height/2-height/6 && mouseY < height/2-height/6+height/3) {
+            this.mouseOver = playersList[i];
+            if (this.useAbility === 0) {
+              currentChar = playersList[i];
+            }
+          }
+        }
+        break;
+      case "ability":
+        // check what is being moused over, player or enemy
+        for (var i = 0; i < playersList.length; i++) {
+          if (mouseX > width*(i+1)/(playersList.length+1)-width/12 && mouseX < width*(i+1)/(playersList.length+1)-width/12+width/6  && mouseY > height/2-height/6 && mouseY < height/2-height/6+height/3) {
+            this.mouseOver = playersList[i];
+          }
+        }
+        for (var i = 0; i < enemiesList.length; i++) {
+          if (mouseX > width*(i+1)/(enemiesList.length+1)-width/12 && mouseX < width*(i+1)/(enemiesList.length+1)-width/12+width/6  && mouseY > height/5-height/6 && mouseY < height/5-height/6+height/3) {
+            this.mouseOver = enemiesList[i];
+          }
+        }
+        // if this ability can target this moused over character
+        if (currentAbility.canTargets.includes(this.mouseOver)) {
+
+        }
 
         break;
-      case "choose":
-
-        break;
-      case "choose":
+      case "happen":
 
         break;
       default:
         console.log("error");
-    }
-    for (var i = 0; i < playersList.length; i++) {
-      if (mouseX > width*(i+1)/(playersList.length+1)-width/12 && mouseX < width*(i+1)/(playersList.length+1)-width/12+width/6  && mouseY > height/2-height/6 && mouseY < height/2-height/6+height/3) {
-        this.mouseOver = playersList[i];
-        if (this.useAbility === 0) {
-          currentChar = playersList[i];
-        }
-      }
     }
   }
 
@@ -77,6 +91,7 @@ class PlanState {
         text("Click to make Frontline", width*(i+1)/(playersList.length+1), height/2+height/9);
       }
     }
+    // draw the enemy sprites
     for (var i = 0; i < enemiesList.length; i++) {
       fill(255);
       rectMode(CENTER, CENTER);
@@ -107,13 +122,20 @@ class PlanState {
         fill(255);
         rectMode(CORNER);
         rect(width/7+(i*width/3), height-height/4.5, width/3.5, height/6);
+        // name, cost and ability
+        noStroke();
+        fill(0);
         textAlign(CENTER, CENTER);
-        textSize(width/60+height/60);
+        textSize(width/80+height/80);
         text(currentChar.abilities[0][i].name, width/3.5+(i*width/3), height-height/6);
+        let abilityCostText = "Cost: "  + currentChar.abilities[0][i].cost + " Energy";
+        text(abilityCostText, width/3.5+(i*width/3), height-height/8);
+        textSize(width/100+height/100);
+        text(currentChar.abilities[0][i].description, width/3.5+(i*width/3), height-height/12);
       }
-      // ultimate ability if is a supporting skill
-      rect(width-width/7, height-height/4.5, width/10, height/6);
-      pop();
+        // ultimate ability if is a supporting skill
+        rect(width-width/7, height-height/4.5, width/10, height/6);
+        pop();
     }
   }
 
@@ -122,7 +144,13 @@ class PlanState {
   // if a character is using an ability, if over an appropriate target, then ability happens
   mouseDown() {
     if (this.mouseOver != 0) {
-      frontline = this.mouseOver;
+      if (this.situation === "choose") {
+          frontline = this.mouseOver;
+      }
+      if (this.situation === "ability") {
+          currentAbility.targets = this.mouseOver;
+          currentAbility.happens();
+      }
     }
   }
 }

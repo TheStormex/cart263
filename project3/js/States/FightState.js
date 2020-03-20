@@ -36,13 +36,13 @@ class FightState {
   moveSprites() {
     frontline.move();
     for (var i = 0; i < enemiesList.length; i++) {
-      enemiesList[i]
+      enemiesList[i].move();
     }
     for (var i = 0; i < playerBullets.length; i++) {
-      playerBullets[i]
+      playerBullets[i].move();
     }
     for (var i = 0; i < enemyBullets.length; i++) {
-      enemyBullets[i]
+      enemyBullets[i].move();
     }
   }
 }

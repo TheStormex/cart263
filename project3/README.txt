@@ -30,9 +30,9 @@ Signal Boost - give target 3 energy
 Bit rot Worm - large beam of damage
 
 nuts
-Firewall - reduce incoming damage
-Target Exploits - buff char's next damage
-DDOS - rectangular projectile, stun enemy hit
+Firewall - reduce incoming damage by 25%
+Target Exploits - buff char's next damage by 25%
+DDOS - rectangular projectile, stun enemy hit for 3 seconds
 Brute Force Attack - Dash in mouse direction, frail enemies hit
 Activate VPN - heal both char by 30%
 
@@ -78,3 +78,7 @@ Each hacker gains energy at the beginning of turn, if it did not do anything las
 turn, it gets more!
 Switch between each hacker as the front line often to prevent one from becoming tired!
 Good luck! The fate of humanity rests on your fingertips!
+
+code in:
+- aoe abilities
+- ability targets inside effect for abilities with multiple type of targets
