@@ -89,17 +89,18 @@ let agent;
 let enemiesList = [];
 let playersList = [];
 
-// nuts and bolt's abilities
-let ab_logicBomb = new PlayerAbility("Logic Bomb", "combat", 3, [["damage", 5]], "Throw a projectile", 32, "none", false, [[5, "hit"]], enemiesList);
-let ab_backdoor = new PlayerAbility("Backdoor", "combat", 2, [["damage", 2],  ["dash", "# added to speed"], ["offense_down", 2]], "Dash and weaken enemies", 32, "none", false, [[5, "hit"], [2, "use"]], enemiesList);
-let ab_cleanupProtocol = new PlayerAbility("Cleanup Protocol", "support", 3, [["heal", 6]], "Heal a friendly character", 32, "none", false, [[10, "heal"]], playersList);
-let ab_signalBoost = new PlayerAbility("Signal Boost", "support", 4, [["ramp", 5]], "Give 5 energy to a friendly character", 32, "none", false, [[10, "use"]], playersList);
-let ab_ult_bitRotWorm = new PlayerAbility("Bitrot Worm", "combat", 3, [["damage", 12]], "Shoot a powerful beam", 32, "none", true, [[5, "hit"]], enemiesList);
-let ab_firewall = new PlayerAbility("Firewall", "support", 3, [["defense_up", 5]], "Boost defenses", 32, "none", false, [[10, "use"]], playersList);
-let ab_targetExploits = new PlayerAbility("Target Exploits", "support", 3, [["offense_up", 25]], "Increase friendly character's power", 32, "none", false, [[10, "use"]], playersList);
-let ab_DDOS = new PlayerAbility("DDoS", "combat", 3, [["stun", 3]], "Stun enemies hit", 32, "none", false, [[5, "hit"]], enemiesList);
-let ab_bruteForce = new PlayerAbility("Brute Force Attack", "combat", 3, [["damage", 2], ["dash", 5], ["defense_down", 2]], "Dash and make enemies frail", 32, "none", false, [[5, "hit"], [2, "use"]], enemiesList);
-let ab_ult_vpn = new PlayerAbility("Activate VPN", "support", 3, [["heal", 5], ["defense_up", 2], ["offense_up", 2]], "Heal all friendly characters and boost stats", 32, "none", true, [[10, "use"]], playersList);
+// nuts and bolt's abilities and effects
+let ab_logicBomb_effect = new AbilityEffect(damage, 5);
+let ab_logicBomb = new PlayerCombatAbility("Logic Bomb", 3, [ab_logicBomb_effects], "Throw a projectile", 32, "none", false, [[5, "hit"]], enemiesList);
+let ab_backdoor = new PlayerCombatAbility("Backdoor", 2, [["damage", 2],  ["dash", "# added to speed"], ["offense_down", 2]], "Dash and weaken enemies", 32, "none", false, [[5, "hit"], [2, "use"]], enemiesList);
+let ab_cleanupProtocol = new PlayerSupportAbility("Cleanup Protocol",  3, [["heal", 6]], "Heal a friendly character", 32, "none", false, [[10, "heal"]], playersList);
+let ab_signalBoost = new PlayerSupportAbility("Signal Boost", 4, [["ramp", 5]], "Give 5 energy to a friendly character", 32, "none", false, [[10, "use"]], playersList);
+let ab_ult_bitRotWorm = new PlayerCombatAbility("Bitrot Worm", 3, [["damage", 12]], "Shoot a powerful beam", 32, "none", true, [[5, "hit"]], enemiesList);
+let ab_firewall = new PlayerSupportAbility("Firewall", 3, [["defense_up", 5]], "Boost defenses", 32, "none", false, [[10, "use"]], playersList);
+let ab_targetExploits = new PlayerAbility("Target Exploits", 3, [["offense_up", 25]], "Increase friendly character's power", 32, "none", false, [[10, "use"]], playersList);
+let ab_DDOS = new PlayerCombatAbility("DDoS", 3, [["stun", 3]], "Stun enemies hit", 32, "none", false, [[5, "hit"]], enemiesList);
+let ab_bruteForce = new PlayerCombatAbility("Brute Force Attack", 3, [["damage", 2], ["dash", 5], ["defense_down", 2]], "Dash and make enemies frail", 32, "none", false, [[5, "hit"], [2, "use"]], enemiesList);
+let ab_ult_vpn = new PlayerSupportAbility("Activate VPN", 3, [["heal", 5], ["defense_up", 2], ["offense_up", 2]], "Heal all friendly characters and boost stats", 32, "none", true, [[10, "use"]], playersList);
 // the ability that is being activated right now
 let currentAbility;
 

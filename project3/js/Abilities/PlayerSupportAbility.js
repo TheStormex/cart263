@@ -1,8 +1,6 @@
-class PlayerAbility {
-  constructor(name, type, cost, effects, description, button, ultimate, chargeGive, targets) {
+class PlayerSupportAbility {
+  constructor(name, cost, effects, description, button, ultimate, chargeGive) {
     this.name = name;
-    // support or combat
-    this.type = type;
     // how much energy this costs to activate
     this.cost = cost;
     // what this ability does
@@ -14,45 +12,17 @@ class PlayerAbility {
     this.image;
     // if this is an ultimate ability
     this.ultimate = ultimate;
-    // how much ult charge this gives
+    // how much ult charge this gives upon use
     this.chargeGive = chargeGive;
     // the character that is using this ability
     this.user;
-    // if this ability has been used this turn (support only) so it cannot be used again
+    // if this ability has been used this turn so it cannot be used again
     this.used = false;
   }
   // when this ability happens, do its effects (spawn bullets or if is support ability, instant effect)
   happens() {
-    if (this.type === "combat") {
       // remove the energy this costs
-      frontline.energy -= this.cost;
-      // spawn the bullet(s) this ability makes
-      // for each effect this ability has, do them
-      for (var i = 0; i < this.effects.length; i++) {
-        switch (this.effects[i][0]) {
-          case "damage":
-            for (var i = 0; i < this.targets.length; i++) {
-              this.targets[i].hp -= this.effects[i][1];
-            }
-            break;
-          case "dash":
-            // move the user in the current / last direction by the amount
-            break;
-          case "offense_up":
-            break;
-          case "offense_down":
-            break;
-          case "defense_up":
-            break;
-          case "defense_down":
-            break;
-          default:
-        }
-      }
-    } else
-    if (this.type === "support") {
-      // remove the energy this costs
-      currentChar.energy -= this.cost;
+      this.user.energy -= this.cost;
       // for each effect, apply
       for (var i = 0; i < this.effects.length; i++) {
         switch (this.effects[i][0]) {
@@ -86,7 +56,6 @@ class PlayerAbility {
         }
         this.effects[i]
       }
-    }
   }
 }
 
