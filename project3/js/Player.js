@@ -1,5 +1,5 @@
 class Player {
-  constructor(name, maxHp, energyTurn, maxEnergy, abilities) {
+  constructor(name, maxHp, energyTurn, maxEnergy, abilities, images) {
     this.name = name;
     this.maxHp = maxHp;
     this.hp = maxHp;
@@ -23,7 +23,7 @@ class Player {
     // if this char used an ability this turn
     this.acted = false;
     // this is image
-    this.avatar;
+    this.images;
     // this char's abilities, [support, support], [support ult], [combat, combat], [combat ult]]
     this.abilities = abilities;
   }

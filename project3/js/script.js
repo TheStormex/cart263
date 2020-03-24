@@ -86,20 +86,38 @@ let nuts;
 let serpent;
 let agent;
 
+let boltImages;
+let nutsImages;
+let serpentImages;
+let agentImages;
+
 let enemiesList = [];
 let playersList = [];
 
 // nuts and bolt's abilities and effects
-let ab_logicBomb_effect = new AbilityEffect(damage, 5);
-let ab_logicBomb = new PlayerCombatAbility("Logic Bomb", 3, [ab_logicBomb_effects], "Throw a projectile", 32, "none", false, [[5, "hit"]], enemiesList);
-let ab_backdoor = new PlayerCombatAbility("Backdoor", 2, [["damage", 2],  ["dash", "# added to speed"], ["offense_down", 2]], "Dash and weaken enemies", 32, "none", false, [[5, "hit"], [2, "use"]], enemiesList);
-let ab_cleanupProtocol = new PlayerSupportAbility("Cleanup Protocol",  3, [["heal", 6]], "Heal a friendly character", 32, "none", false, [[10, "heal"]], playersList);
-let ab_signalBoost = new PlayerSupportAbility("Signal Boost", 4, [["ramp", 5]], "Give 5 energy to a friendly character", 32, "none", false, [[10, "use"]], playersList);
-let ab_ult_bitRotWorm = new PlayerCombatAbility("Bitrot Worm", 3, [["damage", 12]], "Shoot a powerful beam", 32, "none", true, [[5, "hit"]], enemiesList);
-let ab_firewall = new PlayerSupportAbility("Firewall", 3, [["defense_up", 5]], "Boost defenses", 32, "none", false, [[10, "use"]], playersList);
-let ab_targetExploits = new PlayerAbility("Target Exploits", 3, [["offense_up", 25]], "Increase friendly character's power", 32, "none", false, [[10, "use"]], playersList);
-let ab_DDOS = new PlayerCombatAbility("DDoS", 3, [["stun", 3]], "Stun enemies hit", 32, "none", false, [[5, "hit"]], enemiesList);
-let ab_bruteForce = new PlayerCombatAbility("Brute Force Attack", 3, [["damage", 2], ["dash", 5], ["defense_down", 2]], "Dash and make enemies frail", 32, "none", false, [[5, "hit"], [2, "use"]], enemiesList);
+let ab_logicBomb_effect = new AbilityEffect("bullet", "", "", 1, S_LOGIC_BOMB, false);
+let ab_logicBomb = new PlayerCombatAbility("Logic Bomb", 3, [ab_logicBomb_effect], "Throw a projectile", 32, "none", false, [[5, "hit"]], 3);
+let ab_backdoor_effect = new AbilityEffect("bullet", "", "", 1, "", false);
+let ab_backdoor_effect2 = new AbilityEffect("dash", "", "", 1, "", false);
+let ab_backdoor = new PlayerCombatAbility("Backdoor", 2, [ab_backdoor_effect, ab_backdoor_effect2], "Dash and weaken enemies", 32, "none", false, [[5, "hit"], [2, "use"]], 2);
+let ab_cleanupProtocol_effect = new AbilityEffect("heal", "", "", 6, "", false);
+let ab_cleanupProtocol = new PlayerSupportAbility("Cleanup Protocol",  3, [ab_cleanupProtocol_effect], "Heal a friendly character", 32, "none", false, [[10, "heal"]], playersList);
+let ab_signalBoost_effect = new AbilityEffect("ramp", "", "", 5, "", false);
+let ab_signalBoost = new PlayerSupportAbility("Signal Boost", 4, [ab_signalBoost_effect], "Give 5 energy to a friendly character", 32, "none", false, [[10, "use"]], playersList);
+let ab_ult_bitRotWorm_effect = new AbilityEffect("bullet", "", "", 10, "", false);
+let ab_ult_bitRotWorm = new PlayerCombatAbility("Bitrot Worm", 3, [ab_ult_bitRotWorm_effect], "Shoot a powerful beam", 32, "none", true, [[5, "hit"]], enemiesList);
+let ab_firewall_effect = new AbilityEffect("defense_up", "", "", 25, "", false);
+let ab_firewall = new PlayerSupportAbility("Firewall", 3, [ab_firewall_effect], "Boost defenses", 32, "none", false, [[10, "use"]], playersList);
+let ab_targetExploits_effect = new AbilityEffect("offense_up", "", "", 25, "", false);
+let ab_targetExploits = new PlayerSupportAbility("Target Exploits", 3, [ab_targetExploits_effect], "Increase friendly character's power", 32, "none", false, [[10, "use"]], playersList);
+let ab_DOOS_effect = new AbilityEffect("stun", "", "", 1.5, "", false);
+let ab_DDOS = new PlayerCombatAbility("DDoS", 3, [["stun", 1.5]], "Stun enemies hit", 32, "none", false, [[5, "hit"]], enemiesList);
+let ab_bruteForce_effect = new AbilityEffect("bullet", "", "", 1, "", false);
+let ab_bruteForce_effect2 = new AbilityEffect("dash", "", "", 1, "", false);
+let ab_bruteForce = new PlayerCombatAbility("Brute Force Attack", 3, [ab_bruteForce_effect, ab_bruteForce_effect2], "Dash and make enemies frail", 32, "none", false, [[5, "hit"], [2, "use"]], enemiesList);
+let ab_ult_vpn_effect = new AbilityEffect("heal", "", "", 5, "", false);
+let ab_ult_vpn_effect2 = new AbilityEffect("defense_up", "", "", 15, "", false);
+let ab_ult_vpn_effect3= new AbilityEffect("offense_up", "", "", 15, "", false);
 let ab_ult_vpn = new PlayerSupportAbility("Activate VPN", 3, [["heal", 5], ["defense_up", 2], ["offense_up", 2]], "Heal all friendly characters and boost stats", 32, "none", true, [[10, "use"]], playersList);
 // the ability that is being activated right now
 let currentAbility;
@@ -107,9 +125,7 @@ let currentAbility;
 // enemies abilities
 let ab_e_wallStraight;
 let ab_e_inOut;
-let ab_e_circle;
 let ab_e_shoot;
-let ab_e_absorb;
 let ab_e_teleport;
 
 let enemyBullets = [];
@@ -164,10 +180,14 @@ function setup() {
   // gameScreen.style('display', 'none');
   background(100);
   // create the player characters and enemy characters
-  bolt = new Player("Bolt", 20, 5, 10, [[ab_cleanupProtocol, ab_signalBoost],[],[ab_logicBomb, ab_backdoor], [ab_ult_bitRotWorm]]);
-  nuts = new Player("Nuts", 30, 4, 12, [[ab_firewall, ab_targetExploits], [ab_ult_vpn], [ab_DDOS, ab_bruteForce], []]);
-  agent = new Enemy("Hackshield Agent", 50, width/20+height/20, [ab_e_shoot, ab_e_absorb, ab_e_teleport]);
-  serpent = new Enemy("Serverspy Serpent", 60);
+  boltImages = new Images(S_BOLT_LEFT, S_BOLT_RIGHT, S_BOLT_FRONT, S_BOLT_FACE);
+  bolt = new Player("Bolt", 20, 5, 10, [[ab_cleanupProtocol, ab_signalBoost], [ab_logicBomb, ab_backdoor, ab_ult_bitRotWorm]], boltImages);
+  nutsImages = new Images(S_NUTS_LEFT, S_NUTS_RIGHT, S_BOLT_FRONT, S_BOLT_FACE);
+  nuts = new Player("Nuts", 30, 4, 12, [[ab_firewall, ab_targetExploits, ab_ult_vpn], [ab_DDOS, ab_bruteForce]], nutsImages);
+  agentImages = new Images(S_AGENT_LEFT, S_AGENT_RIGHT, S_AGENT_FRONT, "none");
+  agent = new Enemy("Hackshield Agent", 50, width/20+height/20, [ab_e_shoot, ab_e_teleport], agentImages);
+  serpentImages = new Images(S_SERPENT_LEFT, S_SERPENT_RIGHT, S_SERPENT_FRONT, "none");
+  serpent = new Enemy("Serverspy Serpent", 60, width/20+height/20, [ab_e_shoot, ab_e_teleport], serpentImages);
   playersList = [bolt, nuts];
   enemiesList = [agent, serpent];
   // create the player and enemies's abilities

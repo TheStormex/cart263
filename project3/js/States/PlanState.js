@@ -2,7 +2,6 @@ class PlanState {
   constructor() {
     // if the mouse is over a player character, get that character's name
     this.mouseOver = 0;
-    this.useAbility = 0;
     this.situation = "choose";
   }
   draw() {
@@ -22,8 +21,14 @@ class PlanState {
         for (var i = 0; i < playersList.length; i++) {
           if (mouseX > width*(i+1)/(playersList.length+1)-width/12 && mouseX < width*(i+1)/(playersList.length+1)-width/12+width/6  && mouseY > height/2-height/6 && mouseY < height/2-height/6+height/3) {
             this.mouseOver = playersList[i];
-            if (this.useAbility === 0) {
-              currentChar = playersList[i];
+            currentChar = playersList[i];
+          }
+        }
+        // if a character is selected, then if mouse over one of their abilities, put it into the mouse over
+        if (currentChar !== "none") {
+          for (var i = 0; i < currentChar.abilities[0].length; i++) {
+            if (mouseX > width/7+(i*width/3.5) && mouseX < width/7+(i*width/3.5)+width/4 && mouseY > height-height/4.5 && mouseY < height-height/4.5+height/6) {
+              this.mouseOver = currentChar.abilities[0][i];
             }
           }
         }
@@ -40,10 +45,6 @@ class PlanState {
             this.mouseOver = enemiesList[i];
           }
         }
-        // if this ability can target this moused over character
-        if (currentAbility.canTargets.includes(this.mouseOver)) {
-
-        }
 
         break;
       case "happen":
@@ -54,6 +55,8 @@ class PlanState {
     }
   }
 
+
+  // draw all characters
   drawChars() {
     push();
     noStroke();
@@ -111,6 +114,8 @@ class PlanState {
     }
     pop();
   }
+
+
   // draw the supporting skills the characters can use in the UI box
   drawPlayerMenu() {
     if (currentChar != "none") {
@@ -121,21 +126,30 @@ class PlanState {
         stroke(0);
         fill(255);
         rectMode(CORNER);
-        rect(width/7+(i*width/3), height-height/4.5, width/3.5, height/6);
+        rect(width/7+(i*width/3.5), height-height/4.5, width/4, height/6);
         // name, cost and ability
         noStroke();
         fill(0);
         textAlign(CENTER, CENTER);
         textSize(width/80+height/80);
-        text(currentChar.abilities[0][i].name, width/3.5+(i*width/3), height-height/6);
+        text(currentChar.abilities[0][i].name, width/3.75+(i*width/3.5), height-height/6);
         let abilityCostText = "Cost: "  + currentChar.abilities[0][i].cost + " Energy";
-        text(abilityCostText, width/3.5+(i*width/3), height-height/8);
-        textSize(width/100+height/100);
-        text(currentChar.abilities[0][i].description, width/3.5+(i*width/3), height-height/12);
+        text(abilityCostText, width/3.75+(i*width/3.5), height-height/8);
+        textSize(width/150+height/150);
+        text(currentChar.abilities[0][i].description, width/3.75+(i*width/3.5), height-height/12);
+        // if this is an ultimate, then let the player know
+        if (currentChar.abilities[0][i].ultimate === true) {
+          textSize(width/100+height/100);
+          if (currentChar.ultCharge === 100) {
+            fill(0, 255, 0);
+            text("Ultimate Ready!", width/3.75+(i*width/3.5), height-height/5);
+          } else {
+            fill(255, 0, 0);
+            text("Ultimate Charging", width/3.75+(i*width/3.5), height-height/5);
+          }
+        }
       }
-        // ultimate ability if is a supporting skill
-        rect(width-width/7, height-height/4.5, width/10, height/6);
-        pop();
+    pop();
     }
   }
 
@@ -145,11 +159,33 @@ class PlanState {
   mouseDown() {
     if (this.mouseOver != 0) {
       if (this.situation === "choose") {
+        // if a player is moused over, that player character is now the front line
+        if (playersList.includes(this.mouseOver)) {
           frontline = this.mouseOver;
+          // if a player's ability is moused over, then clicking selects that ability to be used
+        } else if (currentChar.abilities[0].includes(this.mouseOver)) {
+          // if this ability is not an ultimate and the player character does not have enough to use it, then it works
+          if (this.mouseOver.ultimate !== true && currentChar.ultCharge < 100) {
+            currentAbility = this.mouseOver;
+            // remove the ability from mouseOver since what will be mousedOver will be a character
+            this.mouseOver = 0;
+            this.situation = "ability";
+          } else {
+            console.log("not enough");
+          }
+        }
       }
       if (this.situation === "ability") {
-          currentAbility.targets = this.mouseOver;
-          currentAbility.happens();
+        // if this ability can target this moused over character
+        if (this.mouseOver !== 0) {
+                  console.log(currentAbility);
+          if (currentAbility.effects[currentAbility.currentEffect].canTargets.includes(this.mouseOver)) {
+            currentAbility.effects[currentAbility.currentEffect].targets.push(this.mouseOver);
+            console.log(currentAbility.effects[currentAbility.currentEffect].targets);
+          }
+            currentAbility.targets = this.mouseOver;
+            currentAbility.happens();
+        }
       }
     }
   }

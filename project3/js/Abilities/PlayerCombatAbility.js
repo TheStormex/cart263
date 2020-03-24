@@ -1,5 +1,5 @@
 class PlayerCombatAbility {
-  constructor(name, cost, effects, description, button, ultimate, chargeGive, cooldown) {
+  constructor(name, cost, effects, description, button, image, ultimate, chargeGive, cooldown) {
     this.name = name;
     // how much energy this costs to activate
     this.cost = cost;
@@ -9,7 +9,7 @@ class PlayerCombatAbility {
     this.description = description;
     // what button to click to use this ability
     this.button = button;
-    this.image;
+    this.image = image;
     // if this is an ultimate ability
     this.ultimate = ultimate;
     // how much ult charge this gives upon use
@@ -42,8 +42,11 @@ class PlayerCombatAbility {
           case "defense_down":
             break;
           case "bullet":
-            for (var i = 0; i < this.effects[i].bullets.length; i++) {
-              this.effects[i]
+            for (var i = 0; i < this.effects[i].amount; i++) {
+              // make each bullet
+              // this.effects[i].bullet
+              console.log(this.effects[i].bullet);
+              // if the bullet has a / multiple timers, set a new timeout for each
             }
             break;
           default:
@@ -52,6 +55,4 @@ class PlayerCombatAbility {
       }
     }
   }
-}
-
 // effects: damage, heal,
