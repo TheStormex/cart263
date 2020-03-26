@@ -94,31 +94,34 @@ let agentImages;
 let enemiesList = [];
 let playersList = [];
 
+// how many turns has past
+let turns = 0;
+
 // nuts and bolt's abilities and effects
-let ab_logicBomb_effect = new AbilityEffect("bullet", "", "", 1, S_LOGIC_BOMB, false);
+let ab_logicBomb_effect = new AbilityEffect("bullet", "", 1, "", false, false);
 let ab_logicBomb = new PlayerCombatAbility("Logic Bomb", 3, [ab_logicBomb_effect], "Throw a projectile", 32, "none", false, [[5, "hit"]], 3);
-let ab_backdoor_effect = new AbilityEffect("bullet", "", "", 1, "", false);
-let ab_backdoor_effect2 = new AbilityEffect("dash", "", "", 1, "", false);
+let ab_backdoor_effect = new AbilityEffect("bullet", "", 1, "", false, false);
+let ab_backdoor_effect2 = new AbilityEffect("dash", "", 1, "", false, false);
 let ab_backdoor = new PlayerCombatAbility("Backdoor", 2, [ab_backdoor_effect, ab_backdoor_effect2], "Dash and weaken enemies", 32, "none", false, [[5, "hit"], [2, "use"]], 2);
-let ab_cleanupProtocol_effect = new AbilityEffect("heal", "", "", 6, "", false);
-let ab_cleanupProtocol = new PlayerSupportAbility("Cleanup Protocol",  3, [ab_cleanupProtocol_effect], "Heal a friendly character", 32, "none", false, [[10, "heal"]], playersList);
-let ab_signalBoost_effect = new AbilityEffect("ramp", "", "", 5, "", false);
-let ab_signalBoost = new PlayerSupportAbility("Signal Boost", 4, [ab_signalBoost_effect], "Give 5 energy to a friendly character", 32, "none", false, [[10, "use"]], playersList);
-let ab_ult_bitRotWorm_effect = new AbilityEffect("bullet", "", "", 10, "", false);
-let ab_ult_bitRotWorm = new PlayerCombatAbility("Bitrot Worm", 3, [ab_ult_bitRotWorm_effect], "Shoot a powerful beam", 32, "none", true, [[5, "hit"]], enemiesList);
-let ab_firewall_effect = new AbilityEffect("defense_up", "", "", 25, "", false);
-let ab_firewall = new PlayerSupportAbility("Firewall", 3, [ab_firewall_effect], "Boost defenses", 32, "none", false, [[10, "use"]], playersList);
-let ab_targetExploits_effect = new AbilityEffect("offense_up", "", "", 25, "", false);
-let ab_targetExploits = new PlayerSupportAbility("Target Exploits", 3, [ab_targetExploits_effect], "Increase friendly character's power", 32, "none", false, [[10, "use"]], playersList);
-let ab_DOOS_effect = new AbilityEffect("stun", "", "", 1.5, "", false);
-let ab_DDOS = new PlayerCombatAbility("DDoS", 3, [["stun", 1.5]], "Stun enemies hit", 32, "none", false, [[5, "hit"]], enemiesList);
-let ab_bruteForce_effect = new AbilityEffect("bullet", "", "", 1, "", false);
-let ab_bruteForce_effect2 = new AbilityEffect("dash", "", "", 1, "", false);
-let ab_bruteForce = new PlayerCombatAbility("Brute Force Attack", 3, [ab_bruteForce_effect, ab_bruteForce_effect2], "Dash and make enemies frail", 32, "none", false, [[5, "hit"], [2, "use"]], enemiesList);
-let ab_ult_vpn_effect = new AbilityEffect("heal", "", "", 5, "", false);
-let ab_ult_vpn_effect2 = new AbilityEffect("defense_up", "", "", 15, "", false);
-let ab_ult_vpn_effect3= new AbilityEffect("offense_up", "", "", 15, "", false);
-let ab_ult_vpn = new PlayerSupportAbility("Activate VPN", 3, [["heal", 5], ["defense_up", 2], ["offense_up", 2]], "Heal all friendly characters and boost stats", 32, "none", true, [[10, "use"]], playersList);
+let ab_cleanupProtocol_effect = new AbilityEffect("heal", "players", 6, "", false, false);
+let ab_cleanupProtocol = new PlayerSupportAbility("Cleanup Protocol",  3, [ab_cleanupProtocol_effect], "Heal a friendly character", 32, "none", false, [[10, "heal"]], 0);
+let ab_signalBoost_effect = new AbilityEffect("offense_up", "players", 5, "", false, false);
+let ab_signalBoost = new PlayerSupportAbility("Signal Boost", 4, [ab_signalBoost_effect], "Give 5 energy to a friendly character", 32, "none", false, [[10, "use"]], 0);
+let ab_ult_bitRotWorm_effect = new AbilityEffect("bullet", "", 10, "", false, false);
+let ab_ult_bitRotWorm = new PlayerCombatAbility("Bitrot Worm", 3, [ab_ult_bitRotWorm_effect], "Shoot a powerful beam", 32, "none", true, [[5, "hit"]], 0);
+let ab_firewall_effect = new AbilityEffect("defense_up", "players", 25, "", false, false);
+let ab_firewall = new PlayerSupportAbility("Firewall", 3, [ab_firewall_effect], "Boost defenses", 32, "none", false, [[10, "use"]], 0);
+let ab_targetExploits_effect = new AbilityEffect("defense_down", "enemies", 25, "", false, false);
+let ab_targetExploits = new PlayerSupportAbility("Target Exploits", 3, [ab_targetExploits_effect], "Weaken enemy character", 32, "none", false, [[10, "use"]], 0);
+let ab_DOOS_effect = new AbilityEffect("stun", "", 1.5, "", false, false);
+let ab_DDOS = new PlayerCombatAbility("DDoS", 3, [["stun", 1.5]], "Stun enemies hit", 32, "none", false, [[5, "hit"]], 4);
+let ab_bruteForce_effect = new AbilityEffect("bullet", "", 1, "", false, false);
+let ab_bruteForce_effect2 = new AbilityEffect("dash", "", 1, "", false, false);
+let ab_bruteForce = new PlayerCombatAbility("Brute Force Attack", 3, [ab_bruteForce_effect, ab_bruteForce_effect2], "Dash and make enemies frail", 32, "none", false, [[5, "hit"], [2, "use"]], 3);
+let ab_ult_vpn_effect = new AbilityEffect("heal", "", 5, "", false, false);
+let ab_ult_vpn_effect2 = new AbilityEffect("defense_up", "", 15, "", false, false);
+let ab_ult_vpn_effect3= new AbilityEffect("offense_up", "", 15, "", false, false);
+let ab_ult_vpn = new PlayerSupportAbility("Activate VPN", 3, [ab_ult_vpn_effect, ab_ult_vpn_effect2, ab_ult_vpn_effect3], "Heal all friendly characters and boost stats", 32, "none", true, [[10, "use"]], 0);
 // the ability that is being activated right now
 let currentAbility;
 
@@ -139,7 +142,6 @@ let gameScreen;
 $(document).ready(start);
 
 function start() {
-  console.log("ready");
 }
 
 // p5 preload, load image sprites
@@ -190,7 +192,16 @@ function setup() {
   serpent = new Enemy("Serverspy Serpent", 60, width/20+height/20, [ab_e_shoot, ab_e_teleport], serpentImages);
   playersList = [bolt, nuts];
   enemiesList = [agent, serpent];
-  // create the player and enemies's abilities
+// set the number of steps of each ability of each player
+  for (var i = 0; i < playersList.length; i++) {
+    for (var i2 = 0; i2 <  playersList[i].abilities[0].length; i2++) {
+      for (var i3 = 0; i3 < playersList[i].abilities[0][i2].effects.length; i3++) {
+        if (playersList[i].abilities[0][i2].effects[i3].step === true) {
+          playersList[i].abilities[0][i2].steps++;
+        }
+      }
+    }
+  }
   frontline = bolt;
   currentChar = "none";
   // load sounds
@@ -271,10 +282,25 @@ function drawCommonUI() {
   }
 }
 
-// when returning to PlanState, give player characters new energy
+// when returning to PlanState, give player characters new energy, if a character has not moved, they gain bonus energy
+// reset the buffs and debuffs of all characters
 function newTurn() {
   for (var i = 0; i < playersList.length; i++) {
+    if (playersList[i].acted === false) {
+      // if not the first turn, apply the not moved bonus
+      if (turns > 0) {
+        playersList[i].energyBoost = 3;
+      }
+    } else if (playersList[i].acted === true) {
+      playersList[i].energyBoost = 0;
+    }
     playersList[i].energy += playersList[i].energyTurn + playersList[i].energyBoost;
+    playersList[i].offenseChange = 0;
+    playersList[i].defenseChange = 0;
+  }
+  for (var i = 0; i < enemiesList.length; i++) {
+    enemiesList[i].offenseChange = 0;
+    enemiesList[i].defenseChange = 0;
   }
 }
 

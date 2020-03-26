@@ -18,8 +18,12 @@ class PlayerSupportAbility {
     this.user;
     // if this ability has been used this turn so it cannot be used again
     this.used = false;
+    // which step is currently happening
+    this.currentStep = 0;
     // which effect is currently happening
     this.currentEffect = 0;
+    // how many steps this ability has before it is finished
+    this.steps = 0;
   }
   // when this ability happens, do its effects (spawn bullets or if is support ability, instant effect)
   happens() {
@@ -27,46 +31,49 @@ class PlayerSupportAbility {
       this.user.energy -= this.cost;
       // for each effect, apply
       for (var i = 0; i < this.effects.length; i++) {
-        switch (this.effects[i][0]) {
+        let theEffect = this.effects[i];
+        switch (this.effects[i].type) {
           case "damage":
-            for (var i = 0; i < this.targets.length; i++) {
-              this.targets[i].hp -= this.effects[i][3];
+            for (var i2 = 0; i2 < theEffect.targets.length; i2++) {
+              theEffect.targets[i].hp -= round(theEffect.amount * (1+this.user.offenseChange*0.01) * (1+theEffect.targets[i].defenseChange*0.01));
+              theEffect.targets[i].hp = constrain(theEffect.targets[i].hp, 0, theEffect.targets[i].maxHp);
             }
-            break
+            break;
           case "heal":
-            for (var i = 0; i < this.targets.length; i++) {
-              this.targets[i].hp += this.effects[i][3];
+            for (var i2 = 0; i2 < theEffect.targets.length; i2++) {
+              theEffect.targets[i].hp += theEffect.amount;
+              theEffect.targets[i].hp = constrain(theEffect.targets[i].hp, 0, theEffect.targets[i].maxHp);
             }
             break;
           case "offense_up":
-            for (var i = 0; i < this.targets.length; i++) {
-              this.targets[i].hp += this.effects[i][3];
+            for (var i2 = 0; i2 < theEffect.targets.length; i2++) {
+              theEffect.targets[i].offenseChange += theEffect.amount;
             }
             break;
           case "offense_down":
-            for (var i = 0; i < this.targets.length; i++) {
-              this.targets[i].hp += this.effects[i][3];
+            for (var i2 = 0; i2 < theEffect.targets.length; i2++) {
+              theEffect.targets[i].offenseChange -= theEffect.amount;
             }
             break;
           case "defense_up":
-            for (var i = 0; i < this.targets.length; i++) {
-              this.targets[i].hp += this.effects[i][3];
+            for (var i2 = 0; i2 < theEffect.targets.length; i2++) {
+              theEffect.targets[i].defenseChange += theEffect.amount;
             }
             break;
           case "defense_down":
-            for (var i = 0; i < this.targets.length; i++) {
-              this.targets[i].hp += this.effects[i][3];
+            for (var i2 = 0; i2 < theEffect.targets.length; i2++) {
+              theEffect.targets[i].defenseChange -= theEffect.amount;
             }
             break;
           case "ramp":
-            for (var i = 0; i < this.targets.length; i++) {
-              this.targets[i].energy += this.effects[i][3];
+            for (var i2 = 0; i2 < theEffect.targets.length; i2++) {
+              theEffect.targets[i].energy += theEffect.amount;
+              theEffect.targets[i].energy = constrain(theEffect.targets[i].energy, 0, theEffect.targets[i].maxEnergy);
             }
             break;
-          default:
-
+          default: console.log("error");
         }
-        this.effects[i]
+        this.used = true;
       }
   }
 }
