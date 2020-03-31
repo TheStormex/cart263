@@ -73,7 +73,13 @@ class PlayerSupportAbility {
             break;
           default: console.log("error");
         }
-        this.used = true;
+        for (var i = 0; i < this.chargeGive.length; i++) {
+          if (this.chargeGive[i][1] === "use") {
+            this.user.ultCharge += this.chargeGive[i][0];
+            this.used = true;
+            console.log(this.user.ultCharge);
+          }
+        }
       }
   }
 }
