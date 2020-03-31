@@ -1,11 +1,11 @@
 class PlanState {
   constructor() {
     // if the mouse is over a player character, get that character's name
-    this.mouseOver = 0;
     this.situation = "choose";
     this.currentAbilityStepNumber = 0;
   }
   draw() {
+    background(100);
     // draw players, enemies, selected player stats on bottom, click on support skills to use it, mouse over to see what it does
     // ult charge, health, energy,
     this.drawChars();
@@ -16,13 +16,13 @@ class PlanState {
   }
   // if the mouse is over an player avatar, that player character becomes the selected character, if not using an ability, then that character becomes the current character
   mouseOverPlayer() {
-    this.mouseOver = 0;
+    mouseOver = 0;
     // draw depending on the situation: choose, ability, happen
     switch (this.situation) {
       case "choose":
         for (var i = 0; i < playersList.length; i++) {
           if (mouseX > width*(i+1)/(playersList.length+1)-width/12 && mouseX < width*(i+1)/(playersList.length+1)-width/12+width/6  && mouseY > height/2-height/6 && mouseY < height/2-height/6+height/3) {
-            this.mouseOver = playersList[i];
+            mouseOver = playersList[i];
             currentChar = playersList[i];
           }
         }
@@ -30,30 +30,30 @@ class PlanState {
         if (currentChar !== "none") {
           for (var i = 0; i < currentChar.abilities[0].length; i++) {
             if (mouseX > width/7+(i*width/3.5) && mouseX < width/7+(i*width/3.5)+width/4 && mouseY > height-height/4.5 && mouseY < height-height/4.5+height/6) {
-              this.mouseOver = currentChar.abilities[0][i];
+              mouseOver = currentChar.abilities[0][i];
             }
           }
         }
         // check if mousing over the fight button
         if (mouseX > width-width/10-width/20 && mouseX < width-width/10+width/10-width/20 && mouseY > height/2-height/30 && mouseY < height/2+height/15-height/30) {
-          this.mouseOver = "fight"
+          mouseOver = "fight"
         }
         break;
       case "ability":
         // check what is being moused over, player or enemy
         for (var i = 0; i < playersList.length; i++) {
           if (mouseX > width*(i+1)/(playersList.length+1)-width/12 && mouseX < width*(i+1)/(playersList.length+1)-width/12+width/6  && mouseY > height/2-height/6 && mouseY < height/2-height/6+height/3) {
-            this.mouseOver = playersList[i];
+            mouseOver = playersList[i];
           }
         }
         for (var i = 0; i < enemiesList.length; i++) {
           if (mouseX > width*(i+1)/(enemiesList.length+1)-width/12 && mouseX < width*(i+1)/(enemiesList.length+1)-width/12+width/6  && mouseY > height/5-height/6 && mouseY < height/5-height/6+height/3) {
-            this.mouseOver = enemiesList[i];
+            mouseOver = enemiesList[i];
           }
         }
         // check if mousing over the cancel button
         if (mouseX > width-width/10-width/20 && mouseX < width-width/10+width/10-width/20 && mouseY > height/2-height/30 && mouseY < height/2+height/15-height/30) {
-          this.mouseOver = "cancel"
+          mouseOver = "cancel"
         }
         break;
       case "happen":
@@ -218,7 +218,7 @@ class PlanState {
         strokeWeight(3);
         stroke(0);
         // if moused over, it is highlighted
-        if (this.mouseOver.name === currentChar.abilities[0][i].name) {
+        if (mouseOver.name === currentChar.abilities[0][i].name) {
           fill(0);
         } else {
           fill(255);
@@ -228,7 +228,7 @@ class PlanState {
         // name, cost and ability
         noStroke();
         // if moused over, it is highlighted
-        if (this.mouseOver.name === currentChar.abilities[0][i].name) {
+        if (mouseOver.name === currentChar.abilities[0][i].name) {
           fill(255);
         } else {
           fill(0);
@@ -265,20 +265,20 @@ class PlanState {
         rectMode(CENTER);
         noStroke();
         // if moused over, it is highlighted
-        if (this.mouseOver === "cancel") {
+        if (mouseOver === "cancel") {
           fill(0);
         } else {
           fill(255,50,0);
         }
         rect(width-width/10, height/2, width/10, height/15);
         // if moused over, it is highlighted
-        if (this.mouseOver === "cancel") {
+        if (mouseOver === "cancel") {
           fill(255, 0, 0);
         } else {
           fill(0);
         }
         textAlign(CENTER, CENTER);
-        textSize(width/100+height/100);
+        textSize(width/120+height/120);
         text("Cancel Ability", width-width/10, height/2);
         pop();
       }
@@ -289,14 +289,14 @@ class PlanState {
       rectMode(CENTER);
       noStroke();
       // if moused over, it is highlighted
-      if (this.mouseOver === "fight") {
+      if (mouseOver === "fight") {
         fill(0);
       } else {
         fill(255,255,0);
       }
       rect(width-width/10, height/2, width/10, height/15);
       // if moused over, it is highlighted
-      if (this.mouseOver === "fight") {
+      if (mouseOver === "fight") {
         fill(255, 255, 0);
       } else {
         fill(0);
@@ -312,18 +312,22 @@ class PlanState {
   // if the character that mouse is over is not the front line, click to make frontline
   // if a character is using an ability, if over an appropriate target, then ability happens
   mouseDown() {
-    if (this.mouseOver != 0) {
+    if (mouseOver != 0) {
       if (this.situation === "choose") {
+        // if the fight button is clicked, go to fight state
+        if (mouseOver === "fight") {
+          whichScreen = FIGHT_STATE;
+        }
         // if a player is moused over, that player character is now the front line
-        if (playersList.includes(this.mouseOver)) {
-          frontline = this.mouseOver;
+         else if (playersList.includes(mouseOver)) {
+          frontline = mouseOver;
           // if a player's ability is moused over, then clicking selects that ability to be used
-        } else if (currentChar.abilities[0].includes(this.mouseOver)) {
+        } else if (currentChar.abilities[0].includes(mouseOver)) {
           // if this ability is not an ultimate and the player character does not have enough to use it, and if they have enough energy to use it, and it has not been used this turn then it works
-          if (this.mouseOver.ultimate === false && currentChar.ultCharge < 100 && currentChar.energy - this.mouseOver.cost >= 0 && this.mouseOver.used === false) {
-            currentAbility = this.mouseOver;
+          if (mouseOver.ultimate === false && currentChar.ultCharge < 100 && currentChar.energy - mouseOver.cost >= 0 && mouseOver.used === false) {
+            currentAbility = mouseOver;
             // remove the ability from mouseOver since what will be mousedOver will be a character
-            this.mouseOver = 0;
+            mouseOver = 0;
             currentAbility.currentStep = 1;
             currentAbility.currentEffect = currentAbility.effects[0];
             // if the first effect can target players, then make the canTargetsList into an array of all player characters, same if enemies
@@ -336,21 +340,19 @@ class PlanState {
           } else {
             console.log("not enough");
           }
-        } else if (this.mouseOver === "fight") {
-          whichScreen = FIGHT_STATE;
         }
       }
       if (this.situation === "ability") {
         // if this ability can target this moused over character activate ability
-        if (this.mouseOver !== 0) {
-        if (currentAbility.currentEffect.canTargetsList.includes(this.mouseOver)) {
-            currentAbility.currentEffect.targets.push(this.mouseOver);
+        if (mouseOver !== 0) {
+        if (currentAbility.currentEffect.canTargetsList.includes(mouseOver)) {
+            currentAbility.currentEffect.targets.push(mouseOver);
             console.log("works");
             currentAbility.user = currentChar;
             currentAbility.happens();
             this.situation = "choose";
           // if the cancel button is moused over, cancel the ability
-          } else if (this.mouseOver === "cancel") {
+          } else if (mouseOver === "cancel") {
             this.situation = "choose";
           }
         }

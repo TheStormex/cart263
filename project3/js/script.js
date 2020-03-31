@@ -105,7 +105,7 @@ let ab_backdoor_effect2 = new AbilityEffect("dash", "", 1, "", false, false);
 let ab_backdoor = new PlayerCombatAbility("Backdoor", 2, [ab_backdoor_effect, ab_backdoor_effect2], "Dash and weaken enemies", 32, "none", false, [[5, "hit"], [2, "use"]], 2);
 let ab_cleanupProtocol_effect = new AbilityEffect("heal", "players", 6, "", false, false);
 let ab_cleanupProtocol = new PlayerSupportAbility("Cleanup Protocol",  3, [ab_cleanupProtocol_effect], "Heal a friendly character", 32, "none", false, [[10, "heal"]], 0);
-let ab_signalBoost_effect = new AbilityEffect("offense_up", "players", 5, "", false, false);
+let ab_signalBoost_effect = new AbilityEffect("ramp", "players", 5, "", false, false);
 let ab_signalBoost = new PlayerSupportAbility("Signal Boost", 4, [ab_signalBoost_effect], "Give 5 energy to a friendly character", 32, "none", false, [[10, "use"]], 0);
 let ab_ult_bitRotWorm_effect = new AbilityEffect("bullet", "", 10, "", false, false);
 let ab_ult_bitRotWorm = new PlayerCombatAbility("Bitrot Worm", 3, [ab_ult_bitRotWorm_effect], "Shoot a powerful beam", 32, "none", true, [[5, "hit"]], 0);
@@ -134,6 +134,7 @@ let ab_e_teleport;
 let enemyBullets = [];
 let playerBullets = [];
 
+let mouseOver = 0;
 let gameScreen;
 
 // keycodes:
@@ -228,7 +229,6 @@ function setup() {
 // p5 draw
 function draw() {
   clear();
-  background(100);
   whichScreen.draw();
 
 }

@@ -16,9 +16,9 @@ class Enemy {
     this.currentAbility;
   }
   move() {
-    let moveType = this.currentAbility.moves;
-    if (moveType === "noise")  {
-
-    }
+//    let moveType = this.currentAbility.moves;
+  //  if (moveType === "noise")  {
+  //    console.log('yes');
+//    }
   }
 }

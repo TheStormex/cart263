@@ -54,8 +54,8 @@ class Player {
     if (this.y-this.size/2 < 0) {
       this.y = this.size/2;
     }
-    if (this.y+this.size/2 > height) {
-      this.y = height-this.size/2;
+    if (this.y+this.size/2 > height-height/3) {
+      this.y = height-height/3-this.size/2;
     }
   }
 }
