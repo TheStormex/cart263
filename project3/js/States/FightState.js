@@ -8,7 +8,6 @@ class FightState {
     console.log(this.situation);
     background(200);
     // draw frontline player, enemies, movements bullets
-    this.keyDown();
     this.moveSprites();
     this.drawCharSprites();
     this.drawUI();
@@ -19,11 +18,14 @@ class FightState {
     noStroke();
     // draw the player frontline character
     fill(0,255,0);
+    let vector1 = createVector(frontline.x, frontline.y);
+    let vector2 = createVector(mouseX - frontline.x, mouseY - frontline.y);
+    frontline.angle = vector2.heading()+PI/2;
     ellipse(frontline.x, frontline.y, width/20, width/20);
     // draw the enemy characters
     fill(255,0,0);
     for (var i = 0; i < enemiesList.length; i++) {
-      enemiesList[i]
+      enemiesList[i].draw();
     }
     pop();
   }
@@ -31,7 +33,14 @@ class FightState {
     // draw player head, name, health, energy, ultcharge;
     drawCommonUI();
     this.drawPlayerMenu();
-
+    // draw the aim triangle
+    push();
+    noStroke();
+    fill(250, 0, 0);
+    translate(frontline.x, frontline.y);
+    rotate(frontline.angle);
+    triangle(0, -height/10, -width/80, -height/18, width/80, -height/18);
+    pop();
   }
   // draw the supporting skills the characters can use in the UI box
   drawPlayerMenu() {

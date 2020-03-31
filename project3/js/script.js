@@ -142,7 +142,6 @@ let playerBullets = [];
 let mouseOver = 0;
 let currentKeyPressed = 0;
 let currentCombatAbilityKey = 0;
-let currentCombatKeyDown = 0;
 let gameScreen;
 
 

@@ -15,10 +15,17 @@ class Enemy {
     this.abilities = abilities;
     this.currentAbility;
   }
+  draw() {
+    push();
+    fill(0);
+    noStroke();
+    ellipse(this.x, this.y, this.size);
+    pop();
+  }
   move() {
-//    let moveType = this.currentAbility.moves;
-  //  if (moveType === "noise")  {
-  //    console.log('yes');
-//    }
+//   let moveType = this.currentAbility.moves;
+  // if (moveType === "noise")  {
+     console.log('yes');
+//   }
   }
 }

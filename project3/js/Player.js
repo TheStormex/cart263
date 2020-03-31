@@ -6,6 +6,7 @@ class Player {
     this.speed = width/200+height/200;
     this.x = width/2;
     this.y = height/2;
+    this.angle = 0;
     this.vx = 0;
     this.vy = 0;
     this.size = width/20;
