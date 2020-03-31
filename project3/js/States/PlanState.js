@@ -129,7 +129,7 @@ class PlanState {
         if (playersList[i].offenseChange > 0) {
           offenseText = "+" + playersList[i].offenseChange + "%";
         } else if (playersList[i].offenseChange < 0) {
-          offenseText = "-" + playersList[i].offenseChange + "%";
+          offenseText = playersList[i].offenseChange + "%";
         }
         text(offenseText, width*(i+1)/(playersList.length+1)+width/12, height/2-height/23);
       }
@@ -143,7 +143,7 @@ class PlanState {
         if (playersList[i].defenseChange > 0) {
           defenseText = "+" + playersList[i].defenseChange + "%";
         } else if (playersList[i].defenseChange < 0) {
-          defenseText = "-" + playersList[i].defenseChange + "%";
+          defenseText = playersList[i].defenseChange + "%";
         }
         text(defenseText, width*(i+1)/(playersList.length+1)+width/12, height/2+height/80);
       }
@@ -186,7 +186,7 @@ class PlanState {
         if (enemiesList[i].offenseChange > 0) {
           offenseText2 = "+" + enemiesList[i].offenseChange + "%";
         } else if (playersList[i].offenseChange < 0) {
-          offenseText2 = "-" + enemiesList[i].offenseChange + "%";
+          offenseText2 = enemiesList[i].offenseChange + "%";
         }
         text(offenseText, width*(i+1)/(enemiesList.length+1)+width/12, height/2-height/23);
       }
@@ -200,7 +200,7 @@ class PlanState {
         if (enemiesList[i].defenseChange > 0) {
           defenseText2 = "+" + enemiesList[i].defenseChange + "%";
         } else if (enemiesList[i].defenseChange < 0) {
-          defenseText2 = "-" + enemiesList[i].defenseChange + "%";
+          defenseText2 = enemiesList[i].defenseChange + "%";
         }
         text(defenseText2, width*(i+1)/(enemiesList.length+1)+width/12, height/5+height/80);
       }
@@ -250,6 +250,12 @@ class PlanState {
             fill(255, 0, 0);
             text("Ultimate Charging", width/3.75+(i*width/3.5), height-height/5);
           }
+        }
+        // if this ability has been used this turn and cannot be used again
+        if (currentChar.abilities[0][i].used === true) {
+          textSize(width/100+height/100);
+          fill(255, 0, 0);
+          text("Used This Turn", width/3.75+(i*width/3.5), height-height/5);
         }
       }
     pop();
@@ -316,6 +322,7 @@ class PlanState {
       if (this.situation === "choose") {
         // if the fight button is clicked, go to fight state
         if (mouseOver === "fight") {
+          currentChar = frontline;
           whichScreen = FIGHT_STATE;
         }
         // if a player is moused over, that player character is now the front line

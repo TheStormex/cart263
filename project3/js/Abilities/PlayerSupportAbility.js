@@ -77,7 +77,6 @@ class PlayerSupportAbility {
           if (this.chargeGive[i][1] === "use") {
             this.user.ultCharge += this.chargeGive[i][0];
             this.used = true;
-            console.log(this.user.ultCharge);
           }
         }
       }

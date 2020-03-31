@@ -125,6 +125,11 @@ let ab_ult_vpn = new PlayerSupportAbility("Activate VPN", 3, [ab_ult_vpn_effect,
 // the ability that is being activated right now
 let currentAbility;
 
+// keycodes:
+// w - 87 / a - 65/ s - 83/ d - 68 / space -32 / shift - 16 / control - 17
+// buttons to press for each combat ability and the keycode
+let combatButtons = [["Space", 32], ["Shift", 16], ["Ctrl", 17]];
+
 // enemies abilities
 let ab_e_wallStraight;
 let ab_e_inOut;
@@ -135,10 +140,12 @@ let enemyBullets = [];
 let playerBullets = [];
 
 let mouseOver = 0;
+let currentKeyPressed = 0;
+let currentCombatAbilityKey = 0;
+let currentCombatKeyDown = 0;
 let gameScreen;
 
-// keycodes:
-// w - 87 / a - 65/ s - 83/ d - 68 / space -32 / shift - 16 / control - 17
+
 
 $(document).ready(start);
 
@@ -279,6 +286,8 @@ function drawCommonUI() {
     rectMode(CENTER, CENTER);
     rect(width/18, height-height/7, width/10, height/6);
     pop();
+  } else {
+    currentChar = playersList[0];
   }
 }
 
@@ -306,6 +315,11 @@ function newTurn() {
 
 // p5 mouse is pressed
 function mousePressed() {
-  // gameScreen.style('display', 'block');
   whichScreen.mouseDown();
+}
+
+// p5 key is pressed
+function keyPressed() {
+  currentKeyPressed = keyCode;
+  whichScreen.keyDown();
 }
