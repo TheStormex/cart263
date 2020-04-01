@@ -16,6 +16,12 @@ class PlayerAbility {
     this.chargeGive = chargeGive;
     // wait time before this ability can be used again (combat only)
     this.cooldown = cooldown;
+    // the cooldown number shown to the player
+    this.cooldownLeft = 0;
+    // if this ability is on cooldown
+    this.onCooldown = false;
+    // the ability's cooldown timer
+    this.cooldownTimer;
     // the character that is using this ability
     this.user;
     // if this ability has been used this turn so it cannot be used again
@@ -85,6 +91,20 @@ class PlayerAbility {
             this.user.ultCharge += this.chargeGive[i][0];
             this.used = true;
           }
+        }
+        // if this is a combat ability with a cooldown, then after use, set the timer
+        if (this.cooldown !== 0) {
+          this.onCooldown = true;
+          this.cooldownLeft = this.cooldown;
+          console.log(this.cooldownLeft);
+          this.cooldownTimer = setInterval(function() {
+            this.cooldownLeft -= 1;
+            console.log(this);
+            if (this.cooldownLeft === 0) {
+              this.onCooldown = false;
+              clearInterval(this.cooldownLeft);
+            }
+          }, 1000, this);
         }
       }
   }

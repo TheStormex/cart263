@@ -18,6 +18,7 @@ defeat the AI security agents patrolling the servers.
 The game's feedback loops are something I came up with previously for a game I would like to make
 and through this project, I want to test out if this combination of game ideas can work or not.
 
+due april 19
 
 use Pizzicato and p5 for game
 

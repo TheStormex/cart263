@@ -327,6 +327,10 @@ class PlanState {
           for (var i = 0; i < enemiesList.length; i++) {
             let moveset = random(enemiesList[i].abilities);
             enemiesList[i].currentAbility = moveset;
+            // if line then set it here
+            if (enemiesList[i].currentAbility.moves === "line")  {
+              enemiesList[i].angle = random(0, 360);
+            }
           }
           whichScreen = FIGHT_STATE;
         }

@@ -135,7 +135,7 @@ let combatButtons = [["Space", 32], ["Shift", 16], ["Ctrl", 17]];
 let ab_e_wallStraight = new EnemyAbility("", "", "");
 let ab_e_inOut = new EnemyAbility("", "", "");
 let ab_e_shoot = new EnemyAbility("noise", "1", "walls");
-let ab_e_teleport = new EnemyAbility("noise", "1", "walls");
+let ab_e_teleport = new EnemyAbility("line", "1", "through");
 
 let enemyBullets = [];
 let playerBullets = [];
@@ -195,9 +195,9 @@ function setup() {
   nutsImages = new Images(S_NUTS_LEFT, S_NUTS_RIGHT, S_BOLT_FRONT, S_BOLT_FACE);
   nuts = new Player("Nuts", 30, 4, 12, [[ab_firewall, ab_targetExploits, ab_ult_vpn], [ab_DDOS, ab_bruteForce]], nutsImages);
   agentImages = new Images(S_AGENT_LEFT, S_AGENT_RIGHT, S_AGENT_FRONT, "none");
-  agent = new Enemy("Hackshield Agent", 50, width/20+height/20, [ab_e_shoot, ab_e_teleport], agentImages);
+  agent = new Enemy("Hackshield Agent", 50, width/20+height/20, 1, [ab_e_shoot, ab_e_teleport], agentImages);
   serpentImages = new Images(S_SERPENT_LEFT, S_SERPENT_RIGHT, S_SERPENT_FRONT, "none");
-  serpent = new Enemy("Serverspy Serpent", 60, width/20+height/20, [ab_e_shoot, ab_e_teleport], serpentImages);
+  serpent = new Enemy("Serverspy Serpent", 60, width/20+height/20, 2, [ab_e_shoot, ab_e_teleport], serpentImages);
   playersList = [bolt, nuts];
   enemiesList = [agent, serpent];
 // set the number of steps of each ability of each player
@@ -267,7 +267,8 @@ function drawCommonUI() {
     noStroke();
     fill(255, 0 , 0);
     rectMode(CORNER);
-    rect(width/2.8-width/4, height-height/3.63-height/40, width/2, height/20);
+    let healthBarLength = map(currentChar.hp, 0, currentChar.maxHp, 0, width/2);
+    rect(width/2.8-width/4, height-height/3.63-height/40, healthBarLength, height/20);
     // health text
     fill(0);
     let healthText = currentChar.hp + " " + "/" + " " + currentChar.maxHp;

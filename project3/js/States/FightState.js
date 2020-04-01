@@ -26,6 +26,7 @@ class FightState {
     for (var i = 0; i < enemiesList.length; i++) {
       enemiesList[i].move();
       enemiesList[i].wrap();
+      enemiesList[i].contact();
       enemiesList[i].draw();
     }
     pop();
@@ -43,7 +44,7 @@ class FightState {
     triangle(0, -height/10, -width/80, -height/18, width/80, -height/18);
     pop();
   }
-  // draw the supporting skills the characters can use in the UI box
+  // draw the combat skills the characters can use in the UI box
   drawPlayerMenu() {
     if (frontline != "none") {
       push();
@@ -95,6 +96,10 @@ class FightState {
             fill(255, 0, 0);
             text("Ultimate Charging", width/3.75+(i*width/3.5), height-height/5);
           }
+        }
+        // the cooldown of each ability if it is on cooldown
+        if (frontline.abilities[1][i].onCooldown === true) {
+          text(frontline.abilities[1][i].cooldownLeft, width/3.75+(i*width/3.5), height-height/5);
         }
       }
     pop();
@@ -159,7 +164,7 @@ class FightState {
       if (currentCombatAbilityKey === abilityButton) {
         let abilityToBeActivated = frontline.abilities[1][i];
         // if this ability is not an ultimate and the player character does not have enough to use it, and if they have enough energy to use it, and it is not on cooldown then it works
-        if (abilityToBeActivated.ultimate === false && currentChar.ultCharge < 100 && currentChar.energy - abilityToBeActivated.cost >= 0) {
+        if (abilityToBeActivated.ultimate === false && currentChar.ultCharge < 100 && currentChar.energy - abilityToBeActivated.cost >= 0 && abilityToBeActivated.cooldownLeft === 0) {
           currentAbility = frontline.abilities[1][i];
           this.situation = "ability";
         } else {
