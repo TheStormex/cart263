@@ -5,7 +5,6 @@ class FightState {
     this.situation = "shoot";
   }
   draw() {
-    console.log(this.situation);
     background(200);
     // draw frontline player, enemies, movements bullets
     this.moveSprites();
@@ -25,6 +24,8 @@ class FightState {
     // draw the enemy characters
     fill(255,0,0);
     for (var i = 0; i < enemiesList.length; i++) {
+      enemiesList[i].move();
+      enemiesList[i].wrap();
       enemiesList[i].draw();
     }
     pop();
@@ -102,7 +103,21 @@ class FightState {
   // if mouse is down, check if an ability is clicked, if not, shoot basic bullets
   // if an ability is clicked then shoot that ability in that direction / location
   mouseDown() {
+    if (this.situation === "shoot") {
+      for (var i = 0; i < playersList.length; i++) {
+        if (playersList[i].name === frontline.name) {
 
+        }
+      }
+      // let playerBasicBullet = new BulletBoltBasic();
+      // let playerBasicBullet = new BulletNutsBasic();
+    } else if (this.situation === "ability") {
+      currentAbility.user = frontline;
+      console.log(currentAbility.user);
+      currentAbility.happens();
+      currentCombatAbilityKey = "0";
+      this.situation = "shoot";
+    }
   }
   // move frontline character, enemies, bullets, etc.
   moveSprites() {
@@ -142,8 +157,16 @@ class FightState {
     for (var i = 0; i < frontline.abilities[1].length; i++) {
       let abilityButton = combatButtons[i][1];
       if (currentCombatAbilityKey === abilityButton) {
-        currentAbility = frontline.abilities[1][i];
-        this.situation = "ability";
+        let abilityToBeActivated = frontline.abilities[1][i];
+        // if this ability is not an ultimate and the player character does not have enough to use it, and if they have enough energy to use it, and it is not on cooldown then it works
+        if (abilityToBeActivated.ultimate === false && currentChar.ultCharge < 100 && currentChar.energy - abilityToBeActivated.cost >= 0) {
+          currentAbility = frontline.abilities[1][i];
+          this.situation = "ability";
+        } else {
+          currentAbility = 0;
+          currentCombatAbilityKey = 0;
+          console.log("not enough");
+        }
       }
     }
   }

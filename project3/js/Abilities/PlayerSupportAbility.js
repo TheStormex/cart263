@@ -70,6 +70,11 @@ class PlayerSupportAbility {
               theEffect.targets[i].energy += theEffect.amount;
               theEffect.targets[i].energy = constrain(theEffect.targets[i].energy, 0, theEffect.targets[i].maxEnergy);
             }
+          // combat only effects
+          case "bullet":
+
+            break;
+          case "dash":
             break;
           default: console.log("error");
         }

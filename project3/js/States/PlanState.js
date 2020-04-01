@@ -323,6 +323,11 @@ class PlanState {
         // if the fight button is clicked, go to fight state
         if (mouseOver === "fight") {
           currentChar = frontline;
+          // for each enemy, give them a random moveset for the fight sequence
+          for (var i = 0; i < enemiesList.length; i++) {
+            let moveset = random(enemiesList[i].abilities);
+            enemiesList[i].currentAbility = moveset;
+          }
           whichScreen = FIGHT_STATE;
         }
         // if a player is moused over, that player character is now the front line

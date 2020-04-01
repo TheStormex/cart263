@@ -23,9 +23,32 @@ class Enemy {
     pop();
   }
   move() {
-//   let moveType = this.currentAbility.moves;
-  // if (moveType === "noise")  {
-     console.log('yes');
-//   }
+    let moveType = this.currentAbility.moves;
+    if (moveType === "noise")  {
+      this.vx += random(-width/1000, width/1000);
+      this.vx = constrain(this.vx, -width/500, width/500);
+      this.vy += random(-height/1000, height/1000);
+      this.vy = constrain(this.vy, -height/500, height/500);
+    }
+    this.x += this.vx;
+    this.y += this.vy;
+  }
+  wrap() {
+    let wrapType = this.currentAbility.wrap;
+    if (wrapType === "walls") {
+      // prevent going outside of walls
+      if (this.x-this.size/2 <= 0) {
+        this.x = this.size/2;
+      }
+      if (this.x+this.size/2 > width) {
+        this.x = width-this.size/2;
+      }
+      if (this.y-this.size/2 < 0) {
+        this.y = this.size/2;
+      }
+      if (this.y+this.size/2 > height-height/3) {
+        this.y = height-height/3-this.size/2;
+      }
+    }
   }
 }
