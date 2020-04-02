@@ -110,6 +110,7 @@ class PlanState {
       let healthText = playersList[i].hp + " " + "/" + " " + playersList[i].maxHp;
       textAlign(CENTER, CENTER);
       text(playersList[i].name, width*(i+1)/(playersList.length+1), height/2-height/7);
+      fill(0);
       text(healthText, width*(i+1)/(playersList.length+1), height/2-height/10);
       // if is frontline, show it, if not, say click to make front line
       if (playersList[i].name === frontline.name) {
@@ -173,6 +174,7 @@ class PlanState {
       let healthText = enemiesList[i].hp + " " + "/" + " " + enemiesList[i].maxHp;
       textAlign(CENTER, CENTER);
       text(enemiesList[i].name, width*(i+1)/(enemiesList.length+1), height/5-height/7);
+      fill(0);
       text(healthText, width*(i+1)/(enemiesList.length+1), height/5-height/10);
       // draw the status changes of each character if they are not 0
       rectMode(CENTER);

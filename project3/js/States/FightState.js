@@ -9,6 +9,7 @@ class FightState {
     // draw frontline player, enemies, movements bullets
     this.moveSprites();
     this.drawCharSprites();
+    this.drawProjectiles();
     this.drawUI();
   }
   drawCharSprites() {
@@ -19,7 +20,7 @@ class FightState {
     fill(0,255,0);
     let vector1 = createVector(frontline.x, frontline.y);
     let vector2 = createVector(mouseX - frontline.x, mouseY - frontline.y);
-    frontline.angle = vector2.heading()+PI/2;
+    frontline.angle = vector2.heading();
     ellipse(frontline.x, frontline.y, width/20, width/20);
     // draw the enemy characters
     fill(255,0,0);
@@ -40,9 +41,22 @@ class FightState {
     noStroke();
     fill(250, 0, 0);
     translate(frontline.x, frontline.y);
-    rotate(frontline.angle);
+    rotate(frontline.angle+PI/2);
     triangle(0, -height/10, -width/80, -height/18, width/80, -height/18);
     pop();
+    // draw enemies health bar
+    // health bar
+    for (var i = 0; i < enemiesList.length; i++) {
+      push();
+      rectMode(CENTER);
+      fill(255);
+      rect(enemiesList[i].x, enemiesList[i].y-height/10, width/10, height/40);
+      fill(255, 0 ,0);
+      rectMode(CORNER);
+      let healthBarLength = map(enemiesList[i].hp, 0, enemiesList[i].maxHp, 0, width/10);
+      rect(enemiesList[i].x-width/20, enemiesList[i].y-height/10-height/80, healthBarLength, height/40);
+      pop();
+    }
   }
   // draw the combat skills the characters can use in the UI box
   drawPlayerMenu() {
@@ -105,17 +119,27 @@ class FightState {
     pop();
     }
   }
+  // draw all projectiles on the screen
+  drawProjectiles() {
+    for (var i = 0; i < playerBullets.length; i++) {
+      playerBullets[i].move();
+      playerBullets[i].draw();
+    }
+  }
   // if mouse is down, check if an ability is clicked, if not, shoot basic bullets
   // if an ability is clicked then shoot that ability in that direction / location
   mouseDown() {
     if (this.situation === "shoot") {
-      for (var i = 0; i < playersList.length; i++) {
-        if (playersList[i].name === frontline.name) {
-
-        }
+      if (frontline.name === "Bolt") {
+        let playerBasicBullet = new BulletBoltBasic(frontline.x, frontline.y);
+        playerBullets.push(playerBasicBullet);
       }
-      // let playerBasicBullet = new BulletBoltBasic();
-      // let playerBasicBullet = new BulletNutsBasic();
+      else if (frontline.name === "Nuts") {
+        let playerBasicBullet = new BulletNutsBasic(frontline.x, frontline.y);
+        playerBullets.push(playerBasicBullet);
+      }
+
+
     } else if (this.situation === "ability") {
       currentAbility.user = frontline;
       console.log(currentAbility.user);

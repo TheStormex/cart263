@@ -3,7 +3,6 @@ class Enemy {
     this.name = name;
     this.hp = maxHp;
     this.maxHp = maxHp;
-    this.maxHp = maxHp;
     this.speed = width/500+height/500;
     this.x = width/2;
     this.y = height/5;

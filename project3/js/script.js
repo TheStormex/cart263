@@ -28,10 +28,12 @@ let A_SUPPORT;
 let A_SUPPORT_ULT;
 let A_COMBAT_ULT;
 // images for P5 part
+let S_BOLT_BULLET_BASIC;
 let S_BOLT_FACE;
 let S_BOLT_FRONT;
 let S_BOLT_LEFT;
 let S_BOLT_RIGHT;
+let S_NUTS_BULLET_BASIC;
 let S_NUTS_FACE;
 let S_NUTS_FRONT;
 let S_NUTS_LEFT;
@@ -154,10 +156,12 @@ function start() {
 
 // p5 preload, load image sprites
 function preload() {
+  S_BOLT_BULLET_BASIC = loadImage(`assets/images/clown.png`);
   S_BOLT_FACE = loadImage(`assets/images/clown.png`);
   S_BOLT_FRONT = loadImage(`assets/images/clown.png`);
   S_BOLT_LEFT = loadImage(`assets/images/clown.png`);
   S_BOLT_RIGHT = loadImage(`assets/images/clown.png`);
+  S_NUTS_BULLET_BASIC = loadImage(`assets/images/clown.png`);
   S_NUTS_FACE = loadImage(`assets/images/clown.png`);
   S_NUTS_FRONT = loadImage(`assets/images/clown.png`);
   S_NUTS_LEFT = loadImage(`assets/images/clown.png`);

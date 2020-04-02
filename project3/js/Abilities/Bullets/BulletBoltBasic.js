@@ -1,5 +1,5 @@
 class BulletBoltBasic extends Bullet {
-  constructor(speed, x, y, damage, affects, size, change, image, wall, timer) {
-    super(speed, x, y, damage, affects, size, change, image, wall, timer);
+  constructor(x, y) {
+    super(width/200+height/200, frontline.angle, x, y, 1, "enemies", ["damage"], frontline, width/100+height/100, "none", S_BOLT_BULLET_BASIC, "done", "done", "none");
   }
 }
