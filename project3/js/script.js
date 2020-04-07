@@ -100,13 +100,13 @@ let enemiesList = [];
 let playersList = [];
 
 // how many turns has past
-let turns = 0;
+let turns = 1;
 
 // bullets characteristics
 // (origin, speed, angle, damage, targets, effects, size, change, image, wall, ifHit, timer)
 // speed and size = % of screen
-let pro_p_bolt_basic = ["to be set", 0.5, "origin", 2, "enemies", ["damage"], 1, "none", "to be set", "done", "done", "none"];
-let pro_p_nuts_basic = ["to be set", 1, "origin", 1, "enemies", ["damage"], 1, "none", "to be set", "done", "done", "none"];
+let pro_p_bolt_basic = ["to be set", 0.6, "origin", 2, "enemies", ["damage"], 3, "none", "to be set", "done", ["done", "nothing"], 250];
+let pro_p_nuts_basic = ["to be set", 1, "origin", 1, "enemies", ["damage"], 1.5, "none", "to be set", "done", ["done", "nothing"], 150];
 let pro_p_logicBomb = [];
 let pro_p_logicBombExplosion = [];
 let pro_p_backdoor = [];
@@ -175,7 +175,10 @@ let currentKeyPressed = 0;
 let currentCombatAbilityKey = 0;
 let gameScreen;
 
+// how long until go back to plan state from fight
+let fightTimer;
 let fightTime = 0;
+let currentFightTime = 0;
 
 
 $(document).ready(start);
@@ -354,15 +357,21 @@ function newTurn() {
   for (var i = 0; i < playersList.length; i++) {
     if (playersList[i].acted === false) {
       // if not the first turn, apply the not moved bonus
-      if (turns > 0) {
+      if (turns > 1) {
         playersList[i].energyBoost = 3;
       }
     } else if (playersList[i].acted === true) {
       playersList[i].energyBoost = 0;
     }
     playersList[i].energy += playersList[i].energyTurn + playersList[i].energyBoost;
+    playersList[i].energy = constrain(playersList[i].energy, 0, playersList[i].maxEnergy);
     playersList[i].offenseChange = 0;
     playersList[i].defenseChange = 0;
+    playersList[i].acted = false;
+    // all abilities are no used yet
+    for (var i2 = 0; i2 < playersList[i].abilities[0].length; i2++) {
+      playersList[i].abilities[0][i2].used = false;
+    }
   }
   for (var i = 0; i < enemiesList.length; i++) {
     enemiesList[i].offenseChange = 0;

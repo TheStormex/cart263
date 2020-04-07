@@ -21,7 +21,7 @@ class Bullet {
     this.image = image;
     // if this touches a wall, what to do
     this.wall = wall;
-    // if this hits a target what to do
+    // if this hits a target what to do 0 = if disappear, 1 = others
     this.ifHit = ifHit;
     // start a timer when this bullet is spawned, when the timer reaches
     this.timer = timer;
@@ -60,7 +60,7 @@ class Bullet {
     for (var i2 = 0; i2 < this.effects.length; i2++) {
       switch (this.effects[i2]) {
         case "damage":
-          target.hp -= (this.damage*(1+this.origin.offenseChange/100)/(1+target.defenseChange/100));
+          target.hp -= round((this.damage*(1+this.origin.offenseChange/100)/(1+target.defenseChange/100)));
           target.hp = constrain(target.hp, 0, target.maxHp);
           break;
         // spawn more bullets
@@ -69,10 +69,21 @@ class Bullet {
         default:
       }
     }
-    console.log(this.ifHit);
-    switch (this.ifHit) {
+    switch (this.ifHit[0]) {
       case "done":
         this.isDestroyed = true;
+        break;
+      case "through":
+        // nothing
+        break;
+      default:
+    }
+    switch (this.ifHit[1]) {
+      case "spawn":
+        // create new bullets
+        break;
+      case "nothing":
+        // nothing
         break;
       default:
 

@@ -23,8 +23,9 @@ class Player {
     this.energyTurn = energyTurn;
     // if this char used an ability this turn
     this.acted = false;
-    // this character's basic bullet
+    // this character's basic bullet and if is on cooldown
     this.basicBullet = basicBullet;
+    this.basicBulletCooldown = false;
     // this is image
     this.images = images;
     // this char's abilities, [support, support], [support ult], [combat, combat], [combat ult]]

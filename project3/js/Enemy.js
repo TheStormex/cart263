@@ -80,7 +80,7 @@ class Enemy {
     let d = dist(this.x, this.y, frontline.x, frontline.y);
     if (d < this.size) {
       if (frontline.invincible === false) {
-          frontline.hp -= (this.contactDamage*(1+this.offenseChange/100)/(1+frontline.defenseChange/100));
+          frontline.hp -= round((this.contactDamage*(1+this.offenseChange/100)/(1+frontline.defenseChange/100)));
           frontline.hp = constrain(frontline.hp, 0, frontline.maxHp);
           frontline.invincible = true;
           setTimeout(function() {frontline.invincible = false}, 250);

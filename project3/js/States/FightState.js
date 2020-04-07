@@ -55,6 +55,18 @@ class FightState {
       rect(enemiesList[i].x-width/20, enemiesList[i].y-height/10-height/80, healthBarLength, height/40);
       pop();
     }
+    // draw progess bar of the fight until go back to plan state
+    push();
+    rectMode(CORNER);
+    fill(255);
+    noStroke();
+    rect(0, height-height/3, width, height/50);
+    let progressBarLength = map(currentFightTime/100, 0, fightTime, 0, width);
+    colorMode(HSB, 100);
+    let colorOfBar = map(currentFightTime/100, 0, fightTime, 0, 100);
+    fill(colorOfBar, 100, 100);
+    rect(0, height-height/3, progressBarLength, height/50);
+    pop();
   }
   // draw the combat skills the characters can use in the UI box
   drawPlayerMenu() {
@@ -132,8 +144,12 @@ class FightState {
   // if an ability is clicked then shoot that ability in that direction / location
   mouseDown() {
     if (this.situation === "shoot") {
-      let playerBasicBullet = new Bullet(frontline, frontline.x, frontline.y, width*(frontline.basicBullet[1]/2)/100+height*(frontline.basicBullet[1]/2)/100, frontline.angle, frontline.basicBullet[3], frontline.basicBullet[4], frontline.basicBullet[5], width*(frontline.basicBullet[6]/2)/100+height*(frontline.basicBullet[6]/2)/100, frontline.basicBullet[7], frontline.basicBullet[8], frontline.basicBullet[9], frontline.basicBullet[10], frontline.basicBullet[11], frontline.basicBullet[12]);
-      playerBullets.push(playerBasicBullet);
+      if (frontline.basicBulletCooldown === false) {
+        let playerBasicBullet = new Bullet(frontline, frontline.x, frontline.y, width*(frontline.basicBullet[1]/2)/100+height*(frontline.basicBullet[1]/2)/100, frontline.angle, frontline.basicBullet[3], frontline.basicBullet[4], frontline.basicBullet[5], width*(frontline.basicBullet[6]/2)/100+height*(frontline.basicBullet[6]/2)/100, frontline.basicBullet[7], frontline.basicBullet[8], frontline.basicBullet[9], frontline.basicBullet[10], frontline.basicBullet[11], frontline.basicBullet[12]);
+        playerBullets.push(playerBasicBullet);
+        frontline.basicBulletCooldown = true;
+        setTimeout(function() {frontline.basicBulletCooldown = false}, frontline.basicBullet[11]);
+      }
     } else if (this.situation === "ability") {
       currentAbility.user = frontline;
       currentAbility.happens();

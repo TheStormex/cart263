@@ -81,5 +81,4 @@ Switch between each hacker as the front line often to prevent one from becoming 
 Good luck! The fate of humanity rests on your fingertips!
 
 code in:
-- aoe abilities
-- ability targets inside effect for abilities with multiple type of targets
+- shoot cooldown

@@ -35,8 +35,9 @@ class PlayerAbility {
   }
   // when this ability happens, do its effects (spawn bullets or if is support ability, instant effect)
   happens() {
-      // remove the energy this costs
+      // remove the energy this costs and set the player's acted to yes
       this.user.energy -= this.cost;
+      this.user.acted = true;
       // for each effect, apply
       for (var i = 0; i < this.effects.length; i++) {
         let theEffect = this.effects[i];
@@ -80,7 +81,9 @@ class PlayerAbility {
             }
           // combat only effects
           case "bullet":
-
+            for (var i = 0; i < theEffect.amount; i++) {
+            //  let newAbilityBullet = new Bullet();
+            }
             break;
           case "dash":
             break;
@@ -106,6 +109,8 @@ class PlayerAbility {
             }
           }, 1000, this);
         }
+        // remove all targets from the ability effect since ability effect is finished
+        theEffect.targets = [];
       }
   }
 }

@@ -325,25 +325,7 @@ class PlanState {
       if (this.situation === "choose") {
         // if the fight button is clicked, go to fight state
         if (mouseOver === "fight") {
-          currentChar = frontline;
-          // for each enemy, give them a random moveset for the fight sequence
-          let highestTime = 0;
-          for (var i = 0; i < enemiesList.length; i++) {
-            let moveset = random(enemiesList[i].abilities);
-            enemiesList[i].currentAbility = moveset;
-            // set the timers for enemy shoot bullets depending on ability
-
-            if (enemiesList[i].currentAbility.timer > highestTime) {
-              highestTime = enemiesList[i].currentAbility.timer;
-            }
-            // if line then set it here
-            if (enemiesList[i].currentAbility.moves === "line")  {
-              enemiesList[i].angle = random(0, 360);
-            }
-          }
-          fightTime = highestTime;
-          setTimeout(function() {whichScreen = PLAN_STATE}, fightTime*1000);
-          whichScreen = FIGHT_STATE;
+          this.goToFight();
         }
         // if a player is moused over, that player character is now the front line
          else if (playersList.includes(mouseOver)) {
@@ -384,5 +366,57 @@ class PlanState {
         }
       }
     }
+  }
+  // go to the fight state from here
+  goToFight() {
+    currentChar = frontline;
+    // for each enemy, give them a random moveset for the fight sequence
+    let highestTime = 0;
+    for (var i = 0; i < enemiesList.length; i++) {
+      let moveset = random(enemiesList[i].abilities);
+      enemiesList[i].currentAbility = moveset;
+      // set the timers for enemy shoot bullets depending on ability
+
+      if (enemiesList[i].currentAbility.timer > highestTime) {
+        highestTime = enemiesList[i].currentAbility.timer;
+      }
+      // if line then set it here
+      if (enemiesList[i].currentAbility.moves === "line")  {
+        enemiesList[i].angle = random(0, 360);
+      }
+    }
+    fightTime = highestTime;
+    currentFightTime = 0;
+    fightTimer = setInterval(function() {
+      currentFightTime++;
+      if (currentFightTime/100 >= fightTime) {
+        clearInterval(fightTimer);
+        turns++;
+        console.log(turns);
+        newTurn();
+        whichScreen = PLAN_STATE;
+      }
+    }, 10);
+    whichScreen = FIGHT_STATE;
+  }
+  // when a key is pressed
+  keyDown() {
+    // if is ctrl, shift or space, set the current ability to the ability that
+    // is assigned to that key, if already activated, then clicking will cancel it
+    // if (currentKeyPressed === 32 || currentKeyPressed === 16 || currentKeyPressed === 17) {
+    //   if (currentCombatAbilityKey !== currentKeyPressed) {
+    //     if (this.situation === "choose") {
+    //       this.setAbility();
+    //     } else if (this.situation === "ability") {
+    //       currentAbility = 0;
+    //       this.situation = "shoot";
+    //       this.setAbility();
+    //     }
+    //   } else if (currentCombatAbilityKey === currentKeyPressed) {
+    //     currentAbility = 0;
+    //     this.situation = "shoot";
+    //     currentCombatAbilityKey = "none";
+    //   }
+    // }
   }
 }
