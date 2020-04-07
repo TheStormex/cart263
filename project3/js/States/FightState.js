@@ -21,13 +21,11 @@ class FightState {
     let vector1 = createVector(frontline.x, frontline.y);
     let vector2 = createVector(mouseX - frontline.x, mouseY - frontline.y);
     frontline.angle = vector2.heading();
-    ellipse(frontline.x, frontline.y, width/20, width/20);
+    imageMode(CENTER);
+    image(frontline.images.front, frontline.x, frontline.y, width/20, width/20);
     // draw the enemy characters
     fill(255,0,0);
     for (var i = 0; i < enemiesList.length; i++) {
-      enemiesList[i].move();
-      enemiesList[i].wrap();
-      enemiesList[i].contact();
       enemiesList[i].draw();
     }
     pop();
@@ -124,25 +122,20 @@ class FightState {
     for (var i = 0; i < playerBullets.length; i++) {
       playerBullets[i].move();
       playerBullets[i].draw();
+      playerBullets[i].contact();
+      if (playerBullets[i].isDestroyed === true) {
+        playerBullets.splice(i, 1);
+      }
     }
   }
   // if mouse is down, check if an ability is clicked, if not, shoot basic bullets
   // if an ability is clicked then shoot that ability in that direction / location
   mouseDown() {
     if (this.situation === "shoot") {
-      if (frontline.name === "Bolt") {
-        let playerBasicBullet = new BulletBoltBasic(frontline.x, frontline.y);
-        playerBullets.push(playerBasicBullet);
-      }
-      else if (frontline.name === "Nuts") {
-        let playerBasicBullet = new BulletNutsBasic(frontline.x, frontline.y);
-        playerBullets.push(playerBasicBullet);
-      }
-
-
+      let playerBasicBullet = new Bullet(frontline, frontline.x, frontline.y, width*(frontline.basicBullet[1]/2)/100+height*(frontline.basicBullet[1]/2)/100, frontline.angle, frontline.basicBullet[3], frontline.basicBullet[4], frontline.basicBullet[5], width*(frontline.basicBullet[6]/2)/100+height*(frontline.basicBullet[6]/2)/100, frontline.basicBullet[7], frontline.basicBullet[8], frontline.basicBullet[9], frontline.basicBullet[10], frontline.basicBullet[11], frontline.basicBullet[12]);
+      playerBullets.push(playerBasicBullet);
     } else if (this.situation === "ability") {
       currentAbility.user = frontline;
-      console.log(currentAbility.user);
       currentAbility.happens();
       currentCombatAbilityKey = "0";
       this.situation = "shoot";
@@ -153,6 +146,13 @@ class FightState {
     frontline.move();
     for (var i = 0; i < enemiesList.length; i++) {
       enemiesList[i].move();
+      enemiesList[i].wrap();
+      enemiesList[i].contact();
+      enemiesList[i].checkAlive();
+      if (enemiesList[i].alive === false) {
+        enemiesList.splice(i, 1);
+      }
+      enemiesList[i].shoot();
     }
     for (var i = 0; i < playerBullets.length; i++) {
       playerBullets[i].move();

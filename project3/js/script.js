@@ -78,6 +78,9 @@ const PLAN_STATE = new PlanState();
 const FIGHT_STATE = new FightState();
 const END_STATE = new EndState();
 
+// framecount
+let framecount = 0;
+
 // variables
 let frontline = "bolt";
 let currentChar;
@@ -99,10 +102,35 @@ let playersList = [];
 // how many turns has past
 let turns = 0;
 
+// bullets characteristics
+// (origin, speed, angle, damage, targets, effects, size, change, image, wall, ifHit, timer)
+// speed and size = % of screen
+let pro_p_bolt_basic = ["to be set", 0.5, "origin", 2, "enemies", ["damage"], 1, "none", "to be set", "done", "done", "none"];
+let pro_p_nuts_basic = ["to be set", 1, "origin", 1, "enemies", ["damage"], 1, "none", "to be set", "done", "done", "none"];
+let pro_p_logicBomb = [];
+let pro_p_logicBombExplosion = [];
+let pro_p_backdoor = [];
+let pro_p_ult_bitRotWorm = [];
+let pro_p_DDOS = [];
+let pro_p_bruteForce = [];
+// enemy bullets
+// agent
+let pro_e_javelin = [];
+let pro_e_shield = [];
+// if alone
+let pro_e_tshape = [];
+// serpent
+let pro_e_splitBall = [];
+let pro_e_spiral = [];
+// if alone
+let pro_e_outward = [];
+
+
+
 // nuts and bolt's abilities and effects
-let ab_logicBomb_effect = new AbilityEffect("bullet", "", 1, "", false, false);
+let ab_logicBomb_effect = new AbilityEffect("bullet", "", 1, pro_p_logicBomb, false, false);
 let ab_logicBomb = new PlayerAbility("Logic Bomb", 3, [ab_logicBomb_effect], "Throw a projectile", 32, "none", false, [[5, "hit"]], 3);
-let ab_backdoor_effect = new AbilityEffect("bullet", "", 1, "", false, false);
+let ab_backdoor_effect = new AbilityEffect("bullet", "", 1, pro_p_backdoor, false, false);
 let ab_backdoor_effect2 = new AbilityEffect("dash", "", 1, "", false, false);
 let ab_backdoor = new PlayerAbility("Backdoor", 2, [ab_backdoor_effect, ab_backdoor_effect2], "Dash and weaken enemies", 32, "none", false, [[5, "hit"], [2, "use"]], 2);
 let ab_cleanupProtocol_effect = new AbilityEffect("heal", "players", 6, "", false, false);
@@ -136,8 +164,8 @@ let combatButtons = [["Space", 32], ["Shift", 16], ["Ctrl", 17]];
 // enemies abilities
 let ab_e_wallStraight = new EnemyAbility("", "", "");
 let ab_e_inOut = new EnemyAbility("", "", "");
-let ab_e_shoot = new EnemyAbility("noise", "1", "walls");
-let ab_e_teleport = new EnemyAbility("line", "1", "through");
+let ab_e_shoot = new EnemyAbility("noise", [[, 5],[]], "walls", 10);
+let ab_e_teleport = new EnemyAbility("line", "1", "through", 8);
 
 let enemyBullets = [];
 let playerBullets = [];
@@ -147,6 +175,7 @@ let currentKeyPressed = 0;
 let currentCombatAbilityKey = 0;
 let gameScreen;
 
+let fightTime = 0;
 
 
 $(document).ready(start);
@@ -193,11 +222,33 @@ function setup() {
   gameScreen.style('display', 'block');
   // gameScreen.style('display', 'none');
   background(100);
+  // add the image to each bullet's image slot and origin slot
+  pro_p_bolt_basic[8] = S_BOLT_BULLET_BASIC;
+  pro_p_bolt_basic[8] = S_BOLT_BULLET_BASIC;
+  pro_p_nuts_basic[8] = S_NUTS_BULLET_BASIC;
+  pro_p_logicBomb[8] = S_LOGIC_BOMB;
+  pro_p_logicBombExplosion[9] = S_LOGIC_BOMB_EXPLOSION;
+  pro_p_backdoor[8] = S_BACK_DOOR;
+  pro_p_ult_bitRotWorm[8] = S_BEAM;
+  pro_p_DDOS[8] = S_STUN;
+  pro_p_bruteForce[8] = S_BRUTE_FORCE;
+  // enemy bullets
+  // agent
+  // pro_e_javelin[8] =
+  // pro_e_shield[8] =
+  // // if alone
+  // pro_e_tshape[8] =
+  // // serpent
+  // pro_e_splitBall[8] =
+  // pro_e_spiral[8] =
+  // // if alone
+  // pro_e_outward[8] =
+
   // create the player characters and enemy characters
   boltImages = new Images(S_BOLT_LEFT, S_BOLT_RIGHT, S_BOLT_FRONT, S_BOLT_FACE);
-  bolt = new Player("Bolt", 20, 5, 10, [[ab_cleanupProtocol, ab_signalBoost], [ab_logicBomb, ab_backdoor, ab_ult_bitRotWorm]], boltImages);
+  bolt = new Player("Bolt", 20, 5, 10, [[ab_cleanupProtocol, ab_signalBoost], [ab_logicBomb, ab_backdoor, ab_ult_bitRotWorm]], pro_p_bolt_basic, boltImages);
   nutsImages = new Images(S_NUTS_LEFT, S_NUTS_RIGHT, S_BOLT_FRONT, S_BOLT_FACE);
-  nuts = new Player("Nuts", 30, 4, 12, [[ab_firewall, ab_targetExploits, ab_ult_vpn], [ab_DDOS, ab_bruteForce]], nutsImages);
+  nuts = new Player("Nuts", 30, 4, 12, [[ab_firewall, ab_targetExploits, ab_ult_vpn], [ab_DDOS, ab_bruteForce]], pro_p_nuts_basic, nutsImages);
   agentImages = new Images(S_AGENT_LEFT, S_AGENT_RIGHT, S_AGENT_FRONT, "none");
   agent = new Enemy("Hackshield Agent", 50, width/20+height/20, 1, [ab_e_shoot, ab_e_teleport], agentImages);
   serpentImages = new Images(S_SERPENT_LEFT, S_SERPENT_RIGHT, S_SERPENT_FRONT, "none");
@@ -241,7 +292,8 @@ function setup() {
 function draw() {
   clear();
   whichScreen.draw();
-
+  framecount++;
+  // console.log(framecount);
 }
 
 function windowResized() {
@@ -288,8 +340,8 @@ function drawCommonUI() {
     let ultChargeText = "Ult Charge: " + currentChar.ultCharge + "%";
     text(ultChargeText, width-width/8, height-height/3.6);
     // character head image
-    rectMode(CENTER, CENTER);
-    rect(width/18, height-height/7, width/10, height/6);
+    imageMode(CENTER, CENTER);
+    image(currentChar.images.face, width/18, height-height/7, width/10, height/6);
     pop();
   } else {
     currentChar = playersList[0];

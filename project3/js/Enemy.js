@@ -1,9 +1,9 @@
 class Enemy {
-  constructor(name, maxHp, size, contactDamage, abilities) {
+  constructor(name, maxHp, size, contactDamage, abilities, images) {
     this.name = name;
     this.hp = maxHp;
     this.maxHp = maxHp;
-    this.speed = width/500+height/500;
+    this.speed = width/250+height/250;
     this.x = width/2;
     this.y = height/5;
     this.vx = 0;
@@ -15,6 +15,8 @@ class Enemy {
     this.size = size;
     this.abilities = abilities;
     this.currentAbility;
+    this.images = images;
+    this.alive = true;
   }
   draw() {
     push();
@@ -56,7 +58,7 @@ class Enemy {
         this.angle = random(-30, 30);
       }
     }
-    if (wrapType === "through") {
+    else if (wrapType === "through") {
       this.angle += random(-0.2, 0.2);
       // reappear on the other side
       if (this.x-this.size/2 <= 0) {
@@ -80,10 +82,19 @@ class Enemy {
       if (frontline.invincible === false) {
           frontline.hp -= (this.contactDamage*(1+this.offenseChange/100)/(1+frontline.defenseChange/100));
           frontline.hp = constrain(frontline.hp, 0, frontline.maxHp);
-          console.log(frontline.name + frontline.hp);
           frontline.invincible = true;
           setTimeout(function() {frontline.invincible = false}, 250);
       }
+    }
+  }
+  // shoot bullets of this ability
+  shoot() {
+
+  }
+  // if this is still alive
+  checkAlive() {
+    if (this.hp <= 0) {
+      this.alive = false;
     }
   }
 }

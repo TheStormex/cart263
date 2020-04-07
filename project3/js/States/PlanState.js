@@ -96,9 +96,9 @@ class PlanState {
         fill(255, 150, 0);
         rect(width*(i+1)/(playersList.length+1), height/2, width/7, height/3.2);
       }
-      // replace with images later
-      fill(255);
-      rect(width*(i+1)/(playersList.length+1), height/2, width/10, height/7);
+      // images of the player's front
+      imageMode(CENTER);
+      image(playersList[i].images.front, width*(i+1)/(playersList.length+1), height/2, width/10, height/7);
       // health bar
       fill(255);
       rect(width*(i+1)/(playersList.length+1), height/2-height/10, width/10, height/40);
@@ -162,7 +162,8 @@ class PlanState {
         }
       }
       fill(255);
-      rect(width*(i+1)/(enemiesList.length+1), height/5, width/10, height/7);
+      imageMode(CENTER);
+      image(enemiesList[i].images.front, width*(i+1)/(enemiesList.length+1), height/5, width/10, height/7);
       // health bar
       fill(255);
       rect(width*(i+1)/(enemiesList.length+1), height/5-height/10, width/10, height/40);
@@ -326,14 +327,22 @@ class PlanState {
         if (mouseOver === "fight") {
           currentChar = frontline;
           // for each enemy, give them a random moveset for the fight sequence
+          let highestTime = 0;
           for (var i = 0; i < enemiesList.length; i++) {
             let moveset = random(enemiesList[i].abilities);
             enemiesList[i].currentAbility = moveset;
+            // set the timers for enemy shoot bullets depending on ability
+
+            if (enemiesList[i].currentAbility.timer > highestTime) {
+              highestTime = enemiesList[i].currentAbility.timer;
+            }
             // if line then set it here
             if (enemiesList[i].currentAbility.moves === "line")  {
               enemiesList[i].angle = random(0, 360);
             }
           }
+          fightTime = highestTime;
+          setTimeout(function() {whichScreen = PLAN_STATE}, fightTime*1000);
           whichScreen = FIGHT_STATE;
         }
         // if a player is moused over, that player character is now the front line
@@ -365,7 +374,6 @@ class PlanState {
         if (mouseOver !== 0) {
         if (currentAbility.currentEffect.canTargetsList.includes(mouseOver)) {
             currentAbility.currentEffect.targets.push(mouseOver);
-            console.log("works");
             currentAbility.user = currentChar;
             currentAbility.happens();
             this.situation = "choose";

@@ -1,9 +1,11 @@
 class Bullet {
-  constructor(speed, angle, x, y, damage, targets, effects, origin, size, change, image, wall, ifHit, timer) {
-    this.speed = speed;
-    this.angle = angle;
+  constructor(origin, x, y, speed, angle, damage, targets, effects, size, change, image, wall, ifHit, timer) {
+    // who shot this bullet
+    this.origin = origin;
     this.x = x;
     this.y = y;
+    this.speed = speed;
+    this.angle = angle;
     this.vx = 0;
     this.vy = 0;
     this.damage = damage;
@@ -11,8 +13,6 @@ class Bullet {
     this.targets = targets;
     // what effects this bullet has when hit a target
     this.effects = effects;
-    // who shot this bullet
-    this.origin = origin;
     // how larget is this bullet
     this.size = size;
     // if this changes size, damage, who it affecs, speed, etc.
@@ -25,6 +25,8 @@ class Bullet {
     this.ifHit = ifHit;
     // start a timer when this bullet is spawned, when the timer reaches
     this.timer = timer;
+    // if this bullet should be destroyed in the next frame
+    this.isDestroyed = false;
   }
   move() {
     this.vx = this.speed * cos(this.angle);
@@ -36,14 +38,14 @@ class Bullet {
     if (this.targets === "enemies") {
       for (var i = 0; i < enemiesList.length; i++) {
         let d = dist(this.x, this.y, enemiesList[i].x, enemiesList[i].y);
-        if (d < this.size) {
+        if (d < enemiesList[i].size/2 + this.size/2) {
           this.effectHappens(enemiesList[i]);
         }
       }
     }
     else if (this.targets === "players") {
       let d = dist(this.x, this.y, frontline.x, frontline.y);
-      if (d < this.size) {
+      if (d < frontline.size/2 + this.size/2) {
         this.effectHappens(frontline);
       }
     }
@@ -59,13 +61,18 @@ class Bullet {
       switch (this.effects[i2]) {
         case "damage":
           target.hp -= (this.damage*(1+this.origin.offenseChange/100)/(1+target.defenseChange/100));
+          target.hp = constrain(target.hp, 0, target.maxHp);
           break;
+        // spawn more bullets
+        case "spawn":
+
         default:
       }
     }
-    switch (this.Ifhit) {
+    console.log(this.ifHit);
+    switch (this.ifHit) {
       case "done":
-
+        this.isDestroyed = true;
         break;
       default:
 

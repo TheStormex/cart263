@@ -26,7 +26,7 @@ class Player {
     // this character's basic bullet
     this.basicBullet = basicBullet;
     // this is image
-    this.images;
+    this.images = images;
     // this char's abilities, [support, support], [support ult], [combat, combat], [combat ult]]
     this.abilities = abilities;
     // after taking a hit, the player is invincible for 0.25 seconds
