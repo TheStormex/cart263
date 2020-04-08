@@ -125,6 +125,7 @@ class PlayerAbility {
             clearInterval(this.cooldownTimer);
           }
         }, 1000);
+        intervalsList.push(this.cooldownTimer);
       }
       // remove all targets from the ability effect since ability effect is finished
       theEffect.targets = [];

@@ -411,11 +411,7 @@ class PlanState {
     fightTimer = setInterval(function() {
       currentFightTime++;
       if (currentFightTime/100 >= fightTime) {
-        clearInterval(fightTimer);
-        turns++;
-        console.log(turns);
-        newTurn();
-        whichScreen = PLAN_STATE;
+        fightToPlan();
       }
     }, 10);
     whichScreen = FIGHT_STATE;

@@ -100,6 +100,9 @@ let agentImages;
 let enemiesList = [];
 let playersList = [];
 
+let timeoutsList = [];
+let intervalsList = [];
+
 // how many turns has past
 let turns = 1;
 
@@ -295,6 +298,7 @@ function setup() {
 // p5 draw
 function draw() {
   clear();
+  checkAliveAll();
   whichScreen.draw();
   framecount++;
   // console.log(framecount);
@@ -368,21 +372,29 @@ function newTurn() {
     }
   }
   for (var i = 0; i < playersList.length; i++) {
+    // reset stat changes
+    playersList[i].offenseChange = 0;
+    playersList[i].defenseChange = 0;
     // if a player character was not frontline and did not use any abilities last turn, it gains refreshed this turn
     if (playersList[i].acted === false && playersList[i].frontlineTurns === 0) {
       // if not the first turn, give the characters refreshed buff
       if (turns > 1) {
         playersList[i].energyBoost = 3;
+        playersList[i].offenseChange = 10;
+        playersList[i].defenseChange = 10;
         playersList[i].refreshed = true;
       }
     } else if (playersList[i].acted === true) {
       playersList[i].energyBoost = 0;
       playersList[i].refreshed = false;
     }
+    // if the frontline is tired, get debuffs
+    if (frontline.tired === true) {
+      frontline.offenseChange = -10;
+      frontline.defenseChange = -10;
+    }
     playersList[i].energy += playersList[i].energyTurn + playersList[i].energyBoost;
     playersList[i].energy = constrain(playersList[i].energy, 0, playersList[i].maxEnergy);
-    playersList[i].offenseChange = 0;
-    playersList[i].defenseChange = 0;
     playersList[i].acted = false;
     // all abilities are no used yet
     for (var i2 = 0; i2 < playersList[i].abilities[0].length; i2++) {
@@ -404,6 +416,24 @@ function checkAliveAll() {
   }
   for (var i = 0; i < playersList.length; i++) {
     if (playersList[i].hp <= 0) {
+      if (playersList.length > 1) {
+        while (currentChar.name === playersList[i].name) {
+          currentChar = random(playersList);
+        }
+        // if we are in fight state, then if the frontline dies, go back to Plan state
+        if (frontline.name === playersList[i].name && whichScreen === FIGHT_STATE) {
+          // if this is the last player character
+          if (playersList.length <= 1) {
+            winLose = "lose";
+            whichScreen = END_STATE;
+          } else if (playersList.length > 1) {
+            fightToPlan();
+          }
+        }
+        while (frontline.name === playersList[i].name) {
+          frontline = random(playersList);
+        }
+      }
       playersList.splice(i, 1);
     }
   }
@@ -415,6 +445,25 @@ function checkAliveAll() {
     winLose = "lose";
     whichScreen = END_STATE;
   }
+}
+
+// go from the fight state to the plan state
+function fightToPlan() {
+  clearInterval(fightTimer);
+  turns++;
+  newTurn();
+  whichScreen = PLAN_STATE;
+}
+
+// end the game
+function endGame() {
+  for (var i = 0; i < timeoutsList.length; i++) {
+    clearTimeout(timeoutsList[i]);
+  }
+  for (var i = 0; i < intervalsList.length; i++) {
+    clearInterval(intervalsList[i]);
+  }
+  whichScreen = END_STATE;
 }
 
 // p5 mouse is pressed

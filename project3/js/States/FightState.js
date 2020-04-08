@@ -6,8 +6,6 @@ class FightState {
   }
   draw() {
     background(200);
-    // check if all characters are alive
-    checkAliveAll();
     // draw frontline player, enemies, movements bullets
     this.moveSprites();
     this.drawCharSprites();
