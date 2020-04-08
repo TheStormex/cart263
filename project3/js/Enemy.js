@@ -22,7 +22,8 @@ class Enemy {
     push();
     fill(0);
     noStroke();
-    ellipse(this.x, this.y, this.size);
+    imageMode(CENTER);
+    image(this.images.front, this.x, this.y, this.size, this.size);
     pop();
   }
   move() {

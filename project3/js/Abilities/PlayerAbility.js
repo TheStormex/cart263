@@ -35,83 +35,100 @@ class PlayerAbility {
   }
   // when this ability happens, do its effects (spawn bullets or if is support ability, instant effect)
   happens() {
-      // remove the energy this costs and set the player's acted to yes
-      this.user.energy -= this.cost;
-      this.user.acted = true;
-      // for each effect, apply
-      for (var i = 0; i < this.effects.length; i++) {
-        let theEffect = this.effects[i];
-        switch (this.effects[i].type) {
-          case "damage":
-            for (var i2 = 0; i2 < theEffect.targets.length; i2++) {
-              theEffect.targets[i].hp -= round(theEffect.amount * (1+this.user.offenseChange*0.01) * (1+theEffect.targets[i].defenseChange*0.01));
-              theEffect.targets[i].hp = constrain(theEffect.targets[i].hp, 0, theEffect.targets[i].maxHp);
+    // check if the ability did what it needs to give ult charge
+    let hitTarget = false;
+    let healed = false;
+    // remove the energy this costs and set the player's acted to yes
+    this.user.energy -= this.cost;
+    this.user.acted = true;
+    // for each effect, apply
+    for (var i = 0; i < this.effects.length; i++) {
+      let theEffect = this.effects[i];
+      switch (this.effects[i].type) {
+        case "damage":
+          for (var i2 = 0; i2 < theEffect.targets.length; i2++) {
+            theEffect.targets[i].hp -= round(theEffect.amount * (1+this.user.offenseChange*0.01) * (1+theEffect.targets[i].defenseChange*0.01));
+            theEffect.targets[i].hp = constrain(theEffect.targets[i].hp, 0, theEffect.targets[i].maxHp);
+          }
+          break;
+        case "heal":
+          for (var i2 = 0; i2 < theEffect.targets.length; i2++) {
+            let targetOldHp = theEffect.targets[i].hp;
+            theEffect.targets[i].hp += theEffect.amount;
+            theEffect.targets[i].hp = constrain(theEffect.targets[i].hp, 0, theEffect.targets[i].maxHp);
+            // if the target's health went up after being healed, then give heal ult charge
+            if (targetOldHp < theEffect.targets[i].maxHp && theEffect.targets[i].hp > targetOldHp) {
+              healed = true;
             }
+          }
+          break;
+        case "offense_up":
+          for (var i2 = 0; i2 < theEffect.targets.length; i2++) {
+            theEffect.targets[i].offenseChange += theEffect.amount;
+          }
+          break;
+        case "offense_down":
+          for (var i2 = 0; i2 < theEffect.targets.length; i2++) {
+            theEffect.targets[i].offenseChange -= theEffect.amount;
+          }
+          break;
+        case "defense_up":
+          for (var i2 = 0; i2 < theEffect.targets.length; i2++) {
+            theEffect.targets[i].defenseChange += theEffect.amount;
+          }
+          break;
+        case "defense_down":
+          for (var i2 = 0; i2 < theEffect.targets.length; i2++) {
+            theEffect.targets[i].defenseChange -= theEffect.amount;
+          }
+          break;
+        case "ramp":
+          for (var i2 = 0; i2 < theEffect.targets.length; i2++) {
+            theEffect.targets[i].energy += theEffect.amount;
+            theEffect.targets[i].energy = constrain(theEffect.targets[i].energy, 0, theEffect.targets[i].maxEnergy);
+          }
+        // combat only effects
+        case "bullet":
+          for (var i = 0; i < theEffect.amount; i++) {
+          //  let newAbilityBullet = new Bullet();
+          }
+          break;
+        case "dash":
+          break;
+        default: console.log("error");
+      }
+      for (var i = 0; i < this.chargeGive.length; i++) {
+        switch (this.chargeGive[i][1]) {
+          case "use":
+            this.user.ultCharge += this.chargeGive[i][0];
             break;
           case "heal":
-            for (var i2 = 0; i2 < theEffect.targets.length; i2++) {
-              theEffect.targets[i].hp += theEffect.amount;
-              theEffect.targets[i].hp = constrain(theEffect.targets[i].hp, 0, theEffect.targets[i].maxHp);
+            if (healed === true) {
+              this.user.ultCharge += this.chargeGive[i][0];
             }
             break;
-          case "offense_up":
-            for (var i2 = 0; i2 < theEffect.targets.length; i2++) {
-              theEffect.targets[i].offenseChange += theEffect.amount;
-            }
-            break;
-          case "offense_down":
-            for (var i2 = 0; i2 < theEffect.targets.length; i2++) {
-              theEffect.targets[i].offenseChange -= theEffect.amount;
-            }
-            break;
-          case "defense_up":
-            for (var i2 = 0; i2 < theEffect.targets.length; i2++) {
-              theEffect.targets[i].defenseChange += theEffect.amount;
-            }
-            break;
-          case "defense_down":
-            for (var i2 = 0; i2 < theEffect.targets.length; i2++) {
-              theEffect.targets[i].defenseChange -= theEffect.amount;
-            }
-            break;
-          case "ramp":
-            for (var i2 = 0; i2 < theEffect.targets.length; i2++) {
-              theEffect.targets[i].energy += theEffect.amount;
-              theEffect.targets[i].energy = constrain(theEffect.targets[i].energy, 0, theEffect.targets[i].maxEnergy);
-            }
-          // combat only effects
-          case "bullet":
-            for (var i = 0; i < theEffect.amount; i++) {
-            //  let newAbilityBullet = new Bullet();
-            }
-            break;
-          case "dash":
-            break;
-          default: console.log("error");
+          default:
         }
-        for (var i = 0; i < this.chargeGive.length; i++) {
-          if (this.chargeGive[i][1] === "use") {
-            this.user.ultCharge += this.chargeGive[i][0];
-            this.used = true;
-          }
-        }
-        // if this is a combat ability with a cooldown, then after use, set the timer
-        if (this.cooldown !== 0) {
-          this.onCooldown = true;
-          this.cooldownLeft = this.cooldown;
-          console.log(this.cooldownLeft);
-          this.cooldownTimer = setInterval(function() {
-            this.cooldownLeft -= 1;
-            console.log(this);
-            if (this.cooldownLeft === 0) {
-              this.onCooldown = false;
-              clearInterval(this.cooldownLeft);
-            }
-          }, 1000, this);
-        }
-        // remove all targets from the ability effect since ability effect is finished
-        theEffect.targets = [];
       }
+      // if this is a combat ability with a cooldown, then after use, set the timer
+      if (this.cooldown !== 0) {
+        this.onCooldown = true;
+        this.cooldownLeft = this.cooldown;
+        console.log(this.cooldownLeft);
+        this.cooldownTimer = setInterval(function() {
+          this.cooldownLeft -= 1;
+          console.log(this);
+          if (this.cooldownLeft === 0) {
+            this.onCooldown = false;
+            clearInterval(this.cooldownLeft);
+          }
+        }, 1000, this);
+      }
+      // this ability is now used this turn
+      this.used = true;
+      // remove all targets from the ability effect since ability effect is finished
+      theEffect.targets = [];
+    }
   }
 }
 
