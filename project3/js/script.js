@@ -345,6 +345,9 @@ function drawCommonUI() {
     // character head image
     imageMode(CENTER, CENTER);
     image(currentChar.images.face, width/18, height-height/7, width/10, height/6);
+    // how many turns has passed
+    let turnsText = "Turn " + turns;
+    text(turnsText, width/18, height-height/30);
     pop();
   } else {
     currentChar = playersList[0];
@@ -354,14 +357,26 @@ function drawCommonUI() {
 // when returning to PlanState, give player characters new energy, if a character has not moved, they gain bonus energy
 // reset the buffs and debuffs of all characters
 function newTurn() {
+  // the frontline who fought last turn gets 1 more turn as frontline, if too many, then they are now fatigued
+  // if was frontline, then cannot have refreshed
+  if (turns > 1) {
+    frontline.frontlineTurns++;
+    frontline.refreshed = false;
+    if (frontline.frontlineTurns >= 2) {
+      frontline.tired = true;
+    }
+  }
   for (var i = 0; i < playersList.length; i++) {
-    if (playersList[i].acted === false) {
-      // if not the first turn, apply the not moved bonus
+    // if a player character was not frontline and did not use any abilities last turn, it gains refreshed this turn
+    if (playersList[i].acted === false && playersList[i].frontlineTurns === 0) {
+      // if not the first turn, give the characters refreshed buff
       if (turns > 1) {
         playersList[i].energyBoost = 3;
+        playersList[i].refreshed = true;
       }
     } else if (playersList[i].acted === true) {
       playersList[i].energyBoost = 0;
+      playersList[i].refreshed = false;
     }
     playersList[i].energy += playersList[i].energyTurn + playersList[i].energyBoost;
     playersList[i].energy = constrain(playersList[i].energy, 0, playersList[i].maxEnergy);

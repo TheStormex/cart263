@@ -118,6 +118,20 @@ class PlanState {
       } else {
         text("Click to make Frontline", width*(i+1)/(playersList.length+1), height/2+height/9);
       }
+      // if this character is tired of being frontline, show it
+      if (playersList[i].tired === true) {
+        strokeWeight(3);
+        stroke(100, 0, 100);
+        fill(255, 0, 0);
+        text("Tired!", width*(i+1)/(playersList.length+1), height/2+height/7);
+        noStroke();
+      }  else if (playersList[i].refreshed === true) { // if this character is refreshed by not using any abilities last turn and was not frontline
+        strokeWeight(3);
+        stroke(0, 150, 0);
+        fill(0, 255, 100);
+        text("Refreshed!", width*(i+1)/(playersList.length+1), height/2+height/7);
+        noStroke();
+      }
       // draw the status changes of each character if they are not 0
       rectMode(CENTER);
       if (playersList[i].offenseChange !== 0) {
@@ -370,6 +384,13 @@ class PlanState {
   // go to the fight state from here
   goToFight() {
     currentChar = frontline;
+    // all characters not frontline has their frontline turns reset
+    for (var i = 0; i < playersList.length; i++) {
+      if (playersList[i].name !== frontline.name) {
+        playersList[i].frontlineTurns = 0;
+        playersList[i].tired = false;
+      }
+    }
     // for each enemy, give them a random moveset for the fight sequence
     let highestTime = 0;
     for (var i = 0; i < enemiesList.length; i++) {

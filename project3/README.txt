@@ -81,4 +81,5 @@ Switch between each hacker as the front line often to prevent one from becoming 
 Good luck! The fate of humanity rests on your fingertips!
 
 code in:
-- shoot cooldown
+- fatigue consequences
+- ability happens

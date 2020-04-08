@@ -88,7 +88,7 @@ class FightState {
         rectMode(CORNER);
         rect(width/7+(i*width/3.5), height-height/4.5, width/4, height/6);
         noStroke();
-        // name, cost and ability
+        // name, cost and ability, cooldown
         // if activated, it is highlighted
         for (var i2 = 0; i2 < combatButtons.length; i2++) {
           if (currentCombatAbilityKey === abilityButton) {
@@ -135,6 +135,7 @@ class FightState {
       playerBullets[i].move();
       playerBullets[i].draw();
       playerBullets[i].contact();
+      // if this projectile is to be destroyed now, then removed it from the array
       if (playerBullets[i].isDestroyed === true) {
         playerBullets.splice(i, 1);
       }
@@ -153,6 +154,21 @@ class FightState {
     } else if (this.situation === "ability") {
       currentAbility.user = frontline;
       currentAbility.happens();
+      // if this is a combat ability with a cooldown, then after use, set the timer
+      let thisAbility = currentAbility;
+      if (thisAbility.cooldown !== 0) {
+        thisAbility.onCooldown = true;
+        thisAbility.cooldownLeft = thisAbility.cooldown;
+        console.log(thisAbility.cooldownLeft);
+        thisAbility.cooldownTimer = setInterval(function() {
+          thisAbility.cooldownLeft -= 1;
+          console.log(thisAbility);
+          if (thisAbility.cooldownLeft <= 0) {
+            thisAbility.onCooldown = false;
+            clearInterval(thisAbility.cooldownTimer);
+          }
+        }, 1000, thisAbility);
+      }
       currentCombatAbilityKey = "0";
       this.situation = "shoot";
     }

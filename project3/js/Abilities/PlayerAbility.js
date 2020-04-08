@@ -110,20 +110,6 @@ class PlayerAbility {
           default:
         }
       }
-      // if this is a combat ability with a cooldown, then after use, set the timer
-      if (this.cooldown !== 0) {
-        this.onCooldown = true;
-        this.cooldownLeft = this.cooldown;
-        console.log(this.cooldownLeft);
-        this.cooldownTimer = setInterval(function() {
-          this.cooldownLeft -= 1;
-          console.log(this);
-          if (this.cooldownLeft === 0) {
-            this.onCooldown = false;
-            clearInterval(this.cooldownLeft);
-          }
-        }, 1000, this);
-      }
       // this ability is now used this turn
       this.used = true;
       // remove all targets from the ability effect since ability effect is finished

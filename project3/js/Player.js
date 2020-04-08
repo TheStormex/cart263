@@ -3,7 +3,8 @@ class Player {
     this.name = name;
     this.maxHp = maxHp;
     this.hp = maxHp;
-    this.speed = width/200+height/200;
+    this.baseSpeed = width/200+height/200;
+    this.currentSpeed = this.baseSpeed;
     this.x = width/2;
     this.y = height/2;
     this.angle = 0;
@@ -12,8 +13,10 @@ class Player {
     this.size = width/20;
     this.energy = 0;
     this.maxEnergy = maxEnergy;
-    // bonus energy gained if not move last turn
+    // bonus energy gained if not move last turn, char is refreshed this turn
+    this.refreshed = false;
     this.energyBoost = 0;
+    // stat changes
     this.offenseChange = 0;
     this.defenseChange = 0;
     this.ultCharge = 0;
@@ -34,19 +37,25 @@ class Player {
     this.invincible = false;
   }
   move() {
+    // apply tired penalty if tired
+    if (this.tired === true) {
+      this.currentSpeed = this.baseSpeed/2;
+    } else if (this.tired === false) {
+      this.currentSpeed = this.baseSpeed;
+    }
     this.vx = 0;
     this.vy = 0;
     if (keyIsDown(87)) {
-      this.vy = -this.speed;
+      this.vy = -this.currentSpeed;
     }
     if (keyIsDown(65)) {
-      this.vx = -this.speed;
+      this.vx = -this.currentSpeed;
     }
     if (keyIsDown(83)) {
-      this.vy = this.speed;
+      this.vy = this.currentSpeed;
     }
     if (keyIsDown(68)) {
-      this.vx = this.speed;
+      this.vx = this.currentSpeed;
     }
     this.x += this.vx;
     this.y += this.vy;
