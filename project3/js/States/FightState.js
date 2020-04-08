@@ -6,28 +6,48 @@ class FightState {
   }
   draw() {
     background(200);
-    // draw frontline player, enemies, movements bullets
-    this.moveSprites();
-    this.drawCharSprites();
-    this.drawProjectiles();
+    // move, check for actions and draw frontline player, enemies, movements bullets
+    this.drawSprites();
     this.drawUI();
   }
-  drawCharSprites() {
+  drawSprites() {
     // if screen is resized, move each char to new locations
     push();
+    // draw enemies
+    for (var i = 0; i < enemiesList.length; i++) {
+      enemiesList[i].move();
+      enemiesList[i].wrap();
+      enemiesList[i].contact();
+      enemiesList[i].checkAlive();
+      if (enemiesList[i].alive === false) {
+        enemiesList.splice(i, 1);
+      }
+      enemiesList[i].draw();
+      enemiesList[i].shoot();
+    }
+    // draw projectiles
+    for (var i = 0; i < projectilesList.length; i++) {
+      projectilesList[i].move();
+      projectilesList[i].draw();
+      projectilesList[i].contact();
+      if (typeof projectilesList[i] != "undefined") {
+        projectilesList[i].wrap();
+      }
+
+      // if this projectile is to be destroyed now, then removed it from the array
+      // if (projectilesList[i].isDestroyed === true) {
+      //   projectilesList.splice(i, 1);
+      // }
+    }
     noStroke();
     // draw the player frontline character
     fill(0,255,0);
+    frontline.move();
     let vector1 = createVector(frontline.x, frontline.y);
     let vector2 = createVector(mouseX - frontline.x, mouseY - frontline.y);
     frontline.angle = vector2.heading();
     imageMode(CENTER);
     image(frontline.images.front, frontline.x, frontline.y, width/20, width/20);
-    // draw the enemy characters
-    fill(255,0,0);
-    for (var i = 0; i < enemiesList.length; i++) {
-      enemiesList[i].draw();
-    }
     pop();
   }
   drawUI() {
@@ -129,25 +149,13 @@ class FightState {
     pop();
     }
   }
-  // draw all projectiles on the screen
-  drawProjectiles() {
-    for (var i = 0; i < playerBullets.length; i++) {
-      playerBullets[i].move();
-      playerBullets[i].draw();
-      playerBullets[i].contact();
-      // if this projectile is to be destroyed now, then removed it from the array
-      // if (playerBullets[i].isDestroyed === true) {
-      //   playerBullets.splice(i, 1);
-      // }
-    }
-  }
   // if mouse is down, check if an ability is clicked, if not, shoot basic bullets
   // if an ability is clicked then shoot that ability in that direction / location
   mouseDown() {
     if (this.situation === "shoot") {
       if (frontline.basicBulletCooldown === false) {
-        let playerBasicBullet = new Bullet(frontline, frontline.x, frontline.y, width*(frontline.basicBullet[1]/2)/100+height*(frontline.basicBullet[1]/2)/100, frontline.angle, frontline.basicBullet[3], frontline.basicBullet[4], frontline.basicBullet[5], width*(frontline.basicBullet[6]/2)/100+height*(frontline.basicBullet[6]/2)/100, frontline.basicBullet[7], frontline.basicBullet[8], frontline.basicBullet[9], frontline.basicBullet[10], frontline.basicBullet[11], frontline.basicBullet[12]);
-        playerBullets.push(playerBasicBullet);
+        let playerBasicBullet = new Bullet(frontline, frontline.x, frontline.y, width*(frontline.basicBullet[0]/2)/100+height*(frontline.basicBullet[0]/2)/100, frontline.angle, frontline.basicBullet[2], frontline.basicBullet[3], frontline.basicBullet[4], frontline.basicBullet[5], width*(frontline.basicBullet[6]/2)/100+height*(frontline.basicBullet[6]/2)/100, frontline.basicBullet[7], frontline.basicBullet[8], frontline.basicBullet[9], frontline.basicBullet[10], frontline.basicBullet[11], frontline.basicBullet[12]);
+        projectilesList.push(playerBasicBullet);
         frontline.basicBulletCooldown = true;
         setTimeout(function() {frontline.basicBulletCooldown = false}, frontline.basicBullet[11]);
       }
@@ -171,26 +179,6 @@ class FightState {
       // }
       currentCombatAbilityKey = "0";
       this.situation = "shoot";
-    }
-  }
-  // move frontline character, enemies, bullets, etc.
-  moveSprites() {
-    frontline.move();
-    for (var i = 0; i < enemiesList.length; i++) {
-      enemiesList[i].move();
-      enemiesList[i].wrap();
-      enemiesList[i].contact();
-      enemiesList[i].checkAlive();
-      if (enemiesList[i].alive === false) {
-        enemiesList.splice(i, 1);
-      }
-      enemiesList[i].shoot();
-    }
-    for (var i = 0; i < playerBullets.length; i++) {
-      playerBullets[i].move();
-    }
-    for (var i = 0; i < enemyBullets.length; i++) {
-      enemyBullets[i].move();
     }
   }
   // when a key is pressed
@@ -227,6 +215,7 @@ class FightState {
           currentAbility = 0;
           currentCombatAbilityKey = 0;
           console.log("not enough");
+          console.log(abilityToBeActivated.cooldownLeft);
         }
       }
     }

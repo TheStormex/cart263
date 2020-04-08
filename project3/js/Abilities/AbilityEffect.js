@@ -1,5 +1,5 @@
 class AbilityEffect {
-  constructor(type, canTargets, amount, bullet, step, aoe) {
+  constructor(type, canTargets, amount, bullet, step, aoe, delay) {
     // type of the effect
     this.type = type;
     // what characters this ability effect can target, gets a list when used (support)
@@ -15,6 +15,8 @@ class AbilityEffect {
     this.step = step;
     // if this is an area of effect ability that affect all targets of group (support)
     this.aoe = aoe;
+    // if there is a delay between parts of this effect (output many bullets but 1 at a time)
+    this.delay = delay;
     if (this.aoe === true) {
       for (var i = 0; i < this.canTargets.length; i++) {
         this.targets.push(this.canTargetsList[i]);

@@ -107,13 +107,13 @@ let intervalsList = [];
 let turns = 1;
 
 // bullets characteristics
-// (origin, speed, angle, damage, targets, effects, size, change, image, wall, ifHit, timer)
+// (speed, angle, damage, moveType, targets, effects, size, changes, image, wall, ifHit, timer)
 // speed and size = % of screen
-let pro_p_bolt_basic = ["to be set", 0.6, "origin", 2, "enemies", ["damage"], 3, "none", "to be set", "done", ["done", "nothing"], 250];
-let pro_p_nuts_basic = ["to be set", 1, "origin", 1, "enemies", ["damage"], 1.5, "none", "to be set", "done", ["done", "nothing"], 150];
-let pro_p_logicBomb = [];
-let pro_p_logicBombExplosion = [];
-let pro_p_backdoor = [];
+let pro_p_bolt_basic = [1.2, "origin", 2, "straight", "enemies", ["damage"], 3, [], "to be set", "done", ["done", "nothing"], 250];
+let pro_p_nuts_basic = [2, "origin", 1, "straight", "enemies", ["damage"], 1.5, [], "to be set", "done", ["done", "nothing"], 150];
+let pro_p_logicBomb = [0.6, "origin", 5, "straight", "enemies", ["damage"], 8, ["speed", -1], "to be set", "done", ["done", "nothing"], 150];
+let pro_p_logicBombExplosion = [0, "origin", 5, "stay", "enemies", ["damage"], 8, ["size", 2], "to be set", "done", ["done", "nothing"], 150];
+let pro_p_backdoor = [0, "origin", 1, "stay", "enemies", ["damage"], 2, ["size", -1], "to be set", "done", ["done", "nothing"], 150];
 let pro_p_ult_bitRotWorm = [];
 let pro_p_DDOS = [];
 let pro_p_bruteForce = [];
@@ -132,29 +132,29 @@ let pro_e_outward = [];
 
 
 // nuts and bolt's abilities and effects
-let ab_logicBomb_effect = new AbilityEffect("bullet", "", 1, pro_p_logicBomb, false, false);
+let ab_logicBomb_effect = new AbilityEffect("bullet", "", 1, pro_p_logicBomb, false, false, 0);
 let ab_logicBomb = new PlayerAbility("Logic Bomb", 3, [ab_logicBomb_effect], "Throw a projectile", 32, "none", false, [[5, "hit"]], 3);
-let ab_backdoor_effect = new AbilityEffect("bullet", "", 1, pro_p_backdoor, false, false);
-let ab_backdoor_effect2 = new AbilityEffect("dash", "", 1, "", false, false);
+let ab_backdoor_effect = new AbilityEffect("bullet", "", 5, pro_p_backdoor, false, false, 20);
+let ab_backdoor_effect2 = new AbilityEffect("dash", "", 3, "", false, false, 0);
 let ab_backdoor = new PlayerAbility("Backdoor", 2, [ab_backdoor_effect, ab_backdoor_effect2], "Dash and weaken enemies", 32, "none", false, [[5, "hit"], [2, "use"]], 2);
-let ab_cleanupProtocol_effect = new AbilityEffect("heal", "players", 6, "", false, false);
+let ab_cleanupProtocol_effect = new AbilityEffect("heal", "players", 6, "", false, false, 0);
 let ab_cleanupProtocol = new PlayerAbility("Cleanup Protocol",  3, [ab_cleanupProtocol_effect], "Heal a friendly character", 32, "none", false, [[5, "use"], [10, "heal"]], 0);
-let ab_signalBoost_effect = new AbilityEffect("ramp", "players", 5, "", false, false);
+let ab_signalBoost_effect = new AbilityEffect("ramp", "players", 5, "", false, false, 0);
 let ab_signalBoost = new PlayerAbility("Signal Boost", 4, [ab_signalBoost_effect], "Give 5 energy to a friendly character", 32, "none", false, [[10, "use"]], 0);
-let ab_ult_bitRotWorm_effect = new AbilityEffect("bullet", "", 10, "", false, false);
+let ab_ult_bitRotWorm_effect = new AbilityEffect("bullet", "", 10, "", false, false, 10);
 let ab_ult_bitRotWorm = new PlayerAbility("Bitrot Worm", 3, [ab_ult_bitRotWorm_effect], "Shoot a powerful beam", 32, "none", true, [[5, "hit"]], 0);
-let ab_firewall_effect = new AbilityEffect("defense_up", "players", 25, "", false, false);
+let ab_firewall_effect = new AbilityEffect("defense_up", "players", 25, "", false, false, 0);
 let ab_firewall = new PlayerAbility("Firewall", 3, [ab_firewall_effect], "Boost defenses", 32, "none", false, [[10, "use"]], 0);
-let ab_targetExploits_effect = new AbilityEffect("defense_down", "enemies", 25, "", false, false);
+let ab_targetExploits_effect = new AbilityEffect("defense_down", "enemies", 25, "", false, false, 0);
 let ab_targetExploits = new PlayerAbility("Target Exploits", 3, [ab_targetExploits_effect], "Weaken enemy character", 32, "none", false, [[10, "use"]], 0);
-let ab_DOOS_effect = new AbilityEffect("stun", "", 1.5, "", false, false);
+let ab_DOOS_effect = new AbilityEffect("bullet", "", 3, "", false, false, 50);
 let ab_DDOS = new PlayerAbility("DDoS", 3, [["stun", 1.5]], "Stun enemies hit", 32, "none", false, [[5, "hit"]], 4);
-let ab_bruteForce_effect = new AbilityEffect("bullet", "", 1, "", false, false);
-let ab_bruteForce_effect2 = new AbilityEffect("dash", "", 1, "", false, false);
+let ab_bruteForce_effect = new AbilityEffect("bullet", "", 3, "", false, false, 10);
+let ab_bruteForce_effect2 = new AbilityEffect("dash", "", 3, "", false, false, 0);
 let ab_bruteForce = new PlayerAbility("Brute Force Attack", 3, [ab_bruteForce_effect, ab_bruteForce_effect2], "Dash and make enemies frail", 32, "none", false, [[5, "hit"], [2, "use"]], 3);
-let ab_ult_vpn_effect = new AbilityEffect("heal", "", 5, "", false, false);
-let ab_ult_vpn_effect2 = new AbilityEffect("defense_up", "", 15, "", false, false);
-let ab_ult_vpn_effect3= new AbilityEffect("offense_up", "", 15, "", false, false);
+let ab_ult_vpn_effect = new AbilityEffect("heal", "", 5, "", false, false, 0);
+let ab_ult_vpn_effect2 = new AbilityEffect("defense_up", "", 15, "", false, false, 0);
+let ab_ult_vpn_effect3= new AbilityEffect("offense_up", "", 15, "", false, false, 0);
 let ab_ult_vpn = new PlayerAbility("Activate VPN", 3, [ab_ult_vpn_effect, ab_ult_vpn_effect2, ab_ult_vpn_effect3], "Heal all friendly characters and boost stats", 32, "none", true, [[10, "use"]], 0);
 
 // the ability that is being activated right now
@@ -171,8 +171,7 @@ let ab_e_inOut = new EnemyAbility("", "", "");
 let ab_e_shoot = new EnemyAbility("noise", [[, 5],[]], "walls", 10);
 let ab_e_teleport = new EnemyAbility("line", "1", "through", 8);
 
-let enemyBullets = [];
-let playerBullets = [];
+let projectilesList = [];
 
 let mouseOver = 0;
 let currentKeyPressed = 0;
@@ -417,21 +416,21 @@ function checkAliveAll() {
   for (var i = 0; i < playersList.length; i++) {
     if (playersList[i].hp <= 0) {
       if (playersList.length > 1) {
-        while (currentChar.name === playersList[i].name) {
-          currentChar = random(playersList);
+        if (currentChar.name === playersList[i].name) {
+          currentChar = playersList[(i+1)%playersList.length];
         }
         // if we are in fight state, then if the frontline dies, go back to Plan state
         if (frontline.name === playersList[i].name && whichScreen === FIGHT_STATE) {
           // if this is the last player character
           if (playersList.length <= 1) {
             winLose = "lose";
-            whichScreen = END_STATE;
+            endGame();
           } else if (playersList.length > 1) {
             fightToPlan();
           }
         }
-        while (frontline.name === playersList[i].name) {
-          frontline = random(playersList);
+        if (frontline.name === playersList[i].name) {
+          frontline = playersList[(i+1)%playersList.length];
         }
       }
       playersList.splice(i, 1);
@@ -439,17 +438,18 @@ function checkAliveAll() {
   }
   if (enemiesList.length <= 0) {
     winLose = "win";
-    whichScreen = END_STATE;
+    endGame()
   }
   if (playersList.length <= 0) {
     winLose = "lose";
-    whichScreen = END_STATE;
+    endGame();
   }
 }
 
 // go from the fight state to the plan state
 function fightToPlan() {
   clearInterval(fightTimer);
+  projectilesList = [];
   turns++;
   newTurn();
   whichScreen = PLAN_STATE;

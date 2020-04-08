@@ -81,6 +81,7 @@ Switch between each hacker as the front line often to prevent one from becoming 
 Good luck! The fate of humanity rests on your fingertips!
 
 code in:
-- fatigue consequences
-- ability happens
+- ability happens for all player abilities
+- enemy abilities
+- bullets recalling the ult charge if hit a target
 - end state, clear all timers

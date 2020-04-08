@@ -1,5 +1,5 @@
 class Bullet {
-  constructor(origin, x, y, speed, angle, damage, targets, effects, size, change, image, wall, ifHit, timer) {
+  constructor(origin, x, y, speed, angle, damage, moveType, targets, effects, size, changes, image, wall, ifHit, timer) {
     // who shot this bullet
     this.origin = origin;
     this.x = x;
@@ -9,6 +9,7 @@ class Bullet {
     this.vx = 0;
     this.vy = 0;
     this.damage = damage;
+    this.moveType = moveType;
     // what char can this bullet hit?
     this.targets = targets;
     // what effects this bullet has when hit a target
@@ -16,8 +17,8 @@ class Bullet {
     // how larget is this bullet
     this.size = size;
     // if this changes size, damage, who it affecs, speed, etc.
-    // check which ones this have and apply that change every draw
-    this.change = change;
+    // check which ones this have and apply those changes every draw
+    this.changes = changes;
     this.image = image;
     // if this touches a wall, what to do
     this.wall = wall;
@@ -29,10 +30,19 @@ class Bullet {
     this.isDestroyed = false;
   }
   move() {
-    this.vx = this.speed * cos(this.angle);
-    this.vy = this.speed * sin(this.angle)
-    this.x += this.vx;
-    this.y += this.vy;
+    // how will this bullet move
+    switch (this.moveType) {
+      case "straight":
+        this.vx = this.speed * cos(this.angle);
+        this.vy = this.speed * sin(this.angle);
+        this.x += this.vx;
+        this.y += this.vy;
+        break;
+      case "stay":
+        // not move
+        break;
+      default:
+    }
   }
   contact() {
     if (this.targets === "enemies") {
@@ -48,6 +58,37 @@ class Bullet {
       if (d < frontline.size/2 + this.size/2) {
         this.effectHappens(frontline);
       }
+    }
+  }
+
+  wrap() {
+    switch (this.wall) {
+      case "done":
+        // prevent going outside of walls
+        if (this.x-this.size/2 <= 0) {
+          let index = projectilesList.indexOf(this);
+          projectilesList.splice(index, 1);
+        }
+        if (this.x+this.size/2 > width) {
+          let index = projectilesList.indexOf(this);
+          projectilesList.splice(index, 1);
+        }
+        if (this.y-this.size/2 < 0) {
+          let index = projectilesList.indexOf(this);
+          projectilesList.splice(index, 1);
+        }
+        if (this.y+this.size/2 > height-height/3) {
+          let index = projectilesList.indexOf(this);
+          projectilesList.splice(index, 1);
+        }
+        break;
+      default:
+    }
+  }
+
+  changesApply() {
+    for (var i = 0; i < this.changes.length; i++) {
+    //  this.changes[i]
     }
   }
   draw() {
@@ -71,8 +112,8 @@ class Bullet {
     }
     switch (this.ifHit[0]) {
       case "done":
-          let index = playerBullets.indexOf(this);
-          playerBullets.splice(index, 1);
+          let index = projectilesList.indexOf(this);
+          projectilesList.splice(index, 1);
       //  this.isDestroyed = true;
         break;
       case "through":
@@ -88,7 +129,6 @@ class Bullet {
         // nothing
         break;
       default:
-
     }
   }
 }

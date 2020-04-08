@@ -42,69 +42,90 @@ class PlayerAbility {
     this.user.energy -= this.cost;
     this.user.acted = true;
     // for each effect, apply
-    for (var i = 0; i < this.effects.length; i++) {
+    for (let i = 0; i < this.effects.length; i++) {
       let theEffect = this.effects[i];
       switch (this.effects[i].type) {
         case "damage":
-          for (var i2 = 0; i2 < theEffect.targets.length; i2++) {
+          for (let i2 = 0; i2 < theEffect.targets.length; i2++) {
             theEffect.targets[i].hp -= round(theEffect.amount * (1+this.user.offenseChange*0.01) * (1+theEffect.targets[i].defenseChange*0.01));
             theEffect.targets[i].hp = constrain(theEffect.targets[i].hp, 0, theEffect.targets[i].maxHp);
           }
           break;
         case "heal":
-          for (var i2 = 0; i2 < theEffect.targets.length; i2++) {
-            let targetOldHp = theEffect.targets[i].hp;
-            theEffect.targets[i].hp += theEffect.amount;
-            theEffect.targets[i].hp = constrain(theEffect.targets[i].hp, 0, theEffect.targets[i].maxHp);
+          for (let i2 = 0; i2 < theEffect.targets.length; i2++) {
+            let targetOldHp = theEffect.targets[i2].hp;
+            theEffect.targets[i2].hp += theEffect.amount;
+            theEffect.targets[i2].hp = constrain(theEffect.targets[i2].hp, 0, theEffect.targets[i2].maxHp);
             // if the target's health went up after being healed, then give heal ult charge
-            if (targetOldHp < theEffect.targets[i].maxHp && theEffect.targets[i].hp > targetOldHp) {
+            if (targetOldHp < theEffect.targets[i2].maxHp && theEffect.targets[i2].hp > targetOldHp) {
               healed = true;
             }
           }
           break;
         case "offense_up":
-          for (var i2 = 0; i2 < theEffect.targets.length; i2++) {
+          for (let i2 = 0; i2 < theEffect.targets.length; i2++) {
             theEffect.targets[i].offenseChange += theEffect.amount;
           }
           break;
         case "offense_down":
-          for (var i2 = 0; i2 < theEffect.targets.length; i2++) {
+          for (let i2 = 0; i2 < theEffect.targets.length; i2++) {
             theEffect.targets[i].offenseChange -= theEffect.amount;
           }
           break;
         case "defense_up":
-          for (var i2 = 0; i2 < theEffect.targets.length; i2++) {
+          for (let i2 = 0; i2 < theEffect.targets.length; i2++) {
             theEffect.targets[i].defenseChange += theEffect.amount;
           }
           break;
         case "defense_down":
-          for (var i2 = 0; i2 < theEffect.targets.length; i2++) {
+          for (let i2 = 0; i2 < theEffect.targets.length; i2++) {
             theEffect.targets[i].defenseChange -= theEffect.amount;
           }
           break;
         case "ramp":
-          for (var i2 = 0; i2 < theEffect.targets.length; i2++) {
-            theEffect.targets[i].energy += theEffect.amount;
-            theEffect.targets[i].energy = constrain(theEffect.targets[i].energy, 0, theEffect.targets[i].maxEnergy);
-          }
-        // combat only effects
-        case "bullet":
-          for (var i = 0; i < theEffect.amount; i++) {
-          //  let newAbilityBullet = new Bullet();
+          for (let i2 = 0; i2 < theEffect.targets.length; i2++) {
+            theEffect.targets[i2].energy += theEffect.amount;
+            theEffect.targets[i2].energy = constrain(theEffect.targets[i2].energy, 0, theEffect.targets[i2].maxEnergy);
           }
           break;
+        // combat only effects
+        case "bullet":
+          let howManyBullets = theEffect.amount;
+          let bulletsSpawnCount = 0;
+          let bulletsDelay = setInterval(() => {
+            let newAbilityBullet = new Bullet(this.user, this.user.x, this.user.y, width*(theEffect.bullet[0]/2)/100+height*(theEffect.bullet[0]/2)/100, this.user.angle, theEffect.bullet[2], theEffect.bullet[3], theEffect.bullet[4], theEffect.bullet[5], width*(theEffect.bullet[6]/2)/100+height*(theEffect.bullet[6]/2)/100, theEffect.bullet[7], theEffect.bullet[8], theEffect.bullet[9], theEffect.bullet[10], theEffect.bullet[11], theEffect.bullet[12]);
+            projectilesList.push(newAbilityBullet);
+            bulletsSpawnCount++;
+            if (bulletsSpawnCount >= howManyBullets) {
+              clearInterval(bulletsDelay);
+            }
+          }, theEffect.delay)
+          break;
+        // move the user towards the mouse angle direction
         case "dash":
+          let dashCounter = 10;
+          let currentUserAngle = this.user.angle;
+          let dashInterval = setInterval(() => {
+            this.user.vx = this.user.currentSpeed * theEffect.amount * cos(currentUserAngle);
+            this.user.vy = this.user.currentSpeed * theEffect.amount * sin(currentUserAngle);
+            this.user.x += this.user.vx;
+            this.user.y += this.user.vy;
+            dashCounter--;
+            if (dashCounter <= 0) {
+              clearInterval(dashInterval);
+            }
+          }, 10);
           break;
         default: console.log("error");
       }
-      for (var i = 0; i < this.chargeGive.length; i++) {
+      for (let i4 = 0; i4 < this.chargeGive.length; i4++) {
         switch (this.chargeGive[i][1]) {
           case "use":
-            this.user.ultCharge += this.chargeGive[i][0];
+            this.user.ultCharge += this.chargeGive[i4][0];
             break;
           case "heal":
             if (healed === true) {
-              this.user.ultCharge += this.chargeGive[i][0];
+              this.user.ultCharge += this.chargeGive[i4][0];
             }
             break;
           default:
@@ -116,16 +137,15 @@ class PlayerAbility {
       if (this.cooldown !== 0) {
         this.onCooldown = true;
         this.cooldownLeft = this.cooldown;
-        console.log(this.cooldownLeft);
         this.cooldownTimer = setInterval(() => {
           this.cooldownLeft -= 1;
-          console.log(this);
-          if (this.cooldownLeft === 0) {
+          if (this.cooldownLeft <= 0) {
             this.onCooldown = false;
+            this.cooldownLeft = 0;
             clearInterval(this.cooldownTimer);
           }
         }, 1000);
-        intervalsList.push(this.cooldownTimer);
+      //  intervalsList.push(this.cooldownTimer);
       }
       // remove all targets from the ability effect since ability effect is finished
       theEffect.targets = [];
