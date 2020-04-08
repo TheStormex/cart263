@@ -71,7 +71,9 @@ class Bullet {
     }
     switch (this.ifHit[0]) {
       case "done":
-        this.isDestroyed = true;
+          let index = playerBullets.indexOf(this);
+          playerBullets.splice(index, 1);
+      //  this.isDestroyed = true;
         break;
       case "through":
         // nothing

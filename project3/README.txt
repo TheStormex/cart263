@@ -83,3 +83,5 @@ Good luck! The fate of humanity rests on your fingertips!
 code in:
 - fatigue consequences
 - ability happens
+- if win or lose, go to end state
+-

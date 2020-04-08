@@ -6,6 +6,8 @@ class FightState {
   }
   draw() {
     background(200);
+    // check if all characters are alive
+    checkAliveAll();
     // draw frontline player, enemies, movements bullets
     this.moveSprites();
     this.drawCharSprites();
@@ -136,9 +138,9 @@ class FightState {
       playerBullets[i].draw();
       playerBullets[i].contact();
       // if this projectile is to be destroyed now, then removed it from the array
-      if (playerBullets[i].isDestroyed === true) {
-        playerBullets.splice(i, 1);
-      }
+      // if (playerBullets[i].isDestroyed === true) {
+      //   playerBullets.splice(i, 1);
+      // }
     }
   }
   // if mouse is down, check if an ability is clicked, if not, shoot basic bullets
@@ -156,19 +158,19 @@ class FightState {
       currentAbility.happens();
       // if this is a combat ability with a cooldown, then after use, set the timer
       let thisAbility = currentAbility;
-      if (thisAbility.cooldown !== 0) {
-        thisAbility.onCooldown = true;
-        thisAbility.cooldownLeft = thisAbility.cooldown;
-        console.log(thisAbility.cooldownLeft);
-        thisAbility.cooldownTimer = setInterval(function() {
-          thisAbility.cooldownLeft -= 1;
-          console.log(thisAbility);
-          if (thisAbility.cooldownLeft <= 0) {
-            thisAbility.onCooldown = false;
-            clearInterval(thisAbility.cooldownTimer);
-          }
-        }, 1000, thisAbility);
-      }
+      // if (thisAbility.cooldown !== 0) {
+      //   thisAbility.onCooldown = true;
+      //   thisAbility.cooldownLeft = thisAbility.cooldown;
+      //   console.log(thisAbility.cooldownLeft);
+      //   thisAbility.cooldownTimer = setInterval(function() {
+      //     thisAbility.cooldownLeft -= 1;
+      //     console.log(thisAbility);
+      //     if (thisAbility.cooldownLeft <= 0) {
+      //       thisAbility.onCooldown = false;
+      //       clearInterval(thisAbility.cooldownTimer);
+      //     }
+      //   }, 1000, thisAbility);
+      // }
       currentCombatAbilityKey = "0";
       this.situation = "shoot";
     }

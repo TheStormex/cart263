@@ -85,6 +85,7 @@ let framecount = 0;
 let frontline = "bolt";
 let currentChar;
 let whichScreen;
+let winLose;
 // players and enemy objects
 let bolt;
 let nuts;
@@ -391,6 +392,28 @@ function newTurn() {
   for (var i = 0; i < enemiesList.length; i++) {
     enemiesList[i].offenseChange = 0;
     enemiesList[i].defenseChange = 0;
+  }
+}
+
+// check if all enemies and players are alive if all dead of 1 type, go to game end screen
+function checkAliveAll() {
+  for (var i = 0; i < enemiesList.length; i++) {
+    if (enemiesList[i].hp <= 0) {
+      enemiesList.splice(i, 1);
+    }
+  }
+  for (var i = 0; i < playersList.length; i++) {
+    if (playersList[i].hp <= 0) {
+      playersList.splice(i, 1);
+    }
+  }
+  if (enemiesList.length <= 0) {
+    winLose = "win";
+    whichScreen = END_STATE;
+  }
+  if (playersList.length <= 0) {
+    winLose = "lose";
+    whichScreen = END_STATE;
   }
 }
 
