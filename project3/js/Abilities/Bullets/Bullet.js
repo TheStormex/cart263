@@ -106,7 +106,11 @@ class Bullet {
           break;
         // spawn more bullets
         case "spawn":
-
+          break;
+        // give characters ult charge (players)
+        case "ultCharge":
+          this.origin.
+          break;
         default:
       }
     }
