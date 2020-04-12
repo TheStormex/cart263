@@ -99,22 +99,19 @@ class PlayerAbility {
               let newAbilityBullet = new Bullet(this.user, this.user.x, this.user.y, width*(theEffect.bullet.speed/2)/100+height*(theEffect.bullet.speed/2)/100, this.user.angle, theEffect.bullet.moveType, theEffect.bullet.targets, theEffect.bullet.effects, width*(theEffect.bullet.size/2)/100+height*(theEffect.bullet.size/2)/100, theEffect.bullet.changes, theEffect.bullet.images, theEffect.bullet.wall, theEffect.bullet.ifHit, theEffect.bullet.timer);
               // start the interval for changes of each bullet
               for (let i = 0; i < newAbilityBullet.changes.length; i++) {
+                let timePerLoop = 10;
+                let whichChange;
                 switch (newAbilityBullet.changes[i][0]) {
                   case "size":
                     // total change / miliseconds
                     let bulletSizeChange = (newAbilityBullet.changes[i][1]*newAbilityBullet.size/100)/(newAbilityBullet.changes[i][2]/10);
                     let bulletSizeTarget =  newAbilityBullet.size + newAbilityBullet.changes[i][1]*newAbilityBullet.size/100;
                     let bulletSizeTimeCount = 0;
-                    let timePerLoop = 10;
-                    let whichChange = i;
+                     whichChange = i;
                     let bulletSizeInterval = setInterval(() => {
                       // change the bullet's size
-                      console.log("Oldsize"+newAbilityBullet.size);
                       newAbilityBullet.size += bulletSizeChange;
                       bulletSizeTimeCount++;
-                      console.log("size"+newAbilityBullet.size);
-                      console.log("bulletSizeChange"+bulletSizeChange);
-                      console.log("time"+bulletSizeTimeCount);
                       // if time reaches max, clear timer
                       if (newAbilityBullet.changes[whichChange][2] / bulletSizeTimeCount <= timePerLoop) {
                         clearInterval(bulletSizeInterval);
@@ -137,6 +134,42 @@ class PlayerAbility {
                       }
 
                     }, timePerLoop);
+                    break;
+                  case "speed":
+                    // total change / miliseconds
+                    let bulletSpeedChange = (newAbilityBullet.changes[i][1]*newAbilityBullet.speed/100)/(newAbilityBullet.changes[i][2]/10);
+                    let bulletSpeedTarget =  newAbilityBullet.speed + newAbilityBullet.changes[i][1]*newAbilityBullet.speed/100;
+                    let bulletSpeedTimeCount = 0;
+                    let timePerSpeedLoop = 10;
+                    whichChange = i;
+                    let bulletSpeedInterval = setInterval(() => {
+                      // change the bullet's size
+                      newAbilityBullet.speed += bulletSpeedChange;
+                      bulletSpeedTimeCount++;
+                      // if time reaches max, clear timer
+                      if (newAbilityBullet.changes[whichChange][2] / bulletSpeedTimeCount <= timePerSpeedLoop) {
+                        clearInterval(bulletSpeedInterval);
+                      }
+                      // if reach target, stop timer
+                      if (newAbilityBullet.changes[whichChange][1] > 0) {
+                        if (newAbilityBullet.speed >= bulletSpeedTarget) {
+                          clearInterval(bulletSpeedInterval);
+                        }
+                      } else if (newAbilityBullet.changes[whichChange][1] < 0) {
+                        if (newAbilityBullet.speed <= bulletSpeedTarget) {
+                          clearInterval(bulletSpeedInterval);
+                        }
+                      }
+                      // if bullet would be too small, finish timer
+                      if (newAbilityBullet.speed <= 0) {
+                        let index = projectilesList.indexOf(this);
+                        projectilesList.splice(index, 1);
+                        clearInterval(bulletSpeedInterval);
+                      }
+
+                    }, timePerLoop);
+                    break;
+                  case "spawn":
                     break;
                   default:
                 }

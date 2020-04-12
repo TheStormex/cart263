@@ -94,9 +94,9 @@ class Bullet {
   }
   effectHappens(target) {
     for (var i2 = 0; i2 < this.effects.length; i2++) {
-      switch (this.effects[i2]) {
+      switch (this.effects[i2][0]) {
         case "damage":
-          target.hp -= round((this.damage*(1+this.origin.offenseChange/100)/(1+target.defenseChange/100)));
+          target.hp -= round((this.effects[i2][1]*(1+this.origin.offenseChange/100)/(1+target.defenseChange/100)));
           target.hp = constrain(target.hp, 0, target.maxHp);
           break;
         // spawn more bullets
@@ -104,7 +104,12 @@ class Bullet {
           break;
         // give characters ult charge (players)
         case "ultCharge":
-          this.origin.
+          this.origin.ultCharge += this.effects[i2][1];
+          break;
+        // stun the target
+        case "stun":
+          target.stun = true;
+          console.log("stun");
           break;
         default:
       }

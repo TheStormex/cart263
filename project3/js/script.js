@@ -110,14 +110,15 @@ let turns = 1;
 // (speed, angle, moveType, targets, effects, size, changes, image, wall, ifHit, timer)
 // speed and size = % of screen
 // change: what to change, how much to change total %, how long should it take to finish the change
-let pro_p_bolt_basic = new BulletStats(1.2, "origin", "straight", "enemies", [["damage", 2]], 3, [], "to be set", "done", ["done", "nothing"], 250);
-let pro_p_nuts_basic = new BulletStats(2, "origin", "straight", "enemies", [["damage", 1]], 1.5, [], "to be set", "done", ["done", "nothing"], 150);
-let pro_p_logicBomb = new BulletStats(0.6, "origin", "straight", "enemies", [["damage", 2]], 8, [["speed", -0.6, 1000]], "to be set", "done", ["done", "nothing"], 150);
-let pro_p_logicBombExplosion = new BulletStats(0, "origin", "stay", "enemies", [["damage", 5]], 8, [["size", 100, 1000]], "to be set", "done", ["done", "nothing"], 150);
-let pro_p_backdoor = new BulletStats(0, "origin", "stay", "enemies", [["damage", 1]], 2, [["size", -100, 2000]], "to be set", "done", ["done", "nothing"], 150);
-let pro_p_ult_bitRotWorm = [];
-let pro_p_DDOS = [];
-let pro_p_bruteForce = [];
+// change for spawn = spawn, what tp spawn, what can cause the spawn (time, hit) if time, then how long; if hit, then hit what
+let pro_p_bolt_basic = new BulletStats(1.2, "origin", "straight", "enemies", [["damage", 10], ["ultCharge", 1]], 3, [], "to be set", "done", ["done", "nothing"], 250);
+let pro_p_nuts_basic = new BulletStats(2, "origin", "straight", "enemies", [["damage", 10], ["ultCharge", 1]], 1.5, [], "to be set", "done", ["done", "nothing"], 150);
+let pro_p_logicBombExplosion = new BulletStats(0, "origin", "stay", "enemies", [["damage", 50]], 8, [["size", 100, 1000]], "to be set", "done", ["done", "nothing"], 150);
+let pro_p_logicBomb = new BulletStats(0.6, "origin", "straight", "enemies", [["damage", 10]], 8, [["speed", -100, 2000], ["spawn", pro_p_logicBombExplosion, ["hit", ["targets", "walls"]], ["time", 2000]]], "to be set", "done", ["done", "nothing"], 150);
+let pro_p_backdoor = new BulletStats(0, "origin", "stay", "enemies", [["damage", 10]], 2, [["size", -100, 2000]], "to be set", "done", ["done", "nothing"], 150);
+let pro_p_ult_bitRotWorm = new BulletStats(2, "origin", "straight", "enemies", [["damage", 10]], 2, [], "to be set", "done", ["through", "nothing"], 150);
+let pro_p_DDOS = new BulletStats(0.6, "origin", "straight", "enemies", [["damage", 10], ["stun", 1.5]], 8, [["speed", -100, 2000], ["spawn", pro_p_logicBombExplosion, ["hit", ["targets", "walls"]], ["time", 2000]]], "to be set", "done", ["done", "nothing"], 150);
+let pro_p_bruteForce = new BulletStats(0, "origin", "stay", "enemies", [["damage", 10]], 2, [["size", -100, 2000]], "to be set", "done", ["done", "nothing"], 150);
 // enemy bullets
 // agent
 let pro_e_javelin = [];
@@ -148,8 +149,8 @@ let ab_firewall_effect = new AbilityEffect("defense_up", "players", 25, "", fals
 let ab_firewall = new PlayerAbility("Firewall", 3, [ab_firewall_effect], "Boost defenses", 32, "none", false, [[10, "use"]], 0);
 let ab_targetExploits_effect = new AbilityEffect("defense_down", "enemies", 25, "", false, false, 0);
 let ab_targetExploits = new PlayerAbility("Target Exploits", 3, [ab_targetExploits_effect], "Weaken enemy character", 32, "none", false, [[10, "use"]], 0);
-let ab_DOOS_effect = new AbilityEffect("bullet", "", 3, "", false, false, 50);
-let ab_DDOS = new PlayerAbility("DDoS", 3, [["stun", 1.5]], "Stun enemies hit", 32, "none", false, [[5, "hit"]], 4);
+let ab_DOOS_effect = new AbilityEffect("bullet", "", 1, pro_p_DDOS, false, false, 0, 1);
+let ab_DDOS = new PlayerAbility("DDoS", 3, [ab_DOOS_effect], "Stun enemies hit", 32, "none", false, [[5, "hit"]], 4);
 let ab_bruteForce_effect = new AbilityEffect("bullet", "", 3, "", false, false, 10);
 let ab_bruteForce_effect2 = new AbilityEffect("dash", "", 3, "", false, false, 0);
 let ab_bruteForce = new PlayerAbility("Brute Force Attack", 3, [ab_bruteForce_effect, ab_bruteForce_effect2], "Dash and make enemies frail", 32, "none", false, [[5, "hit"], [2, "use"]], 3);
@@ -255,13 +256,13 @@ function setup() {
 
   // create the player characters and enemy characters
   boltImages = new Images(S_BOLT_LEFT, S_BOLT_RIGHT, S_BOLT_FRONT, S_BOLT_FACE);
-  bolt = new Player("Bolt", 20, 4, 10, [[ab_cleanupProtocol, ab_signalBoost], [ab_logicBomb, ab_backdoor, ab_ult_bitRotWorm]], pro_p_bolt_basic, boltImages);
+  bolt = new Player("Bolt", 200, 4, 10, [[ab_cleanupProtocol, ab_signalBoost], [ab_logicBomb, ab_backdoor, ab_ult_bitRotWorm]], pro_p_bolt_basic, boltImages);
   nutsImages = new Images(S_NUTS_LEFT, S_NUTS_RIGHT, S_BOLT_FRONT, S_BOLT_FACE);
-  nuts = new Player("Nuts", 30, 3, 12, [[ab_firewall, ab_targetExploits, ab_ult_vpn], [ab_DDOS, ab_bruteForce]], pro_p_nuts_basic, nutsImages);
+  nuts = new Player("Nuts", 300, 3, 12, [[ab_firewall, ab_targetExploits, ab_ult_vpn], [ab_DDOS, ab_bruteForce]], pro_p_nuts_basic, nutsImages);
   agentImages = new Images(S_AGENT_LEFT, S_AGENT_RIGHT, S_AGENT_FRONT, "none");
-  agent = new Enemy("Hackshield Agent", 50, width/20+height/20, 1, [ab_e_shoot, ab_e_teleport], agentImages);
+  agent = new Enemy("Hackshield Agent", 500, width/20+height/20, 1, [ab_e_shoot, ab_e_teleport], agentImages);
   serpentImages = new Images(S_SERPENT_LEFT, S_SERPENT_RIGHT, S_SERPENT_FRONT, "none");
-  serpent = new Enemy("Serverspy Serpent", 60, width/20+height/20, 2, [ab_e_shoot, ab_e_teleport], serpentImages);
+  serpent = new Enemy("Serverspy Serpent", 600, width/20+height/20, 2, [ab_e_shoot, ab_e_teleport], serpentImages);
   playersList = [bolt, nuts];
   enemiesList = [agent, serpent];
 // set the number of steps of each ability of each player
@@ -369,7 +370,7 @@ function newTurn() {
   if (turns > 1) {
     frontline.frontlineTurns++;
     frontline.refreshed = false;
-    if (frontline.frontlineTurns >= 2) {
+    if (frontline.frontlineTurns >= 3) {
       frontline.tired = true;
     }
   }

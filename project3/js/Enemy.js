@@ -4,6 +4,7 @@ class Enemy {
     this.hp = maxHp;
     this.maxHp = maxHp;
     this.speed = width/250+height/250;
+    this.stun = false;
     this.x = width/2;
     this.y = height/5;
     this.vx = 0;
@@ -84,7 +85,7 @@ class Enemy {
           frontline.hp -= round((this.contactDamage*(1+this.offenseChange/100)/(1+frontline.defenseChange/100)));
           frontline.hp = constrain(frontline.hp, 0, frontline.maxHp);
           frontline.invincible = true;
-          setTimeout(function() {frontline.invincible = false}, 250);
+          setTimeout(function() {frontline.invincible = false}, 50);
       }
     }
   }
