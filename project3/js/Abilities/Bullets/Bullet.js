@@ -1,5 +1,5 @@
 class Bullet {
-  constructor(origin, x, y, speed, angle, damage, moveType, targets, effects, size, changes, image, wall, ifHit, timer) {
+  constructor(origin, x, y, speed, angle, moveType, targets, effects, size, changes, images, wall, ifHit, timer) {
     // who shot this bullet
     this.origin = origin;
     this.x = x;
@@ -8,7 +8,6 @@ class Bullet {
     this.angle = angle;
     this.vx = 0;
     this.vy = 0;
-    this.damage = damage;
     this.moveType = moveType;
     // what char can this bullet hit?
     this.targets = targets;
@@ -19,7 +18,7 @@ class Bullet {
     // if this changes size, damage, who it affecs, speed, etc.
     // check which ones this have and apply those changes every draw
     this.changes = changes;
-    this.image = image;
+    this.images = images;
     // if this touches a wall, what to do
     this.wall = wall;
     // if this hits a target what to do 0 = if disappear, 1 = others
@@ -65,36 +64,32 @@ class Bullet {
     switch (this.wall) {
       case "done":
         // prevent going outside of walls
-        if (this.x-this.size/2 <= 0) {
+        if (this.x <= 0) {
           let index = projectilesList.indexOf(this);
           projectilesList.splice(index, 1);
         }
-        if (this.x+this.size/2 > width) {
+        if (this.x > width) {
           let index = projectilesList.indexOf(this);
           projectilesList.splice(index, 1);
         }
-        if (this.y-this.size/2 < 0) {
+        if (this.y < 0) {
           let index = projectilesList.indexOf(this);
           projectilesList.splice(index, 1);
         }
-        if (this.y+this.size/2 > height-height/3) {
+        if (this.y > height-height/3) {
           let index = projectilesList.indexOf(this);
           projectilesList.splice(index, 1);
         }
         break;
+      case "through":
+        break;
       default:
-    }
-  }
-
-  changesApply() {
-    for (var i = 0; i < this.changes.length; i++) {
-    //  this.changes[i]
     }
   }
   draw() {
     push();
     imageMode(CENTER);
-    image(this.image, this.x, this.y, this.size, this.size);
+    image(this.images, this.x, this.y, this.size, this.size);
     pop();
   }
   effectHappens(target) {

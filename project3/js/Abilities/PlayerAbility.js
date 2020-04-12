@@ -90,16 +90,64 @@ class PlayerAbility {
           break;
         // combat only effects
         case "bullet":
-          let howManyBullets = theEffect.amount;
-          let bulletsSpawnCount = 0;
-          let bulletsDelay = setInterval(() => {
-            let newAbilityBullet = new Bullet(this.user, this.user.x, this.user.y, width*(theEffect.bullet[0]/2)/100+height*(theEffect.bullet[0]/2)/100, this.user.angle, theEffect.bullet[2], theEffect.bullet[3], theEffect.bullet[4], theEffect.bullet[5], width*(theEffect.bullet[6]/2)/100+height*(theEffect.bullet[6]/2)/100, theEffect.bullet[7], theEffect.bullet[8], theEffect.bullet[9], theEffect.bullet[10], theEffect.bullet[11], theEffect.bullet[12]);
-            projectilesList.push(newAbilityBullet);
-            bulletsSpawnCount++;
-            if (bulletsSpawnCount >= howManyBullets) {
-              clearInterval(bulletsDelay);
+          let howManyShots = theEffect.amount;
+          let howManyBulletsPerShot = theEffect.perDelay;
+          let shotsCount = 0;
+          // create timer that creates every shot of bullets
+          let allBulletSpawnTimer = setInterval(() => {
+            for (let i = 0; i < howManyBulletsPerShot; i++) {
+              let newAbilityBullet = new Bullet(this.user, this.user.x, this.user.y, width*(theEffect.bullet.speed/2)/100+height*(theEffect.bullet.speed/2)/100, this.user.angle, theEffect.bullet.moveType, theEffect.bullet.targets, theEffect.bullet.effects, width*(theEffect.bullet.size/2)/100+height*(theEffect.bullet.size/2)/100, theEffect.bullet.changes, theEffect.bullet.images, theEffect.bullet.wall, theEffect.bullet.ifHit, theEffect.bullet.timer);
+              // start the interval for changes of each bullet
+              for (let i = 0; i < newAbilityBullet.changes.length; i++) {
+                switch (newAbilityBullet.changes[i][0]) {
+                  case "size":
+                    // total change / miliseconds
+                    let bulletSizeChange = (newAbilityBullet.changes[i][1]*newAbilityBullet.size/100)/(newAbilityBullet.changes[i][2]/10);
+                    let bulletSizeTarget =  newAbilityBullet.size + newAbilityBullet.changes[i][1]*newAbilityBullet.size/100;
+                    let bulletSizeTimeCount = 0;
+                    let timePerLoop = 10;
+                    let whichChange = i;
+                    let bulletSizeInterval = setInterval(() => {
+                      // change the bullet's size
+                      console.log("Oldsize"+newAbilityBullet.size);
+                      newAbilityBullet.size += bulletSizeChange;
+                      bulletSizeTimeCount++;
+                      console.log("size"+newAbilityBullet.size);
+                      console.log("bulletSizeChange"+bulletSizeChange);
+                      console.log("time"+bulletSizeTimeCount);
+                      // if time reaches max, clear timer
+                      if (newAbilityBullet.changes[whichChange][2] / bulletSizeTimeCount <= timePerLoop) {
+                        clearInterval(bulletSizeInterval);
+                      }
+                      // if reach target, stop timer
+                      if (newAbilityBullet.changes[whichChange][1] > 0) {
+                        if (newAbilityBullet.size >= bulletSizeTarget) {
+                          clearInterval(bulletSizeInterval);
+                        }
+                      } else if (newAbilityBullet.changes[whichChange][1] < 0) {
+                        if (newAbilityBullet.size <= bulletSizeTarget) {
+                          clearInterval(bulletSizeInterval);
+                        }
+                      }
+                      // if bullet would be too small, finish timer
+                      if (newAbilityBullet.size <= 0) {
+                        let index = projectilesList.indexOf(this);
+                        projectilesList.splice(index, 1);
+                        clearInterval(bulletSizeInterval);
+                      }
+
+                    }, timePerLoop);
+                    break;
+                  default:
+                }
+              }
+              projectilesList.push(newAbilityBullet);
             }
-          }, theEffect.delay)
+            shotsCount++;
+            if (shotsCount >= howManyShots) {
+              clearInterval(allBulletSpawnTimer);
+            }
+          }, theEffect.delay);
           break;
         // move the user towards the mouse angle direction
         case "dash":

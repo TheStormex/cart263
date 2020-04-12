@@ -33,7 +33,6 @@ class FightState {
       if (typeof projectilesList[i] != "undefined") {
         projectilesList[i].wrap();
       }
-
       // if this projectile is to be destroyed now, then removed it from the array
       // if (projectilesList[i].isDestroyed === true) {
       //   projectilesList.splice(i, 1);
@@ -154,7 +153,7 @@ class FightState {
   mouseDown() {
     if (this.situation === "shoot") {
       if (frontline.basicBulletCooldown === false) {
-        let playerBasicBullet = new Bullet(frontline, frontline.x, frontline.y, width*(frontline.basicBullet[0]/2)/100+height*(frontline.basicBullet[0]/2)/100, frontline.angle, frontline.basicBullet[2], frontline.basicBullet[3], frontline.basicBullet[4], frontline.basicBullet[5], width*(frontline.basicBullet[6]/2)/100+height*(frontline.basicBullet[6]/2)/100, frontline.basicBullet[7], frontline.basicBullet[8], frontline.basicBullet[9], frontline.basicBullet[10], frontline.basicBullet[11], frontline.basicBullet[12]);
+        let playerBasicBullet = new Bullet(frontline, frontline.x, frontline.y, width*(frontline.basicBullet.speed/2)/100+height*(frontline.basicBullet.speed/2)/100, frontline.angle, frontline.basicBullet.moveType, frontline.basicBullet.targets, frontline.basicBullet.effects, width*(frontline.basicBullet.size/2)/100+height*(frontline.basicBullet.size/2)/100, frontline.basicBullet.changes, frontline.basicBullet.images, frontline.basicBullet.wall, frontline.basicBullet.ifHit, frontline.basicBullet.timer);
         projectilesList.push(playerBasicBullet);
         frontline.basicBulletCooldown = true;
         setTimeout(function() {frontline.basicBulletCooldown = false}, frontline.basicBullet[11]);

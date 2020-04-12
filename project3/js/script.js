@@ -107,13 +107,14 @@ let intervalsList = [];
 let turns = 1;
 
 // bullets characteristics
-// (speed, angle, damage, moveType, targets, effects, size, changes, image, wall, ifHit, timer)
+// (speed, angle, moveType, targets, effects, size, changes, image, wall, ifHit, timer)
 // speed and size = % of screen
-let pro_p_bolt_basic = [1.2, "origin", 2, "straight", "enemies", ["damage"], 3, [], "to be set", "done", ["done", "nothing"], 250];
-let pro_p_nuts_basic = [2, "origin", 1, "straight", "enemies", ["damage"], 1.5, [], "to be set", "done", ["done", "nothing"], 150];
-let pro_p_logicBomb = [0.6, "origin", 5, "straight", "enemies", ["damage"], 8, ["speed", -1], "to be set", "done", ["done", "nothing"], 150];
-let pro_p_logicBombExplosion = [0, "origin", 5, "stay", "enemies", ["damage"], 8, ["size", 2], "to be set", "done", ["done", "nothing"], 150];
-let pro_p_backdoor = [0, "origin", 1, "stay", "enemies", ["damage"], 2, ["size", -1], "to be set", "done", ["done", "nothing"], 150];
+// change: what to change, how much to change total %, how long should it take to finish the change
+let pro_p_bolt_basic = new BulletStats(1.2, "origin", "straight", "enemies", [["damage", 2]], 3, [], "to be set", "done", ["done", "nothing"], 250);
+let pro_p_nuts_basic = new BulletStats(2, "origin", "straight", "enemies", [["damage", 1]], 1.5, [], "to be set", "done", ["done", "nothing"], 150);
+let pro_p_logicBomb = new BulletStats(0.6, "origin", "straight", "enemies", [["damage", 2]], 8, [["speed", -0.6, 1000]], "to be set", "done", ["done", "nothing"], 150);
+let pro_p_logicBombExplosion = new BulletStats(0, "origin", "stay", "enemies", [["damage", 5]], 8, [["size", 100, 1000]], "to be set", "done", ["done", "nothing"], 150);
+let pro_p_backdoor = new BulletStats(0, "origin", "stay", "enemies", [["damage", 1]], 2, [["size", -100, 2000]], "to be set", "done", ["done", "nothing"], 150);
 let pro_p_ult_bitRotWorm = [];
 let pro_p_DDOS = [];
 let pro_p_bruteForce = [];
@@ -132,9 +133,9 @@ let pro_e_outward = [];
 
 
 // nuts and bolt's abilities and effects
-let ab_logicBomb_effect = new AbilityEffect("bullet", "", 1, pro_p_logicBomb, false, false, 0);
+let ab_logicBomb_effect = new AbilityEffect("bullet", "", 1, pro_p_logicBomb, false, false, 0, 1);
 let ab_logicBomb = new PlayerAbility("Logic Bomb", 3, [ab_logicBomb_effect], "Throw a projectile", 32, "none", false, [[5, "hit"]], 3);
-let ab_backdoor_effect = new AbilityEffect("bullet", "", 5, pro_p_backdoor, false, false, 20);
+let ab_backdoor_effect = new AbilityEffect("bullet", "", 5, pro_p_backdoor, false, false, 20, 1);
 let ab_backdoor_effect2 = new AbilityEffect("dash", "", 3, "", false, false, 0);
 let ab_backdoor = new PlayerAbility("Backdoor", 2, [ab_backdoor_effect, ab_backdoor_effect2], "Dash and weaken enemies", 32, "none", false, [[5, "hit"], [2, "use"]], 2);
 let ab_cleanupProtocol_effect = new AbilityEffect("heal", "players", 6, "", false, false, 0);
@@ -229,15 +230,17 @@ function setup() {
   // gameScreen.style('display', 'none');
   background(100);
   // add the image to each bullet's image slot and origin slot
-  pro_p_bolt_basic[8] = S_BOLT_BULLET_BASIC;
-  pro_p_bolt_basic[8] = S_BOLT_BULLET_BASIC;
-  pro_p_nuts_basic[8] = S_NUTS_BULLET_BASIC;
-  pro_p_logicBomb[8] = S_LOGIC_BOMB;
-  pro_p_logicBombExplosion[9] = S_LOGIC_BOMB_EXPLOSION;
-  pro_p_backdoor[8] = S_BACK_DOOR;
-  pro_p_ult_bitRotWorm[8] = S_BEAM;
-  pro_p_DDOS[8] = S_STUN;
-  pro_p_bruteForce[8] = S_BRUTE_FORCE;
+
+  pro_p_bolt_basic.images = 0;
+  //console.log(pro_p_bolt_basic);
+  pro_p_bolt_basic.images = S_BOLT_BULLET_BASIC;
+  pro_p_nuts_basic.images = S_NUTS_BULLET_BASIC;
+  pro_p_logicBomb.images = S_LOGIC_BOMB;
+  pro_p_logicBombExplosion.images = S_LOGIC_BOMB_EXPLOSION;
+  pro_p_backdoor.images = S_BACK_DOOR;
+  pro_p_ult_bitRotWorm.images = S_BEAM;
+  pro_p_DDOS.images = S_STUN;
+  pro_p_bruteForce.images = S_BRUTE_FORCE;
   // enemy bullets
   // agent
   // pro_e_javelin[8] =
