@@ -405,7 +405,14 @@ class PlanState {
       if (enemiesList[i].currentAbility.moves === "line")  {
         enemiesList[i].angle = random(0, 360);
       }
+      for (var i2 = 0; i2 < enemiesList[i].currentAbility.effects.length; i++) {
+        let enemyShootLoop = setInterval(() => {
+          shootBullets(enemiesList[i].currentAbility);
+        },  enemiesList[i].currentAbility.loopRate[i2]);
+        intervalsList.push(enemyShootLoop);
+      }
     }
+    // set timer for going back to plan state
     fightTime = highestTime;
     currentFightTime = 0;
     fightTimer = setInterval(function() {
@@ -414,6 +421,7 @@ class PlanState {
         fightToPlan();
       }
     }, 10);
+    intervalsList.push(fightTimer);
     whichScreen = FIGHT_STATE;
   }
   // when a key is pressed

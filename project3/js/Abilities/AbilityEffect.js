@@ -2,10 +2,10 @@ class AbilityEffect {
   constructor(type, canTargets, amount, bullet, step, aoe, delay, perDelay) {
     // type of the effect
     this.type = type;
-    // what characters this ability effect can target, gets a list when used (support)
+    // what characters this ability effect can target, gets a list when used (player support)
     this.canTargets = canTargets;
     this.canTargetsList;
-    // the character(s) that are being targeted by this ability effect right now (support)
+    // the character(s) that are being targeted by this ability effect right now (player support)
     this.targets = [];
     // how much of the effect is applied, if make bullet, how many times make a shot
     this.amount = amount;

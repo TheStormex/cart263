@@ -38,40 +38,43 @@ class Player {
     this.invincible = false;
   }
   move() {
-    // apply tired penalty if tired
-    if (this.tired === true) {
-      this.currentSpeed = this.baseSpeed/2;
-    } else if (this.tired === false) {
-      this.currentSpeed = this.baseSpeed;
-    }
-    this.vx = 0;
-    this.vy = 0;
-    if (keyIsDown(87)) {
-      this.vy = -this.currentSpeed;
-    }
-    if (keyIsDown(65)) {
-      this.vx = -this.currentSpeed;
-    }
-    if (keyIsDown(83)) {
-      this.vy = this.currentSpeed;
-    }
-    if (keyIsDown(68)) {
-      this.vx = this.currentSpeed;
-    }
-    this.x += this.vx;
-    this.y += this.vy;
-    // prevent going outside of walls
-    if (this.x-this.size/2 <= 0) {
-      this.x = this.size/2;
-    }
-    if (this.x+this.size/2 > width) {
-      this.x = width-this.size/2;
-    }
-    if (this.y-this.size/2 < 0) {
-      this.y = this.size/2;
-    }
-    if (this.y+this.size/2 > height-height/3) {
-      this.y = height-height/3-this.size/2;
+    // if this char is not stunned
+    if (this.stun === false) {
+      // apply tired penalty if tired
+      if (this.tired === true) {
+        this.currentSpeed = this.baseSpeed/2;
+      } else if (this.tired === false) {
+        this.currentSpeed = this.baseSpeed;
+      }
+      this.vx = 0;
+      this.vy = 0;
+      if (keyIsDown(87)) {
+        this.vy = -this.currentSpeed;
+      }
+      if (keyIsDown(65)) {
+        this.vx = -this.currentSpeed;
+      }
+      if (keyIsDown(83)) {
+        this.vy = this.currentSpeed;
+      }
+      if (keyIsDown(68)) {
+        this.vx = this.currentSpeed;
+      }
+      this.x += this.vx;
+      this.y += this.vy;
+      // prevent going outside of walls
+      if (this.x-this.size/2 <= 0) {
+        this.x = this.size/2;
+      }
+      if (this.x+this.size/2 > width) {
+        this.x = width-this.size/2;
+      }
+      if (this.y-this.size/2 < 0) {
+        this.y = this.size/2;
+      }
+      if (this.y+this.size/2 > height-height/3) {
+        this.y = height-height/3-this.size/2;
+      }
     }
   }
 }

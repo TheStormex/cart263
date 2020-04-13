@@ -117,19 +117,19 @@ let pro_p_logicBombExplosion = new BulletStats(0, "origin", "stay", "enemies", [
 let pro_p_logicBomb = new BulletStats(0.6, "origin", "straight", "enemies", [["damage", 10]], 8, [["speed", -100, 2000], ["spawn", pro_p_logicBombExplosion, ["hit", ["targets", "walls"]], ["time", 2000]]], "to be set", "done", ["done", "nothing"], 150);
 let pro_p_backdoor = new BulletStats(0, "origin", "stay", "enemies", [["damage", 10]], 2, [["size", -100, 2000]], "to be set", "done", ["done", "nothing"], 150);
 let pro_p_ult_bitRotWorm = new BulletStats(2, "origin", "straight", "enemies", [["damage", 10]], 2, [], "to be set", "done", ["through", "nothing"], 150);
-let pro_p_DDOS = new BulletStats(0.6, "origin", "straight", "enemies", [["damage", 10], ["stun", 1.5]], 8, [["speed", -100, 2000], ["spawn", pro_p_logicBombExplosion, ["hit", ["targets", "walls"]], ["time", 2000]]], "to be set", "done", ["done", "nothing"], 150);
+let pro_p_DDOS = new BulletStats(0.6, "origin", "straight", "enemies", [["damage", 10], ["stun", 1500]], 8, [["speed", -100, 2000], ["spawn", pro_p_logicBombExplosion, ["hit", ["targets", "walls"]], ["time", 2000]]], "to be set", "done", ["done", "nothing"], 150);
 let pro_p_bruteForce = new BulletStats(0, "origin", "stay", "enemies", [["damage", 10]], 2, [["size", -100, 2000]], "to be set", "done", ["done", "nothing"], 150);
 // enemy bullets
 // agent
-let pro_e_javelin = [];
-let pro_e_shield = [];
+let pro_e_javelin = new BulletStats(1.2, "origin", "straight", "players", [["damage", 10]], 3, [], "to be set", "done", ["done", "nothing"], 250);
+let pro_e_shield = new BulletStats(0, "origin", "stay", "players", [["damage", 10]], 2, [["size", -100, 2000]], "to be set", "done", ["done", "nothing"], 150);
 // if alone
-let pro_e_tshape = [];
+let pro_e_tshape = new BulletStats(0, "origin", "stay", "players", [["damage", 10]], 2, [["size", -100, 2000]], "to be set", "done", ["done", "nothing"], 150);
 // serpent
-let pro_e_splitBall = [];
-let pro_e_spiral = [];
+let pro_e_splitBall = new BulletStats(0, "origin", "stay", "players", [["damage", 10]], 2, [["size", -100, 2000]], "to be set", "done", ["done", "nothing"], 150);
+let pro_e_spiral = new BulletStats(0, "origin", "stay", "players", [["damage", 10]], 2, [["size", -100, 2000]], "to be set", "done", ["done", "nothing"], 150);
 // if alone
-let pro_e_outward = [];
+let pro_e_outward = new BulletStats(0, "origin", "stay", "players", [["damage", 10]], 2, [["size", -100, 2000]], "to be set", "done", ["done", "nothing"], 150);
 
 
 
@@ -168,10 +168,12 @@ let currentAbility;
 let combatButtons = [["Space", 32], ["Shift", 16], ["Ctrl", 17]];
 
 // enemies abilities
-let ab_e_wallStraight = new EnemyAbility("", "", "");
-let ab_e_inOut = new EnemyAbility("", "", "");
-let ab_e_shoot = new EnemyAbility("noise", [[, 5],[]], "walls", 10);
-let ab_e_teleport = new EnemyAbility("line", "1", "through", 8);
+// let ab_e_wallStraight = new EnemyAbility("", "", "");
+// let ab_e_inOut = new EnemyAbility("", "", "");
+let ab_e_shoot_effect = new AbilityEffect("bullet", "", 1, pro_e_javelin, false, false, 0, 1);
+let ab_e_shoot = new EnemyAbility("noise", ab_e_shoot_effect, [1000], "walls", 10);
+let ab_e_teleport_effect = new AbilityEffect("bullet", "", 1, pro_e_javelin, false, false, 0, 1);
+let ab_e_teleport = new EnemyAbility("line", ab_e_teleport_effect, [2000], "through", 8);
 
 let projectilesList = [];
 
@@ -244,7 +246,7 @@ function setup() {
   pro_p_bruteForce.images = S_BRUTE_FORCE;
   // enemy bullets
   // agent
-  // pro_e_javelin[8] =
+  pro_e_javelin.images = S_BOLT_BULLET_BASIC;
   // pro_e_shield[8] =
   // // if alone
   // pro_e_tshape[8] =
@@ -452,11 +454,110 @@ function checkAliveAll() {
 
 // go from the fight state to the plan state
 function fightToPlan() {
-  clearInterval(fightTimer);
+  for (var i = 0; i < intervalsList.length; i++) {
+      clearInterval(intervalsList[i]);
+  }
   projectilesList = [];
   turns++;
   newTurn();
   whichScreen = PLAN_STATE;
+}
+
+// create bullets to shoot
+function shootBullets(effect, ability) {
+  let theEffect = effect;
+  let theAbility = ability;
+  let howManyShots = theEffect.amount;
+  let howManyBulletsPerShot = theEffect.perDelay;
+  let shotsCount = 0;
+  // create timer that creates every shot of bullets
+  let allBulletSpawnTimer = setInterval(() => {
+    for (let i = 0; i < howManyBulletsPerShot; i++) {
+      let newAbilityBullet = new Bullet(theAbility.user, theAbility.user.x, theAbility.user.y, width*(theEffect.bullet.speed/2)/100+height*(theEffect.bullet.speed/2)/100, theAbility.user.angle, theEffect.bullet.moveType, theEffect.bullet.targets, theEffect.bullet.effects, width*(theEffect.bullet.size/2)/100+height*(theEffect.bullet.size/2)/100, theEffect.bullet.changes, theEffect.bullet.images, theEffect.bullet.wall, theEffect.bullet.ifHit, theEffect.bullet.timer);
+      // start the interval for changes of each bullet
+      for (let i = 0; i < newAbilityBullet.changes.length; i++) {
+        let timePerLoop = 10;
+        let whichChange;
+        switch (newAbilityBullet.changes[i][0]) {
+          case "size":
+            // total change / miliseconds
+            let bulletSizeChange = (newAbilityBullet.changes[i][1]*newAbilityBullet.size/100)/(newAbilityBullet.changes[i][2]/10);
+            let bulletSizeTarget =  newAbilityBullet.size + newAbilityBullet.changes[i][1]*newAbilityBullet.size/100;
+            let bulletSizeTimeCount = 0;
+             whichChange = i;
+            let bulletSizeInterval = setInterval(() => {
+              // change the bullet's size
+              newAbilityBullet.size += bulletSizeChange;
+              bulletSizeTimeCount++;
+              // if time reaches max, clear timer
+              if (newAbilityBullet.changes[whichChange][2] / bulletSizeTimeCount <= timePerLoop) {
+                clearInterval(bulletSizeInterval);
+              }
+              // if reach target, stop timer
+              if (newAbilityBullet.changes[whichChange][1] > 0) {
+                if (newAbilityBullet.size >= bulletSizeTarget) {
+                  clearInterval(bulletSizeInterval);
+                }
+              } else if (newAbilityBullet.changes[whichChange][1] < 0) {
+                if (newAbilityBullet.size <= bulletSizeTarget) {
+                  clearInterval(bulletSizeInterval);
+                }
+              }
+              // if bullet would be too small, finish timer
+              if (newAbilityBullet.size <= 0) {
+                let index = projectilesList.indexOf(this);
+                projectilesList.splice(index, 1);
+                clearInterval(bulletSizeInterval);
+              }
+
+            }, timePerLoop);
+            break;
+          case "speed":
+            // total change / miliseconds
+            let bulletSpeedChange = (newAbilityBullet.changes[i][1]*newAbilityBullet.speed/100)/(newAbilityBullet.changes[i][2]/10);
+            let bulletSpeedTarget =  newAbilityBullet.speed + newAbilityBullet.changes[i][1]*newAbilityBullet.speed/100;
+            let bulletSpeedTimeCount = 0;
+            let timePerSpeedLoop = 10;
+            whichChange = i;
+            let bulletSpeedInterval = setInterval(() => {
+              // change the bullet's size
+              newAbilityBullet.speed += bulletSpeedChange;
+              bulletSpeedTimeCount++;
+              // if time reaches max, clear timer
+              if (newAbilityBullet.changes[whichChange][2] / bulletSpeedTimeCount <= timePerSpeedLoop) {
+                clearInterval(bulletSpeedInterval);
+              }
+              // if reach target, stop timer
+              if (newAbilityBullet.changes[whichChange][1] > 0) {
+                if (newAbilityBullet.speed >= bulletSpeedTarget) {
+                  clearInterval(bulletSpeedInterval);
+                }
+              } else if (newAbilityBullet.changes[whichChange][1] < 0) {
+                if (newAbilityBullet.speed <= bulletSpeedTarget) {
+                  clearInterval(bulletSpeedInterval);
+                }
+              }
+              // if bullet would be too small, finish timer
+              if (newAbilityBullet.speed <= 0) {
+                let index = projectilesList.indexOf(this);
+                projectilesList.splice(index, 1);
+                clearInterval(bulletSpeedInterval);
+              }
+
+            }, timePerLoop);
+            break;
+          case "spawn":
+            break;
+          default:
+        }
+      }
+      projectilesList.push(newAbilityBullet);
+    }
+    shotsCount++;
+    if (shotsCount >= howManyShots) {
+      clearInterval(allBulletSpawnTimer);
+    }
+  }, theEffect.delay);
 }
 
 // end the game

@@ -28,16 +28,19 @@ class Enemy {
     pop();
   }
   move() {
-    let moveType = this.currentAbility.moves;
-    if (moveType === "noise")  {
-      this.angle += random(-0.2, 0.2);
+    // if not stunned, move
+    if (this.stun === false) {
+      let moveType = this.currentAbility.moves;
+      if (moveType === "noise")  {
+        this.angle += random(-0.2, 0.2);
+      }
+      else if (moveType === "line") {
+      }
+      this.vx = this.speed * cos(this.angle);
+      this.vy = this.speed * sin(this.angle);
+      this.x += this.vx;
+      this.y += this.vy;
     }
-    else if (moveType === "line") {
-    }
-    this.vx = this.speed * cos(this.angle);
-    this.vy = this.speed * sin(this.angle);
-    this.x += this.vx;
-    this.y += this.vy;
   }
   wrap() {
     let wrapType = this.currentAbility.wrap;

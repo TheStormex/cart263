@@ -109,6 +109,10 @@ class Bullet {
         // stun the target
         case "stun":
           target.stun = true;
+          let stunTimer = setInterval(() => {
+            target.stun = false;
+            clearInterval(stunTimer)
+          }, this.effects[i2][1]);
           console.log("stun");
           break;
         default:
