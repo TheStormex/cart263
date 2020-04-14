@@ -1,5 +1,5 @@
 class Bullet {
-  constructor(origin, x, y, speed, angle, moveType, targets, effects, size, changes, images, wall, ifHit, timer) {
+  constructor(origin, x, y, speed, angle, moveType, targets, effects, size, changes, images, sounds, wall, ifHit, timer) {
     // who shot this bullet
     this.origin = origin;
     this.x = x;
@@ -18,7 +18,10 @@ class Bullet {
     // if this changes size, damage, who it affecs, speed, etc.
     // check which ones this have and apply those changes every draw
     this.changes = changes;
+    // the imames of this bullet
     this.images = images;
+    // the sounds of this bullet
+    this.sounds = sounds;
     // if this touches a wall, what to do
     this.wall = wall;
     // if this hits a target what to do 0 = if disappear, 1 = others
@@ -49,6 +52,7 @@ class Bullet {
         let d = dist(this.x, this.y, enemiesList[i].x, enemiesList[i].y);
         if (d < enemiesList[i].size/2 + this.size/2) {
           this.effectHappens(enemiesList[i]);
+          A_HIT_ENEMY.play();
         }
       }
     }
@@ -56,6 +60,7 @@ class Bullet {
       let d = dist(this.x, this.y, frontline.x, frontline.y);
       if (d < frontline.size/2 + this.size/2) {
         this.effectHappens(frontline);
+        A_HIT_PLAYER.play();
       }
     }
   }

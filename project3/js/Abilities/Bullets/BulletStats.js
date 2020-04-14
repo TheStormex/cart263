@@ -1,5 +1,5 @@
 class BulletStats {
-  constructor(speed, angle, moveType, targets, effects, size, changes, images, wall, ifHit, timer) {
+  constructor(speed, angle, moveType, targets, effects, size, changes, images, sounds, wall, ifHit, timer) {
     this.speed = speed;
     this.angle = angle;
     this.moveType = moveType;
@@ -12,7 +12,10 @@ class BulletStats {
     // if this changes size, damage, who it affecs, speed, etc.
     // check which ones this have and apply those changes every draw
     this.changes = changes;
+    // the images of this bullet
     this.images = images;
+    // the sounds of this bullet and when they should play
+    this.sounds = sounds;
     // if this touches a wall, what to do
     this.wall = wall;
     // if this hits a target what to do 0 = if disappear, 1 = others

@@ -12,19 +12,15 @@ and free the world from tyranny?
 
 // constants
 // sounds for P5 part
-let A_SONG;
+let A_CHAR_DEATH;
 let A_BOLT_BASIC;
 let A_NUTS_BASIC;
-let A_AGENT_BALL;
-let A_AGENT_SPEAR;
-let A_AGENT_WAVE;
-let A_AGENT_ABSORB;
+let A_AGENT_BULLET;
 let A_HIT_PLAYER;
 let A_HIT_ENEMY;
-let A_SERPENT_SSS;
-let A_SERPENT_BALL;
-let A_SERPENT_RECT;
+let A_SERPENT_BULLET;
 let A_SUPPORT;
+let A_COMBAT;
 let A_SUPPORT_ULT;
 let A_COMBAT_ULT;
 // images for P5 part
@@ -41,10 +37,11 @@ let S_NUTS_RIGHT;
 let S_AGENT_FRONT;
 let S_AGENT_LEFT;
 let S_AGENT_RIGHT;
+let S_AGENT_BULLET;
 let S_SERPENT_FRONT;
 let S_SERPENT_LEFT;
 let S_SERPENT_RIGHT;
-let S_SERPENT_CIRCLE;
+let S_SERPENT_BULLET;
 let S_LOGIC_BOMB;
 let S_LOGIC_BOMB_EXPLOSION;
 let S_BACK_DOOR;
@@ -111,14 +108,14 @@ let turns = 1;
 // speed and size = % of screen
 // change: what to change, how much to change total %, how long should it take to finish the change
 // change for spawn = spawn, what tp spawn, what can cause the spawn (time, hit) if time, then how long; if hit, then hit what
-let pro_p_bolt_basic = new BulletStats(1.2, "origin", "straight", "enemies", [["damage", 10], ["ultCharge", 1]], 3, [], "to be set", "done", ["done", "nothing"], 250);
-let pro_p_nuts_basic = new BulletStats(2, "origin", "straight", "enemies", [["damage", 10], ["ultCharge", 1]], 1.5, [], "to be set", "done", ["done", "nothing"], 150);
-let pro_p_logicBombExplosion = new BulletStats(0, "origin", "stay", "enemies", [["damage", 50]], 8, [["size", 100, 1000]], "to be set", "done", ["done", "nothing"], 150);
-let pro_p_logicBomb = new BulletStats(0.6, "origin", "straight", "enemies", [["damage", 10]], 8, [["speed", -100, 2000], ["spawn", pro_p_logicBombExplosion, ["hit", ["targets", "walls"]], ["time", 2000]]], "to be set", "done", ["done", "nothing"], 150);
-let pro_p_backdoor = new BulletStats(0, "origin", "stay", "enemies", [["damage", 10]], 2, [["size", -100, 2000]], "to be set", "done", ["done", "nothing"], 150);
-let pro_p_ult_bitRotWorm = new BulletStats(2, "origin", "straight", "enemies", [["damage", 10]], 2, [], "to be set", "done", ["through", "nothing"], 150);
-let pro_p_DDOS = new BulletStats(0.6, "origin", "straight", "enemies", [["damage", 10], ["stun", 1500]], 8, [["speed", -100, 2000], ["spawn", pro_p_logicBombExplosion, ["hit", ["targets", "walls"]], ["time", 2000]]], "to be set", "done", ["done", "nothing"], 150);
-let pro_p_bruteForce = new BulletStats(0, "origin", "stay", "enemies", [["damage", 10]], 2, [["size", -100, 2000]], "to be set", "done", ["done", "nothing"], 150);
+let pro_p_bolt_basic = new BulletStats(1.2, "origin", "straight", "enemies", [["damage", 10], ["ultCharge", 1]], 3, [], "to be set", "to be set", "done", ["done", "nothing"], 250);
+let pro_p_nuts_basic = new BulletStats(2, "origin", "straight", "enemies", [["damage", 10], ["ultCharge", 1]], 1.5, [], "to be set", "to be set", "done", ["done", "nothing"], 150);
+let pro_p_logicBombExplosion = new BulletStats(0, "origin", "stay", "enemies", [["damage", 50]], 8, [["size", 100, 1000]], "to be set", "to be set", "done", ["done", "nothing"], 150);
+let pro_p_logicBomb = new BulletStats(0.6, "origin", "straight", "enemies", [["damage", 10]], 8, [["speed", -100, 2000], ["spawn", pro_p_logicBombExplosion, ["hit", ["targets", "walls"]], ["time", 2000]]], "to be set", "to be set", "done", ["done", "nothing"], 150);
+let pro_p_backdoor = new BulletStats(0, "origin", "stay", "enemies", [["damage", 10]], 2, [["size", -100, 2000]], "to be set", "to be set", "done", ["done", "nothing"], 150);
+let pro_p_ult_bitRotWorm = new BulletStats(2, "origin", "straight", "enemies", [["damage", 10]], 2, [], "to be set", "to be set", "done", ["through", "nothing"], 150);
+let pro_p_DDOS = new BulletStats(0.6, "origin", "straight", "enemies", [["damage", 10], ["stun", 1500]], 8, [["speed", -100, 2000], ["spawn", pro_p_logicBombExplosion, ["hit", ["targets", "walls"]], ["time", 2000]]], "to be set", "to be set", "done", ["done", "nothing"], 150);
+let pro_p_bruteForce = new BulletStats(0, "origin", "stay", "enemies", [["damage", 10]], 2, [["size", -100, 2000]], "to be set", "to be set", "done", ["done", "nothing"], 150);
 // enemy bullets
 // agent
 let pro_e_javelin = new BulletStats(1.2, "origin", "straight", "players", [["damage", 10]], 3, [], "to be set", "done", ["done", "nothing"], 250);
@@ -170,10 +167,10 @@ let combatButtons = [["Space", 32], ["Shift", 16], ["Ctrl", 17]];
 // enemies abilities
 // let ab_e_wallStraight = new EnemyAbility("", "", "");
 // let ab_e_inOut = new EnemyAbility("", "", "");
-let ab_e_shoot_effect = new AbilityEffect("bullet", "", 1, pro_e_javelin, false, false, 0, 1);
-let ab_e_shoot = new EnemyAbility("noise", ab_e_shoot_effect, [1000], "walls", 10);
-let ab_e_teleport_effect = new AbilityEffect("bullet", "", 1, pro_e_javelin, false, false, 0, 1);
-let ab_e_teleport = new EnemyAbility("line", ab_e_teleport_effect, [2000], "through", 8);
+let ab_e_shoot_effect = new AbilityEffect("bullet", "", 1, [pro_e_javelin], false, false, 0, 1);
+let ab_e_shoot = new EnemyAbility("noise", [ab_e_shoot_effect], [1000], "walls", 10);
+let ab_e_teleport_effect = new AbilityEffect("bullet", "", 1, [pro_e_javelin], false, false, 0, 1);
+let ab_e_teleport = new EnemyAbility("line", [ab_e_teleport_effect], [2000], "through", 8);
 
 let projectilesList = [];
 
@@ -186,6 +183,9 @@ let gameScreen;
 let fightTimer;
 let fightTime = 0;
 let currentFightTime = 0;
+
+// to prevent sound from overlapping
+let sfxTimer;
 
 
 $(document).ready(start);
@@ -211,15 +211,10 @@ function preload() {
   S_SERPENT_FRONT = loadImage(`assets/images/clown.png`);
   S_SERPENT_LEFT = loadImage(`assets/images/clown.png`);
   S_SERPENT_RIGHT = loadImage(`assets/images/clown.png`);
-  S_SERPENT_CIRCLE = loadImage(`assets/images/clown.png`);
   S_LOGIC_BOMB = loadImage(`assets/images/clown.png`);
   S_LOGIC_BOMB_EXPLOSION = loadImage(`assets/images/clown.png`);
   S_BACK_DOOR = loadImage(`assets/images/clown.png`);
-  S_CLEANUP = loadImage(`assets/images/clown.png`);
-  S_SIGNAL = loadImage(`assets/images/clown.png`);
   S_BEAM = loadImage(`assets/images/clown.png`);
-  S_FIREWALL = loadImage(`assets/images/clown.png`);
-  S_EXPLOITS = loadImage(`assets/images/clown.png`);
   S_STUN = loadImage(`assets/images/clown.png`);
   S_BRUTE_FORCE = loadImage(`assets/images/clown.png`);
   S_LOGO = loadImage(`assets/images/clown.png`);
@@ -232,13 +227,32 @@ function setup() {
   gameScreen.style('display', 'block');
   // gameScreen.style('display', 'none');
   background(100);
-  // add the image to each bullet's image slot and origin slot
 
-  pro_p_bolt_basic.images = 0;
+  // load sounds
+  A_CHAR_DEATH = loadSound(`assets/sounds/a_char_death.wav`);
+  A_BOLT_BASIC = loadSound(`assets/sounds/a_bolt_basic.wav`);
+  A_NUTS_BASIC = loadSound(`assets/sounds/a_nuts_basic.wav`);
+  A_AGENT_BULLET = loadSound(`assets/sounds/a_agent_bullet.wav`);
+  A_HIT_PLAYER = loadSound(`assets/sounds/a_hit_player.wav`);
+  A_HIT_ENEMY = loadSound(`assets/sounds/a_hit_enemy.wav`);
+  A_SERPENT_BULLET = loadSound(`assets/sounds/a_serpent_bullet.wav`);
+  A_SUPPORT = loadSound(`assets/sounds/a_support.wav`);
+  A_COMBAT = loadSound(`assets/sounds/a_combat.wav`);
+  A_SUPPORT_ULT = loadSound(`assets/sounds/a_support_ult.wav`);
+  A_COMBAT_ULT = loadSound(`assets/sounds/a_combat_ult.wav`);
+  // set the sounds
+
+
+  // add the image to each bullet's image slot and sounds slot
+
+
   //console.log(pro_p_bolt_basic);
   pro_p_bolt_basic.images = S_BOLT_BULLET_BASIC;
+  pro_p_bolt_basic.sounds = A_BOLT_BASIC;
   pro_p_nuts_basic.images = S_NUTS_BULLET_BASIC;
+  pro_p_nuts_basic.sounds = A_NUTS_BASIC;
   pro_p_logicBomb.images = S_LOGIC_BOMB;
+  pro_p_logicBomb.sounds = A_COMBAT;
   pro_p_logicBombExplosion.images = S_LOGIC_BOMB_EXPLOSION;
   pro_p_backdoor.images = S_BACK_DOOR;
   pro_p_ult_bitRotWorm.images = S_BEAM;
@@ -255,6 +269,8 @@ function setup() {
   // pro_e_spiral[8] =
   // // if alone
   // pro_e_outward[8] =
+
+
 
   // create the player characters and enemy characters
   boltImages = new Images(S_BOLT_LEFT, S_BOLT_RIGHT, S_BOLT_FRONT, S_BOLT_FACE);
@@ -279,22 +295,7 @@ function setup() {
   }
   frontline = bolt;
   currentChar = "none";
-  // load sounds
-  A_SONG = loadSound(`assets/sounds/bark.wav`);
-  A_BOLT_BASIC = loadSound(`assets/sounds/bark.wav`);
-  A_NUTS_BASIC = loadSound(`assets/sounds/bark.wav`);
-  A_AGENT_BALL = loadSound(`assets/sounds/bark.wav`);
-  A_AGENT_SPEAR = loadSound(`assets/sounds/bark.wav`);
-  A_AGENT_WAVE = loadSound(`assets/sounds/bark.wav`);
-  A_AGENT_ABSORB = loadSound(`assets/sounds/bark.wav`);
-  A_HIT_PLAYER = loadSound(`assets/sounds/bark.wav`);
-  A_HIT_ENEMY = loadSound(`assets/sounds/bark.wav`);
-  A_SERPENT_SSS = loadSound(`assets/sounds/bark.wav`);
-  A_SERPENT_BALL = loadSound(`assets/sounds/bark.wav`);
-  A_SERPENT_RECT = loadSound(`assets/sounds/bark.wav`);
-  A_SUPPORT = loadSound(`assets/sounds/bark.wav`);
-  A_SUPPORT_ULT = loadSound(`assets/sounds/bark.wav`);
-  A_COMBAT_ULT = loadSound(`assets/sounds/bark.wav`);
+
   // enter the title state and starts the first turn
   whichScreen = PLAN_STATE;
   newTurn();
@@ -473,7 +474,8 @@ function shootBullets(effect, ability) {
   // create timer that creates every shot of bullets
   let allBulletSpawnTimer = setInterval(() => {
     for (let i = 0; i < howManyBulletsPerShot; i++) {
-      let newAbilityBullet = new Bullet(theAbility.user, theAbility.user.x, theAbility.user.y, width*(theEffect.bullet.speed/2)/100+height*(theEffect.bullet.speed/2)/100, theAbility.user.angle, theEffect.bullet.moveType, theEffect.bullet.targets, theEffect.bullet.effects, width*(theEffect.bullet.size/2)/100+height*(theEffect.bullet.size/2)/100, theEffect.bullet.changes, theEffect.bullet.images, theEffect.bullet.wall, theEffect.bullet.ifHit, theEffect.bullet.timer);
+      let newAbilityBullet = new Bullet(theAbility.user, theAbility.user.x, theAbility.user.y, width*(theEffect.bullet.speed/2)/100+height*(theEffect.bullet.speed/2)/100, theAbility.user.angle, theEffect.bullet.moveType, theEffect.bullet.targets, theEffect.bullet.effects, width*(theEffect.bullet.size/2)/100+height*(theEffect.bullet.size/2)/100, theEffect.bullet.changes, theEffect.bullet.images, theEffect.bullet.sounds, theEffect.bullet.wall, theEffect.bullet.ifHit, theEffect.bullet.timer);
+      newAbilityBullet.sounds.play();
       // start the interval for changes of each bullet
       for (let i = 0; i < newAbilityBullet.changes.length; i++) {
         let timePerLoop = 10;
@@ -547,6 +549,12 @@ function shootBullets(effect, ability) {
             }, timePerLoop);
             break;
           case "spawn":
+            // for (var i3 = 0; i3 < newAbilityBullet.changes[i].length; i++) {
+            //   let newSpawnBulletStats = newAbilityBullet.changes[i][1];
+            //   let newSpawnedBullet = new Bullet(theAbility.user, newAbilityBullet.x, newAbilityBullet.y, width*(newSpawnBulletStats.speed/2)/100+height*(newSpawnBulletStats.speed/2)/100, newAbilityBullet.angle, newSpawnBulletStats.moveType, newSpawnBulletStats.targets, newSpawnBulletStats.effects, width*(newSpawnBulletStats.size/2)/100+height*(newSpawnBulletStats.size/2)/100, newSpawnBulletStats.changes, newSpawnBulletStats.images, newSpawnBulletStats.sounds, newSpawnBulletStats.wall, newSpawnBulletStats.ifHit, newSpawnBulletStats.timer);
+            //   projectilesList.push(newSpawnedBullet);
+            //   newSpawnedBullet.sounds.play();
+            // }
             break;
           default:
         }

@@ -20,7 +20,7 @@ class PlanState {
     // draw depending on the situation: choose, ability, happen
     switch (this.situation) {
       case "choose":
-        for (var i = 0; i < playersList.length; i++) {
+        for (let i = 0; i < playersList.length; i++) {
           if (mouseX > width*(i+1)/(playersList.length+1)-width/12 && mouseX < width*(i+1)/(playersList.length+1)-width/12+width/6  && mouseY > height/2-height/6 && mouseY < height/2-height/6+height/3) {
             mouseOver = playersList[i];
             currentChar = playersList[i];
@@ -28,7 +28,7 @@ class PlanState {
         }
         // if a character is selected, then if mouse over one of their abilities, put it into the mouse over
         if (currentChar !== "none") {
-          for (var i = 0; i < currentChar.abilities[0].length; i++) {
+          for (let i = 0; i < currentChar.abilities[0].length; i++) {
             if (mouseX > width/7+(i*width/3.5) && mouseX < width/7+(i*width/3.5)+width/4 && mouseY > height-height/4.5 && mouseY < height-height/4.5+height/6) {
               mouseOver = currentChar.abilities[0][i];
             }
@@ -41,12 +41,12 @@ class PlanState {
         break;
       case "ability":
         // check what is being moused over, player or enemy
-        for (var i = 0; i < playersList.length; i++) {
+        for (let i = 0; i < playersList.length; i++) {
           if (mouseX > width*(i+1)/(playersList.length+1)-width/12 && mouseX < width*(i+1)/(playersList.length+1)-width/12+width/6  && mouseY > height/2-height/6 && mouseY < height/2-height/6+height/3) {
             mouseOver = playersList[i];
           }
         }
-        for (var i = 0; i < enemiesList.length; i++) {
+        for (let i = 0; i < enemiesList.length; i++) {
           if (mouseX > width*(i+1)/(enemiesList.length+1)-width/12 && mouseX < width*(i+1)/(enemiesList.length+1)-width/12+width/6  && mouseY > height/5-height/6 && mouseY < height/5-height/6+height/3) {
             mouseOver = enemiesList[i];
           }
@@ -74,7 +74,7 @@ class PlanState {
     rectMode(CENTER, CENTER);
     fill(255);
     // check enemy / player amount, for each enemy / player, draw name, sprites and stats
-    for (var i = 0; i < playersList.length; i++) {
+    for (let i = 0; i < playersList.length; i++) {
       textSize(width/100+height/100);
       rectMode(CENTER, CENTER);
       // mark the selected character with a square depending on the situation, if choose, then friendly only (can be selected to act)
@@ -164,7 +164,7 @@ class PlanState {
       }
     }
     // draw the enemy sprites
-    for (var i = 0; i < enemiesList.length; i++) {
+    for (let i = 0; i < enemiesList.length; i++) {
       textSize(width/100+height/100);
       fill(255);
       rectMode(CENTER, CENTER);
@@ -231,7 +231,7 @@ class PlanState {
     if (currentChar != "none") {
       push();
       // 2 supporting skills
-      for (var i = 0; i < currentChar.abilities[0].length; i++) {
+      for (let i = 0; i < currentChar.abilities[0].length; i++) {
         strokeWeight(3);
         stroke(0);
         // if moused over, it is highlighted
@@ -385,7 +385,7 @@ class PlanState {
   goToFight() {
     currentChar = frontline;
     // all characters not frontline has their frontline turns reset
-    for (var i = 0; i < playersList.length; i++) {
+    for (let i = 0; i < playersList.length; i++) {
       if (playersList[i].name !== frontline.name) {
         playersList[i].frontlineTurns = 0;
         playersList[i].tired = false;
@@ -393,7 +393,7 @@ class PlanState {
     }
     // for each enemy, give them a random moveset for the fight sequence
     let highestTime = 0;
-    for (var i = 0; i < enemiesList.length; i++) {
+    for (let i = 0; i < enemiesList.length; i++) {
       let moveset = random(enemiesList[i].abilities);
       enemiesList[i].currentAbility = moveset;
       // set the timers for enemy shoot bullets depending on ability
@@ -405,12 +405,18 @@ class PlanState {
       if (enemiesList[i].currentAbility.moves === "line")  {
         enemiesList[i].angle = random(0, 360);
       }
-      for (var i2 = 0; i2 < enemiesList[i].currentAbility.effects.length; i++) {
-        let enemyShootLoop = setInterval(() => {
-          shootBullets(enemiesList[i].currentAbility);
-        },  enemiesList[i].currentAbility.loopRate[i2]);
-        intervalsList.push(enemyShootLoop);
-      }
+      // let currentAbilityEffects = enemiesList[i].currentAbility.effects;
+      // for (let i2 = 0; i2 < currentAbilityEffects.length; i++) {
+      //   let whichEnemy = i;
+      //   let whichEffect = i2;
+      //   let whichAbility = enemiesList[whichEnemy].currentAbility;
+      //   console.log(whichAbility.loopRate);
+      //   let theLoopRate = whichAbility.loopRate[whichEffect];
+      //   let enemyShootLoop = setInterval(() => {
+      //     shootBullets(enemiesList[whichEnemy].currentAbility.effects[whichEffect]);
+      //   }, theLoopRate);
+      //   intervalsList.push(enemyShootLoop);
+      // }
     }
     // set timer for going back to plan state
     fightTime = highestTime;
