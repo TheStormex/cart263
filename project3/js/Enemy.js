@@ -17,6 +17,7 @@ class Enemy {
     this.abilities = abilities;
     this.currentAbility;
     this.images = images;
+    this.currentImage;
     this.alive = true;
   }
   draw() {
@@ -24,7 +25,7 @@ class Enemy {
     fill(0);
     noStroke();
     imageMode(CENTER);
-    image(this.images.front, this.x, this.y, this.size, this.size);
+    image(this.currentImage, this.x, this.y, this.size, this.size);
     pop();
   }
   move() {

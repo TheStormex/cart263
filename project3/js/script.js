@@ -284,9 +284,9 @@ function setup() {
   playersList = [bolt, nuts];
   enemiesList = [agent, serpent];
 // set the number of steps of each ability of each player
-  for (var i = 0; i < playersList.length; i++) {
-    for (var i2 = 0; i2 <  playersList[i].abilities[0].length; i2++) {
-      for (var i3 = 0; i3 < playersList[i].abilities[0][i2].effects.length; i3++) {
+  for (let i = 0; i < playersList.length; i++) {
+    for (let i2 = 0; i2 <  playersList[i].abilities[0].length; i2++) {
+      for (let i3 = 0; i3 < playersList[i].abilities[0][i2].effects.length; i3++) {
         if (playersList[i].abilities[0][i2].effects[i3].step === true) {
           playersList[i].abilities[0][i2].steps++;
         }
@@ -377,7 +377,7 @@ function newTurn() {
       frontline.tired = true;
     }
   }
-  for (var i = 0; i < playersList.length; i++) {
+  for (let i = 0; i < playersList.length; i++) {
     // reset stat changes
     playersList[i].offenseChange = 0;
     playersList[i].defenseChange = 0;
@@ -403,11 +403,11 @@ function newTurn() {
     playersList[i].energy = constrain(playersList[i].energy, 0, playersList[i].maxEnergy);
     playersList[i].acted = false;
     // all abilities are no used yet
-    for (var i2 = 0; i2 < playersList[i].abilities[0].length; i2++) {
+    for (let i2 = 0; i2 < playersList[i].abilities[0].length; i2++) {
       playersList[i].abilities[0][i2].used = false;
     }
   }
-  for (var i = 0; i < enemiesList.length; i++) {
+  for (let i = 0; i < enemiesList.length; i++) {
     enemiesList[i].offenseChange = 0;
     enemiesList[i].defenseChange = 0;
   }
@@ -415,13 +415,13 @@ function newTurn() {
 
 // check if all enemies and players are alive if all dead of 1 type, go to game end screen
 function checkAliveAll() {
-  for (var i = 0; i < enemiesList.length; i++) {
+  for (let i = 0; i < enemiesList.length; i++) {
     if (enemiesList[i].hp <= 0) {
       enemiesList.splice(i, 1);
       A_CHAR_DEATH.play();
     }
   }
-  for (var i = 0; i < playersList.length; i++) {
+  for (let i = 0; i < playersList.length; i++) {
     if (playersList[i].hp <= 0) {
       if (playersList.length > 1) {
         if (currentChar.name === playersList[i].name) {
@@ -457,8 +457,14 @@ function checkAliveAll() {
 
 // go from the fight state to the plan state
 function fightToPlan() {
-  for (var i = 0; i < intervalsList.length; i++) {
+  for (let i = 0; i < intervalsList.length; i++) {
       clearInterval(intervalsList[i]);
+  }
+  for (let i = 0; i < enemiesList.length; i++) {
+    enemiesList[i].currentImage = enemiesList[i].images.front;
+  }
+  for (let i = 0; i < playersList.length; i++) {
+    playersList[i].currentImage = playersList[i].images.front;
   }
   projectilesList = [];
   turns++;
@@ -551,7 +557,7 @@ function shootBullets(effect, ability) {
             }, timePerLoop);
             break;
           case "spawn":
-            // for (var i3 = 0; i3 < newAbilityBullet.changes[i].length; i++) {
+            // for (let i3 = 0; i3 < newAbilityBullet.changes[i].length; i++) {
             //   let newSpawnBulletStats = newAbilityBullet.changes[i][1];
             //   let newSpawnedBullet = new Bullet(theAbility.user, newAbilityBullet.x, newAbilityBullet.y, width*(newSpawnBulletStats.speed/2)/100+height*(newSpawnBulletStats.speed/2)/100, newAbilityBullet.angle, newSpawnBulletStats.moveType, newSpawnBulletStats.targets, newSpawnBulletStats.effects, width*(newSpawnBulletStats.size/2)/100+height*(newSpawnBulletStats.size/2)/100, newSpawnBulletStats.changes, newSpawnBulletStats.images, newSpawnBulletStats.sounds, newSpawnBulletStats.wall, newSpawnBulletStats.ifHit, newSpawnBulletStats.timer);
             //   projectilesList.push(newSpawnedBullet);
@@ -572,10 +578,10 @@ function shootBullets(effect, ability) {
 
 // end the game
 function endGame() {
-  for (var i = 0; i < timeoutsList.length; i++) {
+  for (let i = 0; i < timeoutsList.length; i++) {
     clearTimeout(timeoutsList[i]);
   }
-  for (var i = 0; i < intervalsList.length; i++) {
+  for (let i = 0; i < intervalsList.length; i++) {
     clearInterval(intervalsList[i]);
   }
   whichScreen = END_STATE;

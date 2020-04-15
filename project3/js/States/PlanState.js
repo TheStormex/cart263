@@ -430,6 +430,28 @@ class PlanState {
       //   intervalsList.push(enemyShootLoop);
       // }
     }
+    // set timer for both player and enemy sprites moving
+    frontline.currentImage = frontline.images.left;
+    let playerImageTimer = setInterval(function() {
+      if (frontline.currentImage === frontline.images.left) {
+        frontline.currentImage = frontline.images.right;
+      } else if (frontline.currentImage === frontline.images.right) {
+        frontline.currentImage = frontline.images.left;
+      }
+    }, 500);
+    intervalsList.push(playerImageTimer);
+    for (var i = 0; i < enemiesList.length; i++) {
+      enemiesList[i].currentImage = enemiesList[i].images.left;
+      let thisEnemy = enemiesList[i];
+      let enemyImageTimer = setInterval(() => {
+        if (thisEnemy.currentImage === thisEnemy.images.left) {
+          thisEnemy.currentImage = thisEnemy.images.right;
+        } else if (thisEnemy.currentImage === thisEnemy.images.right) {
+          thisEnemy.currentImage = thisEnemy.images.left;
+        }
+      }, 500);
+      intervalsList.push(enemyImageTimer);
+    }
     // set timer for going back to plan state
     fightTime = highestTime;
     currentFightTime = 0;
