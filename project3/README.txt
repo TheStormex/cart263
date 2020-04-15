@@ -82,6 +82,5 @@ Good luck! The fate of humanity rests on your fingertips!
 
 code in:
 - ability happens for all player abilities (bomb explosion)
-- how to angle the beam properly
 - support ult not working
 - enemy abilities

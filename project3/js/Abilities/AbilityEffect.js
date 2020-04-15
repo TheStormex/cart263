@@ -19,10 +19,5 @@ class AbilityEffect {
     this.delay = delay;
     // how many bullets are created per delay time (per shot)
     this.perDelay = perDelay;
-    if (this.aoe === true) {
-      for (var i = 0; i < this.canTargets.length; i++) {
-        this.targets.push(this.canTargetsList[i]);
-      }
-    }
   }
 }
