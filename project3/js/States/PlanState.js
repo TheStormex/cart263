@@ -382,16 +382,16 @@ class PlanState {
               }
             }
           } else if (currentAbility.currentEffect.aoe === true) {
-              for (var i2 = 0; i2 < currentAbility.currentEffect.canTargetsList.length; i++) {
-                currentAbility.currentEffect.targets.push(currentAbility.currentEffect.canTargetsList[i2]);
-              }
+              // for (var i2 = 0; i2 < currentAbility.currentEffect.canTargetsList.length; i++) {
+              //   currentAbility.currentEffect.targets.push(currentAbility.currentEffect.canTargetsList[i2]);
+              // }
               currentAbility.user = currentChar;
-              if (currentAbility.ultimate === true) {
+              // if (currentAbility.ultimate === true) {
                 A_SUPPORT_ULT.play();
-                currentAbility.user.ultCharge -= 100;
-              } else {
-                A_SUPPORT.play();
-              }
+              //   currentAbility.user.ultCharge -= 100;
+              // } else {
+              //   A_SUPPORT.play();
+              // }
               currentAbility.happens();
               console.log(playersList);
               this.situation = "choose";
@@ -439,19 +439,19 @@ class PlanState {
       if (enemiesList[i].currentAbility.moves === "line")  {
         enemiesList[i].angle = random(0, 360);
       }
-      let currentAbilityEffects = enemiesList[i].currentAbility.effects;
-      for (let i2 = 0; i2 < currentAbilityEffects.length; i++) {
-        let whichEnemy = i;
-        let whichEffect = i2;
-        let whichAbility = enemiesList[whichEnemy].currentAbility;
-        console.log(enemiesList[whichEnemy].currentAbility);
-        console.log(whichAbility.loopRate);
-        let theLoopRate = whichAbility.loopRate[whichEffect];
-        let enemyShootLoop = setInterval(() => {
-          shootBullets(enemiesList[whichEnemy].currentAbility.effects[whichEffect], enemiesList[whichEnemy].currentAbility);
-        }, theLoopRate);
-        intervalsList.push(enemyShootLoop);
-      }
+      // let currentAbilityEffects = enemiesList[i].currentAbility.effects;
+      // for (let i2 = 0; i2 < currentAbilityEffects.length; i++) {
+      //   let whichEnemy = i;
+      //   let whichEffect = i2;
+      //   let whichAbility = enemiesList[whichEnemy].currentAbility;
+      //   console.log(enemiesList[whichEnemy].currentAbility);
+      //   console.log(whichAbility.loopRate);
+      //   let theLoopRate = whichAbility.loopRate[whichEffect];
+      //   let enemyShootLoop = setInterval(() => {
+      //     shootBullets(enemiesList[whichEnemy].currentAbility.effects[whichEffect], enemiesList[whichEnemy].currentAbility);
+      //   }, theLoopRate);
+      //   intervalsList.push(enemyShootLoop);
+      // }
     }
     // set timer for both player and enemy sprites moving
     frontline.currentImage = frontline.images.left;

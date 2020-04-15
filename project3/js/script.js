@@ -109,7 +109,7 @@ let pro_p_nuts_basic = new BulletStats(2, "origin", "straight", "enemies", [["da
 let pro_p_logicBombExplosion = new BulletStats(0, "origin", "stay", "enemies", [["damage", 50]], 8, [["size", 100, 1000]], "to be set", "to be set", "done", ["done", "nothing"], 150);
 let pro_p_logicBomb = new BulletStats(0.6, "origin", "straight", "enemies", [["damage", 10]], 8, [["speed", -100, 2000], ["spawn", pro_p_logicBombExplosion, ["hit", ["targets", "walls"]], ["time", 2000]]], "to be set", "to be set", "done", ["done", "nothing"], 150);
 let pro_p_backdoor = new BulletStats(0, "origin", "stay", "enemies", [["damage", 10]], 2, [["size", -100, 2000]], "to be set", "to be set", "done", ["done", "nothing"], 150);
-let pro_p_ult_bitRotWorm = new BulletStats(2, "origin", "straight", "enemies", [["damage", 10]], 5, [], "to be set", "to be set", "done", ["through", "nothing"], 150);
+let pro_p_ult_bitRotWorm = new BulletStats(2, "origin", "straight", "enemies", [["damage", 5]], 5, [], "to be set", "to be set", "done", ["through", "nothing"], 150);
 let pro_p_DDOS = new BulletStats(1, "origin", "straight", "enemies", [["damage", 10], ["stun", 1500]], 4, [], "to be set", "to be set", "done", ["done", "nothing"], 150);
 let pro_p_bruteForce = new BulletStats(1, "random", "straight", "enemies", [["damage", 10]], 2, [], "to be set", "to be set", "done", ["done", "nothing"], 150);
 // enemy bullets
@@ -136,8 +136,8 @@ let ab_cleanupProtocol_effect = new AbilityEffect("heal", "players", 60, "", fal
 let ab_cleanupProtocol = new PlayerAbility("Cleanup Protocol",  3, [ab_cleanupProtocol_effect], "Heal a friendly character", 32, "none", false, [[5, "use"], [10, "heal"]], 0);
 let ab_signalBoost_effect = new AbilityEffect("ramp", "players", 5, "", false, false, 0, 0);
 let ab_signalBoost = new PlayerAbility("Signal Boost", 4, [ab_signalBoost_effect], "Give 5 energy to a friendly character", 32, "none", false, [[100, "use"]], 0);
-let ab_ult_bitRotWorm_effect = new AbilityEffect("bullet", "", 10, pro_p_ult_bitRotWorm, false, false, 100, 1);
-let ab_ult_bitRotWorm = new PlayerAbility("Bitrot Worm", 3, [ab_ult_bitRotWorm_effect], "Shoot a powerful beam", 32, "none", true, [[5, "hit"]], 0);
+let ab_ult_bitRotWorm_effect = new AbilityEffect("bullet", "", 20, pro_p_ult_bitRotWorm, false, false, 100, 1);
+let ab_ult_bitRotWorm = new PlayerAbility("Bitrot Worm", 0, [ab_ult_bitRotWorm_effect], "Shoot a powerful beam", 32, "none", true, [[5, "hit"]], 0);
 let ab_firewall_effect = new AbilityEffect("defense_up", "players", 25, "", false, false, 0);
 let ab_firewall = new PlayerAbility("Firewall", 3, [ab_firewall_effect], "Boost defenses to a friendly character", 32, "none", false, [[10, "use"]], 0);
 let ab_targetExploits_effect = new AbilityEffect("defense_down", "enemies", 25, "", false, false, 0, 0);
@@ -150,7 +150,7 @@ let ab_bruteForce = new PlayerAbility("Brute Force Attack", 3, [ab_bruteForce_ef
 let ab_ult_vpn_effect = new AbilityEffect("heal", "players", 50, "", false, true, 0, 0);
 let ab_ult_vpn_effect2 = new AbilityEffect("defense_up", "players", 15, "", false, true, 0, 0);
 let ab_ult_vpn_effect3= new AbilityEffect("offense_up", "players", 15, "", false, true, 0, 0);
-let ab_ult_vpn = new PlayerAbility("Activate VPN", 0, [ab_ult_vpn_effect, ab_ult_vpn_effect2, ab_ult_vpn_effect3], "Heal all friendly characters and boost stats", 32, "none", true, [[10, "use"]], 0);
+let ab_ult_vpn = new PlayerAbility("Activate VPN", 0, [ab_ult_vpn_effect, ab_ult_vpn_effect2, ab_ult_vpn_effect3], "Heal all friendly characters and boost stats", 32, "none", true, [[0, "use"]], 0);
 
 // the ability that is being activated right now
 let currentAbility;
@@ -220,8 +220,7 @@ function preload() {
 // p5 setup, load sounds,
 function setup() {
   gameScreen = createCanvas(windowWidth, windowHeight);
-  gameScreen.style('display', 'block');
-  // gameScreen.style('display', 'none');
+  gameScreen.style('display', 'none');
   background(100);
 
   // load sounds
@@ -611,4 +610,10 @@ function mousePressed() {
 function keyPressed() {
   currentKeyPressed = keyCode;
   whichScreen.keyDown();
+}
+
+// begin the game
+function startGame() {
+  $(`#startScreen`).remove();
+  gameScreen.style('display', 'block');
 }

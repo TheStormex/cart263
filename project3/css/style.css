@@ -1,4 +1,39 @@
 body {
-  overflow: hidden;
-  margin: 0;
+  margin: auto;
+  font-family: 'Orbitron', sans-serif;
+  background-color: black;
+}
+button {
+  background-color: green;
+  color: white;
+  width: 20%;
+  height: 20%;
+  font-size: 50px;
+  border-style: solid;
+  font-family: 'Orbitron', sans-serif;
+  margin: auto;
+}
+
+button:hover {
+  background-color: white;
+  color: green;
+}
+
+#letter {
+  font-size: 30px;
+  text-align: center;
+  text-indent: 2em;
+  color: green;
+  margin: auto;
+}
+
+#title {
+  font-size: 50px;
+  text-align: center;
+  color: green;
+  margin: auto;
+}
+
+#startScreen {
+  
 }

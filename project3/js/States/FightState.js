@@ -211,18 +211,17 @@ class FightState {
       if (currentCombatAbilityKey === abilityButton) {
         let abilityToBeActivated = frontline.abilities[1][i];
         // if this ability is not an ultimate and the player character does not have enough to use it, and if they have enough energy to use it, and it is not on cooldown then it works
-        if (abilityToBeActivated.ultimate === false && currentChar.ultCharge < 100 && currentChar.energy - abilityToBeActivated.cost >= 0 && abilityToBeActivated.cooldownLeft === 0) {
+        if (abilityToBeActivated.ultimate === false && currentChar.energy - abilityToBeActivated.cost >= 0 && abilityToBeActivated.cooldownLeft === 0) {
           currentAbility = frontline.abilities[1][i];
           this.situation = "ability";
         } else if (abilityToBeActivated.ultimate === true && frontline.ultCharge === 100) {
-          frontline.ultCharge -= 100;
           currentAbility = frontline.abilities[1][i];
           this.situation = "ability";
         } else {
           currentAbility = 0;
           currentCombatAbilityKey = 0;
           console.log("not enough");
-          console.log(abilityToBeActivated.cooldownLeft);
+          console.log(currentChar.energy - abilityToBeActivated.cost);
         }
       }
     }

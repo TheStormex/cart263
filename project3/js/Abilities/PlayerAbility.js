@@ -41,6 +41,9 @@ class PlayerAbility {
     // remove the energy this costs and set the player's acted to yes
     this.user.energy -= this.cost;
     this.user.acted = true;
+    if (this.ultimate === true) {
+        this.user.ultCharge -= 100;
+    }
     // for each effect, apply
     for (let i = 0; i < this.effects.length; i++) {
       let theEffect = this.effects[i];

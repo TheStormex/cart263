@@ -7,8 +7,8 @@ The game revolves around these two game segments: the choosing action and the ba
 The game ends when both player characters are defeated or when both enemy characters are
 defeated.
 
-The story is that in the near future, a technology company called OmniSyt (as in omni and
-sight, all seeing) has taken control of the world through manipulation information available
+The story is that in the near future, a technology company called OmniSyt
+has taken control of the world through manipulation information available
 to people as well as through collecting their data to sell to the powerful and to commit
 extorsion to prevent competition. The world is filled with their surveillance tools and
 the Internet is controlled by them as well. The player controls two hackers infiltrating
@@ -84,3 +84,9 @@ code in:
 - ability happens for all player abilities (bomb explosion)
 - support ult not working
 - enemy abilities
+bonus:
+- slowdown enemy after hit by ability for time
+- debuff the next turn
+- multiple characters
+
+Hey! Commander! We are ready! Nuts and Bolts are
