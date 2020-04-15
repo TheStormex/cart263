@@ -82,6 +82,7 @@ Good luck! The fate of humanity rests on your fingertips!
 
 code in:
 - ability happens for all player abilities
+- how to angle the beam properly
 - timer for switching between char sprite when moving and to the front if not moving
 - enemy abilities
 - bullets recalling the ult charge if hit a target - variable to the bullet that check for hitTrigger (if hit target and has a hit trigger, do action

@@ -348,18 +348,9 @@ class PlanState {
         } else if (currentChar.abilities[0].includes(mouseOver)) {
           // if this ability is not an ultimate and the player character does not have enough to use it, and if they have enough energy to use it, and it has not been used this turn then it works
           if (mouseOver.ultimate === false && currentChar.ultCharge < 100 && currentChar.energy - mouseOver.cost >= 0 && mouseOver.used === false) {
-            currentAbility = mouseOver;
-            // remove the ability from mouseOver since what will be mousedOver will be a character
-            mouseOver = 0;
-            currentAbility.currentStep = 1;
-            currentAbility.currentEffect = currentAbility.effects[0];
-            // if the first effect can target players, then make the canTargetsList into an array of all player characters, same if enemies
-            if (currentAbility.currentEffect.canTargets === "players") {
-              currentAbility.currentEffect.canTargetsList = playersList;
-            } else if (currentAbility.currentEffect.canTargets === "enemies") {
-              currentAbility.currentEffect.canTargetsList = enemiesList;
-            }
-            this.situation = "ability";
+            this.selectAbility();
+          } else if (mouseOver.ultimate === true && currentChar.ultCharge === 100) {
+            this.selectAbility();
           } else {
             console.log("not enough");
           }
@@ -371,6 +362,12 @@ class PlanState {
         if (currentAbility.currentEffect.canTargetsList.includes(mouseOver)) {
             currentAbility.currentEffect.targets.push(mouseOver);
             currentAbility.user = currentChar;
+            if (currentAbility.ultimate === true) {
+              A_SUPPORT_ULT.play();
+              currentAbility.user.ultCharge -= 100;
+            } else {
+              A_SUPPORT.play();
+            }
             currentAbility.happens();
             this.situation = "choose";
           // if the cancel button is moused over, cancel the ability
@@ -380,6 +377,21 @@ class PlanState {
         }
       }
     }
+  }
+  // select this ability
+  selectAbility() {
+    currentAbility = mouseOver;
+    // remove the ability from mouseOver since what will be mousedOver will be a character
+    mouseOver = 0;
+    currentAbility.currentStep = 1;
+    currentAbility.currentEffect = currentAbility.effects[0];
+    // if the first effect can target players, then make the canTargetsList into an array of all player characters, same if enemies
+    if (currentAbility.currentEffect.canTargets === "players") {
+      currentAbility.currentEffect.canTargetsList = playersList;
+    } else if (currentAbility.currentEffect.canTargets === "enemies") {
+      currentAbility.currentEffect.canTargetsList = enemiesList;
+    }
+    this.situation = "ability";
   }
   // go to the fight state from here
   goToFight() {

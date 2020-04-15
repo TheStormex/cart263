@@ -153,7 +153,7 @@ class FightState {
   mouseDown() {
     if (this.situation === "shoot") {
       if (frontline.basicBulletCooldown === false) {
-        let playerBasicBullet = new Bullet(frontline, frontline.x, frontline.y, width*(frontline.basicBullet.speed/2)/100+height*(frontline.basicBullet.speed/2)/100, frontline.angle, frontline.basicBullet.moveType, frontline.basicBullet.targets, frontline.basicBullet.effects, width*(frontline.basicBullet.size/2)/100+height*(frontline.basicBullet.size/2)/100, frontline.basicBullet.changes, frontline.basicBullet.images, frontline.basicBullet.wall, frontline.basicBullet.ifHit, frontline.basicBullet.timer);
+        let playerBasicBullet = new Bullet(frontline, frontline.x, frontline.y, width*(frontline.basicBullet.speed/2)/100+height*(frontline.basicBullet.speed/2)/100, frontline.angle, frontline.basicBullet.moveType, frontline.basicBullet.targets, frontline.basicBullet.effects, width*(frontline.basicBullet.size/2)/100+height*(frontline.basicBullet.size/2)/100, frontline.basicBullet.changes, frontline.basicBullet.images, frontline.basicBullet.sounds, frontline.basicBullet.wall, frontline.basicBullet.ifHit, frontline.basicBullet.timer);
         frontline.basicBullet.sounds.play();
         projectilesList.push(playerBasicBullet);
         frontline.basicBulletCooldown = true;
@@ -209,6 +209,10 @@ class FightState {
         let abilityToBeActivated = frontline.abilities[1][i];
         // if this ability is not an ultimate and the player character does not have enough to use it, and if they have enough energy to use it, and it is not on cooldown then it works
         if (abilityToBeActivated.ultimate === false && currentChar.ultCharge < 100 && currentChar.energy - abilityToBeActivated.cost >= 0 && abilityToBeActivated.cooldownLeft === 0) {
+          currentAbility = frontline.abilities[1][i];
+          this.situation = "ability";
+        } else if (abilityToBeActivated.ultimate === true && frontline.ultCharge === 100) {
+          frontline.ultCharge -= 100;
           currentAbility = frontline.abilities[1][i];
           this.situation = "ability";
         } else {

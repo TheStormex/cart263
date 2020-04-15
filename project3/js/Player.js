@@ -11,7 +11,7 @@ class Player {
     this.angle = 0;
     this.vx = 0;
     this.vy = 0;
-    this.size = width/20;
+    this.size = width/30+height/30;
     this.energy = 0;
     this.maxEnergy = maxEnergy;
     // bonus energy gained if not move last turn, char is refreshed this turn

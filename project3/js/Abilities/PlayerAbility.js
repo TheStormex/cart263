@@ -110,7 +110,7 @@ class PlayerAbility {
         default: console.log("error");
       }
       for (let i4 = 0; i4 < this.chargeGive.length; i4++) {
-        switch (this.chargeGive[i][1]) {
+        switch (this.chargeGive[i4][1]) {
           case "use":
             this.user.ultCharge += this.chargeGive[i4][0];
             break;

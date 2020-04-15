@@ -125,6 +125,7 @@ class Bullet {
     }
     switch (this.ifHit[0]) {
       case "done":
+      console.log("done");
           let index = projectilesList.indexOf(this);
           projectilesList.splice(index, 1);
       //  this.isDestroyed = true;

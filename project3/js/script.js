@@ -45,12 +45,8 @@ let S_SERPENT_BULLET;
 let S_LOGIC_BOMB;
 let S_LOGIC_BOMB_EXPLOSION;
 let S_BACK_DOOR;
-let S_CLEANUP;
-let S_SIGNAL;
 let S_BEAM;
-let S_FIREWALL;
-let S_EXPLOITS;
-let S_STUN;
+let S_DDOS;
 let S_BRUTE_FORCE;
 let S_LOGO;
 let S_NAME;
@@ -113,7 +109,7 @@ let pro_p_nuts_basic = new BulletStats(2, "origin", "straight", "enemies", [["da
 let pro_p_logicBombExplosion = new BulletStats(0, "origin", "stay", "enemies", [["damage", 50]], 8, [["size", 100, 1000]], "to be set", "to be set", "done", ["done", "nothing"], 150);
 let pro_p_logicBomb = new BulletStats(0.6, "origin", "straight", "enemies", [["damage", 10]], 8, [["speed", -100, 2000], ["spawn", pro_p_logicBombExplosion, ["hit", ["targets", "walls"]], ["time", 2000]]], "to be set", "to be set", "done", ["done", "nothing"], 150);
 let pro_p_backdoor = new BulletStats(0, "origin", "stay", "enemies", [["damage", 10]], 2, [["size", -100, 2000]], "to be set", "to be set", "done", ["done", "nothing"], 150);
-let pro_p_ult_bitRotWorm = new BulletStats(2, "origin", "straight", "enemies", [["damage", 10]], 2, [], "to be set", "to be set", "done", ["through", "nothing"], 150);
+let pro_p_ult_bitRotWorm = new BulletStats(2, "origin", "straight", "enemies", [["damage", 10]], 5, [], "to be set", "to be set", "done", ["through", "nothing"], 150);
 let pro_p_DDOS = new BulletStats(0.6, "origin", "straight", "enemies", [["damage", 10], ["stun", 1500]], 8, [["speed", -100, 2000], ["spawn", pro_p_logicBombExplosion, ["hit", ["targets", "walls"]], ["time", 2000]]], "to be set", "to be set", "done", ["done", "nothing"], 150);
 let pro_p_bruteForce = new BulletStats(0, "origin", "stay", "enemies", [["damage", 10]], 2, [["size", -100, 2000]], "to be set", "to be set", "done", ["done", "nothing"], 150);
 // enemy bullets
@@ -136,25 +132,25 @@ let ab_logicBomb = new PlayerAbility("Logic Bomb", 3, [ab_logicBomb_effect], "Th
 let ab_backdoor_effect = new AbilityEffect("bullet", "", 5, pro_p_backdoor, false, false, 20, 1);
 let ab_backdoor_effect2 = new AbilityEffect("dash", "", 3, "", false, false, 0);
 let ab_backdoor = new PlayerAbility("Backdoor", 2, [ab_backdoor_effect, ab_backdoor_effect2], "Dash and weaken enemies", 32, "none", false, [[5, "hit"], [2, "use"]], 2);
-let ab_cleanupProtocol_effect = new AbilityEffect("heal", "players", 6, "", false, false, 0);
+let ab_cleanupProtocol_effect = new AbilityEffect("heal", "players", 60, "", false, false, 0);
 let ab_cleanupProtocol = new PlayerAbility("Cleanup Protocol",  3, [ab_cleanupProtocol_effect], "Heal a friendly character", 32, "none", false, [[5, "use"], [10, "heal"]], 0);
 let ab_signalBoost_effect = new AbilityEffect("ramp", "players", 5, "", false, false, 0);
 let ab_signalBoost = new PlayerAbility("Signal Boost", 4, [ab_signalBoost_effect], "Give 5 energy to a friendly character", 32, "none", false, [[10, "use"]], 0);
-let ab_ult_bitRotWorm_effect = new AbilityEffect("bullet", "", 10, "", false, false, 10);
+let ab_ult_bitRotWorm_effect = new AbilityEffect("bullet", "", 10, pro_p_ult_bitRotWorm, false, false, 100, 1);
 let ab_ult_bitRotWorm = new PlayerAbility("Bitrot Worm", 3, [ab_ult_bitRotWorm_effect], "Shoot a powerful beam", 32, "none", true, [[5, "hit"]], 0);
 let ab_firewall_effect = new AbilityEffect("defense_up", "players", 25, "", false, false, 0);
 let ab_firewall = new PlayerAbility("Firewall", 3, [ab_firewall_effect], "Boost defenses", 32, "none", false, [[10, "use"]], 0);
 let ab_targetExploits_effect = new AbilityEffect("defense_down", "enemies", 25, "", false, false, 0);
-let ab_targetExploits = new PlayerAbility("Target Exploits", 3, [ab_targetExploits_effect], "Weaken enemy character", 32, "none", false, [[10, "use"]], 0);
+let ab_targetExploits = new PlayerAbility("Target Exploits", 3, [ab_targetExploits_effect], "Weaken enemy character", 32, "none", false, [[100, "use"]], 0);
 let ab_DOOS_effect = new AbilityEffect("bullet", "", 1, pro_p_DDOS, false, false, 0, 1);
 let ab_DDOS = new PlayerAbility("DDoS", 3, [ab_DOOS_effect], "Stun enemies hit", 32, "none", false, [[5, "hit"]], 4);
-let ab_bruteForce_effect = new AbilityEffect("bullet", "", 3, "", false, false, 10);
+let ab_bruteForce_effect = new AbilityEffect("bullet", "", 5, pro_p_bruteForce, false, false, 20, 1);
 let ab_bruteForce_effect2 = new AbilityEffect("dash", "", 3, "", false, false, 0);
 let ab_bruteForce = new PlayerAbility("Brute Force Attack", 3, [ab_bruteForce_effect, ab_bruteForce_effect2], "Dash and make enemies frail", 32, "none", false, [[5, "hit"], [2, "use"]], 3);
-let ab_ult_vpn_effect = new AbilityEffect("heal", "", 5, "", false, false, 0);
-let ab_ult_vpn_effect2 = new AbilityEffect("defense_up", "", 15, "", false, false, 0);
-let ab_ult_vpn_effect3= new AbilityEffect("offense_up", "", 15, "", false, false, 0);
-let ab_ult_vpn = new PlayerAbility("Activate VPN", 3, [ab_ult_vpn_effect, ab_ult_vpn_effect2, ab_ult_vpn_effect3], "Heal all friendly characters and boost stats", 32, "none", true, [[10, "use"]], 0);
+let ab_ult_vpn_effect = new AbilityEffect("heal", "players", 5, "", false, false, 0);
+let ab_ult_vpn_effect2 = new AbilityEffect("defense_up", "players", 15, "", false, false, 0);
+let ab_ult_vpn_effect3= new AbilityEffect("offense_up", "players", 15, "", false, false, 0);
+let ab_ult_vpn = new PlayerAbility("Activate VPN", 0, [ab_ult_vpn_effect, ab_ult_vpn_effect2, ab_ult_vpn_effect3], "Heal all friendly characters and boost stats", 32, "none", true, [[10, "use"]], 0);
 
 // the ability that is being activated right now
 let currentAbility;
@@ -195,28 +191,28 @@ function start() {
 
 // p5 preload, load image sprites
 function preload() {
-  S_BOLT_BULLET_BASIC = loadImage(`assets/images/clown.png`);
-  S_BOLT_FACE = loadImage(`assets/images/clown.png`);
-  S_BOLT_FRONT = loadImage(`assets/images/clown.png`);
-  S_BOLT_LEFT = loadImage(`assets/images/clown.png`);
-  S_BOLT_RIGHT = loadImage(`assets/images/clown.png`);
-  S_NUTS_BULLET_BASIC = loadImage(`assets/images/clown.png`);
-  S_NUTS_FACE = loadImage(`assets/images/clown.png`);
-  S_NUTS_FRONT = loadImage(`assets/images/clown.png`);
-  S_NUTS_LEFT = loadImage(`assets/images/clown.png`);
-  S_NUTS_RIGHT = loadImage(`assets/images/clown.png`);
-  S_AGENT_FRONT = loadImage(`assets/images/clown.png`);
-  S_AGENT_LEFT = loadImage(`assets/images/clown.png`);
-  S_AGENT_RIGHT = loadImage(`assets/images/clown.png`);
-  S_SERPENT_FRONT = loadImage(`assets/images/clown.png`);
-  S_SERPENT_LEFT = loadImage(`assets/images/clown.png`);
-  S_SERPENT_RIGHT = loadImage(`assets/images/clown.png`);
-  S_LOGIC_BOMB = loadImage(`assets/images/clown.png`);
-  S_LOGIC_BOMB_EXPLOSION = loadImage(`assets/images/clown.png`);
-  S_BACK_DOOR = loadImage(`assets/images/clown.png`);
-  S_BEAM = loadImage(`assets/images/clown.png`);
-  S_STUN = loadImage(`assets/images/clown.png`);
-  S_BRUTE_FORCE = loadImage(`assets/images/clown.png`);
+  S_BOLT_BULLET_BASIC = loadImage(`assets/images/bolt_basicBullet.png`);
+  S_BOLT_FACE = loadImage(`assets/images/bolt_face.png`);
+  S_BOLT_FRONT = loadImage(`assets/images/bolt_front.png`);
+  S_BOLT_LEFT = loadImage(`assets/images/bolt_left.png`);
+  S_BOLT_RIGHT = loadImage(`assets/images/bolt_right.png`);
+  S_NUTS_BULLET_BASIC = loadImage(`assets/images/nuts_basicBullet.png`);
+  S_NUTS_FACE = loadImage(`assets/images/nuts_face.png`);
+  S_NUTS_FRONT = loadImage(`assets/images/nuts_front.png`);
+  S_NUTS_LEFT = loadImage(`assets/images/nuts_left.png`);
+  S_NUTS_RIGHT = loadImage(`assets/images/nuts_right.png`);
+  S_AGENT_FRONT = loadImage(`assets/images/agent.png`);
+  S_AGENT_LEFT = loadImage(`assets/images/agent_left.png`);
+  S_AGENT_RIGHT = loadImage(`assets/images/agent_right.png`);
+  S_SERPENT_FRONT = loadImage(`assets/images/serpent.png`);
+  S_SERPENT_LEFT = loadImage(`assets/images/serpent_left.png`);
+  S_SERPENT_RIGHT = loadImage(`assets/images/serpent_right.png`);
+  S_LOGIC_BOMB = loadImage(`assets/images/logicBomb.png`);
+  S_LOGIC_BOMB_EXPLOSION = loadImage(`assets/images/logicBombExplosion.png`);
+  S_BACK_DOOR = loadImage(`assets/images/backdoor.png`);
+  S_BEAM = loadImage(`assets/images/beam.png`);
+  S_DDOS = loadImage(`assets/images/ddos.png`);
+  S_BRUTE_FORCE = loadImage(`assets/images/bruteForce.png`);
   S_LOGO = loadImage(`assets/images/clown.png`);
   S_NAME = loadImage(`assets/images/clown.png`);
 }
@@ -255,8 +251,12 @@ function setup() {
   pro_p_logicBomb.sounds = A_COMBAT;
   pro_p_logicBombExplosion.images = S_LOGIC_BOMB_EXPLOSION;
   pro_p_backdoor.images = S_BACK_DOOR;
+  pro_p_backdoor.sounds = A_COMBAT;
   pro_p_ult_bitRotWorm.images = S_BEAM;
-  pro_p_DDOS.images = S_STUN;
+  pro_p_ult_bitRotWorm.sounds = A_COMBAT_ULT;
+  pro_p_DDOS.images = S_DDOS;
+  pro_p_DDOS.sounds = A_COMBAT;
+  pro_p_bruteForce.images = S_BRUTE_FORCE;
   pro_p_bruteForce.images = S_BRUTE_FORCE;
   // enemy bullets
   // agent
@@ -275,12 +275,12 @@ function setup() {
   // create the player characters and enemy characters
   boltImages = new Images(S_BOLT_LEFT, S_BOLT_RIGHT, S_BOLT_FRONT, S_BOLT_FACE);
   bolt = new Player("Bolt", 200, 4, 10, [[ab_cleanupProtocol, ab_signalBoost], [ab_logicBomb, ab_backdoor, ab_ult_bitRotWorm]], pro_p_bolt_basic, boltImages);
-  nutsImages = new Images(S_NUTS_LEFT, S_NUTS_RIGHT, S_BOLT_FRONT, S_BOLT_FACE);
+  nutsImages = new Images(S_NUTS_LEFT, S_NUTS_RIGHT, S_NUTS_FRONT, S_NUTS_FACE);
   nuts = new Player("Nuts", 300, 3, 12, [[ab_firewall, ab_targetExploits, ab_ult_vpn], [ab_DDOS, ab_bruteForce]], pro_p_nuts_basic, nutsImages);
   agentImages = new Images(S_AGENT_LEFT, S_AGENT_RIGHT, S_AGENT_FRONT, "none");
-  agent = new Enemy("Hackshield Agent", 500, width/20+height/20, 1, [ab_e_shoot, ab_e_teleport], agentImages);
+  agent = new Enemy("Hackshield Agent", 800, width/20+height/20, 1, [ab_e_shoot, ab_e_teleport], agentImages);
   serpentImages = new Images(S_SERPENT_LEFT, S_SERPENT_RIGHT, S_SERPENT_FRONT, "none");
-  serpent = new Enemy("Serverspy Serpent", 600, width/20+height/20, 2, [ab_e_shoot, ab_e_teleport], serpentImages);
+  serpent = new Enemy("Serverspy Serpent", 1000, width/20+height/20, 2, [ab_e_shoot, ab_e_teleport], serpentImages);
   playersList = [bolt, nuts];
   enemiesList = [agent, serpent];
 // set the number of steps of each ability of each player
@@ -418,6 +418,7 @@ function checkAliveAll() {
   for (var i = 0; i < enemiesList.length; i++) {
     if (enemiesList[i].hp <= 0) {
       enemiesList.splice(i, 1);
+      A_CHAR_DEATH.play();
     }
   }
   for (var i = 0; i < playersList.length; i++) {
@@ -441,6 +442,7 @@ function checkAliveAll() {
         }
       }
       playersList.splice(i, 1);
+      A_CHAR_DEATH.play();
     }
   }
   if (enemiesList.length <= 0) {
