@@ -113,10 +113,12 @@ class PlayerAbility {
         switch (this.chargeGive[i4][1]) {
           case "use":
             this.user.ultCharge += this.chargeGive[i4][0];
+            this.user.ultCharge = constrain(this.user.ultCharge, 0, 100);
             break;
           case "heal":
             if (healed === true) {
               this.user.ultCharge += this.chargeGive[i4][0];
+              this.user.ultCharge = constrain(this.user.ultCharge, 0, 100);
             }
             break;
           default:

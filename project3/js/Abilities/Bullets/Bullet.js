@@ -110,6 +110,7 @@ class Bullet {
         // give characters ult charge (players)
         case "ultCharge":
           this.origin.ultCharge += this.effects[i2][1];
+          this.origin.ultCharge = constrain(this.origin.ultCharge, 0, 100);
           break;
         // stun the target
         case "stun":
@@ -125,7 +126,6 @@ class Bullet {
     }
     switch (this.ifHit[0]) {
       case "done":
-      console.log("done");
           let index = projectilesList.indexOf(this);
           projectilesList.splice(index, 1);
       //  this.isDestroyed = true;

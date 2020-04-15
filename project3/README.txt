@@ -81,12 +81,7 @@ Switch between each hacker as the front line often to prevent one from becoming 
 Good luck! The fate of humanity rests on your fingertips!
 
 code in:
-- ability happens for all player abilities
+- ability happens for all player abilities (bomb explosion)
 - how to angle the beam properly
-- timer for switching between char sprite when moving and to the front if not moving
+- support ult not working
 - enemy abilities
-- bullets recalling the ult charge if hit a target - variable to the bullet that check for hitTrigger (if hit target and has a hit trigger, do action
-like buff origin, give ult charge, )
-- remove damage variable for bullets (put that into effects [damage, 4], [ultCharge, 5], [speedChange, 5, 4(seconds)])
-- end state, clear all timers
-- sound variable to pass into bullets and abilities, and when they should play (hit, shoot, when spawn)

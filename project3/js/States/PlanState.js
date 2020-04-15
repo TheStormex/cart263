@@ -268,8 +268,8 @@ class PlanState {
             text("Ultimate Charging", width/3.75+(i*width/3.5), height-height/5);
           }
         }
-        // if this ability has been used this turn and cannot be used again
-        if (currentChar.abilities[0][i].used === true) {
+        // if this non-ultimate ability has been used this turn and cannot be used again
+        if (currentChar.abilities[0][i].used === true && currentChar.abilities[0][i].ultimate === false) {
           textSize(width/100+height/100);
           fill(255, 0, 0);
           text("Used This Turn", width/3.75+(i*width/3.5), height-height/5);
@@ -346,13 +346,16 @@ class PlanState {
           frontline = mouseOver;
           // if a player's ability is moused over, then clicking selects that ability to be used
         } else if (currentChar.abilities[0].includes(mouseOver)) {
-          // if this ability is not an ultimate and the player character does not have enough to use it, and if they have enough energy to use it, and it has not been used this turn then it works
-          if (mouseOver.ultimate === false && currentChar.ultCharge < 100 && currentChar.energy - mouseOver.cost >= 0 && mouseOver.used === false) {
+          // if this ability is not an ultimate, and if they have enough energy to use it, and it has not been used this turn then it works
+          if (mouseOver.ultimate === false && currentChar.energy - mouseOver.cost >= 0 && mouseOver.used === false) {
             this.selectAbility();
           } else if (mouseOver.ultimate === true && currentChar.ultCharge === 100) {
             this.selectAbility();
           } else {
             console.log("not enough");
+            console.log(mouseOver.ultimate);
+            console.log(currentChar.energy - mouseOver.cost)
+            console.log(mouseOver.used);
           }
         }
       }

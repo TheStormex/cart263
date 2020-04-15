@@ -153,7 +153,10 @@ class FightState {
   mouseDown() {
     if (this.situation === "shoot") {
       if (frontline.basicBulletCooldown === false) {
-        let playerBasicBullet = new Bullet(frontline, frontline.x, frontline.y, width*(frontline.basicBullet.speed/2)/100+height*(frontline.basicBullet.speed/2)/100, frontline.angle, frontline.basicBullet.moveType, frontline.basicBullet.targets, frontline.basicBullet.effects, width*(frontline.basicBullet.size/2)/100+height*(frontline.basicBullet.size/2)/100, frontline.basicBullet.changes, frontline.basicBullet.images, frontline.basicBullet.sounds, frontline.basicBullet.wall, frontline.basicBullet.ifHit, frontline.basicBullet.timer);
+        let playerBasicBullet = new Bullet(frontline, frontline.x, frontline.y, width*(frontline.basicBullet.speed/2)/100+height*(frontline.basicBullet.speed/2)/100,
+        frontline.angle, frontline.basicBullet.moveType, frontline.basicBullet.targets, frontline.basicBullet.effects,
+        width*(frontline.basicBullet.size/2)/100+height*(frontline.basicBullet.size/2)/100, frontline.basicBullet.changes,
+        frontline.basicBullet.images, frontline.basicBullet.sounds, frontline.basicBullet.wall, frontline.basicBullet.ifHit, frontline.basicBullet.timer);
         frontline.basicBullet.sounds.play();
         projectilesList.push(playerBasicBullet);
         frontline.basicBulletCooldown = true;
