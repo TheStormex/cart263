@@ -50,7 +50,7 @@
       <p id="title">
         The Last Hacktivists
       </p>
-      <div id="letter">
+      <div id="letter" class="textWall">
         <p>
           In 202X, the global technology and communication corporation OmniSyt has taken over the entire world.
           using their control over all information, they have engaged in information warfare and has taken over
@@ -66,8 +66,13 @@
           defeat the two anti-virus programs protecting OmniSyt's system. Hurry! The fate of humanity and the freedom of
           information rest upon your fingertips! Patch in now by pressing this button!
         </p>
-        <button id="startButton" onclick="startGame()"> Begin!  </button>
+        <button id="startButton" class="bigButton" onclick="startGame()"> Begin!  </button>
       </div>
+    </div>
+    <div id="endScreen" class="textWall">
+      <p id="endingTitle"> </p>
+      <p id="endingText"> </p>
+      <button id="restartButton" class="bigButton" onclick="restart()"> Restart Game </button>
     </div>
   </body>
 

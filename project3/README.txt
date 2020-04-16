@@ -26,3 +26,5 @@ bonus:
 - slowdown enemy after hit by ability for time
 - debuff the next turn
 - multiple characters
+
+why sounds not stop?

@@ -445,19 +445,19 @@ class PlanState {
       if (enemiesList[i].currentAbility.moves === "line")  {
         enemiesList[i].angle = random(0, 360);
       }
-      // let currentAbilityEffects = enemiesList[i].currentAbility.effects;
-      // for (let i2 = 0; i2 < currentAbilityEffects.length; i2++) {
-      //   let whichEnemy = i;
-      //   let whichEffect = i2;
-      //   let whichAbility = enemiesList[whichEnemy].currentAbility;
-      //   console.log(enemiesList[whichEnemy].currentAbility);
-      //   console.log(whichAbility.loopRate);
-      //   let theLoopRate = whichAbility.loopRate[whichEffect];
-      //   let enemyShootLoop = setInterval(() => {
-      //     shootBullets(enemiesList[whichEnemy].currentAbility.effects[whichEffect], whichAbility);
-      //   }, theLoopRate);
-      //   intervalsList.push(enemyShootLoop);
-      // }
+      let currentAbilityEffects = enemiesList[i].currentAbility.effects;
+      for (let i2 = 0; i2 < currentAbilityEffects.length; i2++) {
+        let whichEnemy = i;
+        let whichEffect = i2;
+        let whichAbility = enemiesList[whichEnemy].currentAbility;
+        console.log(enemiesList[whichEnemy].currentAbility);
+        console.log(whichAbility.loopRate);
+        let theLoopRate = whichAbility.loopRate[whichEffect];
+        let enemyShootLoop = setInterval(() => {
+          shootBullets(enemiesList[whichEnemy].currentAbility.effects[whichEffect], whichAbility);
+        }, theLoopRate);
+        intervalsList.push(enemyShootLoop);
+      }
     }
     // set timer for both player and enemy sprites moving
     frontline.currentImage = frontline.images.left;
@@ -512,7 +512,7 @@ class PlanState {
                 lowestHealthEnemy = enemiesList[i];
               }
             }
-          currentDialogText = "Nuts:" + lowestHealthEnemy.name + "'s' health is low! Press the attack!";
+          currentDialogText = "Nuts: " + lowestHealthEnemy.name + "'s health is low! Press the attack!";
         }
       }
       // if a / many friendly character{s} is / are refreshed
@@ -528,10 +528,46 @@ class PlanState {
             if (refreshedCharNames === "") {
               refreshedCharNames = refreshedCharNames.concat(refreshedChars[i]);
             } else {
-              refreshedCharNames = refreshedCharNames.concat(" and ", refreshedChar[i]);
+              refreshedCharNames = refreshedCharNames.concat(" and ", refreshedChars[i]);
             }
           }
         currentDialogText = refreshedCharNames + ": I am energized and refreshed! I will do great this turn!";
+      }
+      // if a friendly char has their ultimate ready
+      let hasUltChars = [];
+      for (var i = 0; i < playersList.length; i++) {
+          if (playersList[i].ultCharge === 100) {
+            hasUltChars.push(playersList[i].name);
+          }
+        }
+      if (hasUltChars.length > 0) {
+        let hasUltCharNames = "";
+          for (var i = 0; i < hasUltChars.length; i++) {
+            if (hasUltCharNames === "") {
+              hasUltCharNames = hasUltCharNames.concat(hasUltChars[i]);
+            } else {
+              hasUltCharNames = hasUltCharNames.concat(" and ", hasUltChars[i]);
+            }
+          }
+        currentDialogText = hasUltCharNames + ": My ultimate ability is ready! Let me unleash true power!";
+      }
+      // if a friendly char is tired
+      let tiredChars = [];
+      for (var i = 0; i < playersList.length; i++) {
+          if (playersList[i].tired === true) {
+            tiredChars.push(playersList[i].name);
+          }
+        }
+      if (tiredChars.length > 0) {
+        let tiredCharNames = "";
+          for (var i = 0; i < tiredChars.length; i++) {
+            if (tiredCharNames === "") {
+              tiredCharNames = tiredCharNames.concat(tiredChars[i]);
+            } else {
+              tiredCharNames = tiredCharNames.concat(" and ", tiredChars[i]);
+            }
+          }
+        currentDialogText = tiredCharNames + ": I am tired! Select another character to be the frontline for better performance!";
       }
       // if a friendly char is near death
       let lowestHealthChar;

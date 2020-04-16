@@ -23,7 +23,7 @@ const TUTORIAL_TEXT = [
   "Bolt: Switch between which one of us you see by hovering your mouse over our AVATARS.",
   "Bolt: You can see our stats: HEALTH, ENERGY and ULT CHARGE.",
   "Nuts: If our HEALTH hits 0, we get disconnected! Make sure that does not happen!",
-  "Nuts: On the other hand, our goal is to make the enemies' HEALTH hit 0",
+  "Nuts: On the other hand, our goal is to make the enemies' HEALTH hit 0!",
   "Bolt: Our ENERGY is used to activate abilities, we get some ENERGY at the beginning of every turn.",
   "Bolt: You can see which turn we are on at the bottom-left corner of your screen.",
   "Bolt: A turn goes like so: you choose if any of us uses our SUPPORT ABILITIES you see down there in this PLAN STATE,",
@@ -34,8 +34,8 @@ const TUTORIAL_TEXT = [
   "Nuts: Avoid enemies and their bullets, you can also press CTRL, SPACEBAR and SHIFT to activate COMBAT ABILITIES",
   "Nuts: After using a COMBAT ABILITY, it goes on cooldown so you'll have to wait before using it again.",
   "Nuts: When the bar above the stats reaches full, you go back to PLAN STATE and do it over again",
-  "Bolt: If any of us was not the frontline and did not use any abilities for a turn, we become REFRESHED, becoming stronger that turn.",
-  "Bolt: If any of us is frontline for more than 2 turns, we become TIRED, so switch between which one of us being the frontline often!",
+  "Bolt: If any of us did not use any abilities for a turn, we become REFRESHED, becoming stronger that turn and getting more ENERGY.",
+  "Bolt: If any of us is frontline for more than 2 turns and used abilities, we become TIRED, so switch between which one of us being the frontline often!",
   "Nuts: All buffs and debuffs to our incoming and outgoing damage lasts for one turn, the same goes for the enemies.",
   "Nuts: Using SUPPORT and COMBAT abilities as well as hitting enemies with bullets increase our ULT CHARGE.",
   "Bolt: Once one of our ULT CHARGE is at 100%, click on our ULTIMATE ABILITY to use it. Mine is a COMBAT ABILITY while Nuts' is a SUPPORT ABILITY.",
@@ -45,6 +45,16 @@ const TUTORIAL_TEXT = [
 const READY_TEXT = [
   "Nuts and Bolt: We are ready to move!",
   "Nuts and Bolt: Let's go! We are ready!"
+];
+
+const ENDING_SCREEN_TITLE = [
+  "Victory for the Hacktivists!",
+  "Defeat of the Hacktivists!"
+];
+
+const ENDING_SCREEN_TEXT = [
+  "We won! The future of information is saved!",
+  "We lost! There is no hope against OmniSyt anymore... is there?"
 ];
 
 let currentDialog = TUTORIAL_TEXT;
@@ -352,9 +362,11 @@ function setup() {
 // p5 draw
 function draw() {
   clear();
-  checkAliveAll();
-  whichScreen.draw();
-  framecount++;
+  if (gameStarted === true) {
+    checkAliveAll();
+    whichScreen.draw();
+    framecount++;
+  }
   // console.log(framecount);
 }
 
@@ -421,7 +433,7 @@ function newTurn() {
   if (turns > 1) {
     frontline.frontlineTurns++;
     frontline.refreshed = false;
-    if (frontline.frontlineTurns >= 3) {
+    if (frontline.frontlineTurns >= 3 && frontline.acted === true) {
       frontline.tired = true;
     }
   }
@@ -429,8 +441,8 @@ function newTurn() {
     // reset stat changes
     playersList[i].offenseChange = 0;
     playersList[i].defenseChange = 0;
-    // if a player character was not frontline and did not use any abilities last turn, it gains refreshed this turn
-    if (playersList[i].acted === false && playersList[i].frontlineTurns === 0) {
+    // if a player character did not use any abilities last turn, it gains refreshed this turn
+    if (playersList[i].acted === false) {
       // if not the first turn, give the characters refreshed buff
       if (turns > 1) {
         playersList[i].energyBoost = 3;
@@ -517,10 +529,8 @@ function fightToPlan() {
   projectilesList = [];
   console.log( soundsList);
   for (var i = 0; i < soundsList.length; i++) {
-    if (soundsList[i].isPlaying()) {
       soundsList[i].stop();
       console.log(  soundsList[i]);
-    }
   }
   turns++;
   newTurn();
@@ -550,7 +560,6 @@ function shootBullets(effect, ability) {
           console.log("angle");
           break;
         default:
-
       }
       let newAbilityBullet = new Bullet(theAbility.user, theAbility.user.x, theAbility.user.y, width*(theEffect.bullet.speed/2)/100+height*(theEffect.bullet.speed/2)/100, angleOfBullet, theEffect.bullet.moveType, theEffect.bullet.targets, theEffect.bullet.effects, width*(theEffect.bullet.size/2)/100+height*(theEffect.bullet.size/2)/100, theEffect.bullet.changes, theEffect.bullet.images, theEffect.bullet.sounds, theEffect.bullet.wall, theEffect.bullet.ifHit, theEffect.bullet.timer);
       console.log(theEffect.bullet);
@@ -650,6 +659,16 @@ function shootBullets(effect, ability) {
 
 // end the game
 function endGame() {
+  gameStarted = false;
+  for (var i = 0; i < playersList.length; i++) {
+    playersList.splice([i], 1);
+  }
+  for (var i = 0; i < enemiesList.length; i++) {
+    enemiesList.splice([i], 1);
+  }
+  for (var i = 0; i < projectilesList.length; i++) {
+    projectilesList.splice([i], 1);
+  }
   for (let i = 0; i < timeoutsList.length; i++) {
     clearTimeout(timeoutsList[i]);
   }
@@ -662,7 +681,15 @@ function endGame() {
     }
   }
   gameScreen.style('display', 'none');
-  whichScreen = END_STATE;
+  $(`#endScreen`).css(`display`, 'block');
+  let endingScreenParts;
+  if (winLose === "win") {
+    endingScreenParts = 0;
+  } else if (winLose === "lose") {
+    endingScreenParts = 1;
+  }
+  $(`#endingTitle`).text(ENDING_SCREEN_TITLE[endingScreenParts]);
+  $(`#endingText`).text(ENDING_SCREEN_TEXT[endingScreenParts]);
 }
 
 // p5 mouse is pressed
@@ -707,4 +734,9 @@ function skipDialog() {
   $(`#skipButton`).remove();
   $(`#previousButton`).remove();
   $(`#nextButton`).remove();
+}
+
+// restart game
+function restart() {
+  // reset all stats
 }
