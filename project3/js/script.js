@@ -24,14 +24,21 @@ const TUTORIAL_TEXT = [
   "Bolt: You can see our stats: HEALTH, ENERGY and ULT CHARGE.",
   "Nuts: If our HEALTH hits 0, we get disconnected! Make sure that does not happen!",
   "Nuts: On the other hand, our goal is to make the enemies' HEALTH hit 0",
-  "Bolt: Our ENERGY is used to activate abilities, we get some ENERGY at the beginning of every turn",
+  "Bolt: Our ENERGY is used to activate abilities, we get some ENERGY at the beginning of every turn.",
   "Bolt: You can see which turn we are on at the bottom-left corner of your screen.",
   "Bolt: A turn goes like so: you choose if any of us uses our SUPPORT ABILITIES you see down there in this PLAN STATE,",
-  "Bolt: Then you press the Fight! button to enter FIGHT STATE.",
+  "Bolt: We can only use each of our SUPPORT ABILITIES once per turn.",
+  "Bolt: Afterwards, you press the Fight! button to enter FIGHT STATE so we can destroy the enemies!",
   "Nuts: In the FIGHT STATE, you control one of us, the FRONTLINE that you have chosen. At the moment, Bolt is the frontline.",
   "Nuts: You use left click on the mouse to shoot at the enemies and WASD to move around.",
   "Nuts: Avoid enemies and their bullets, you can also press CTRL, SPACEBAR and SHIFT to activate COMBAT ABILITIES",
-  "Nuts: ",
+  "Nuts: After using a COMBAT ABILITY, it goes on cooldown so you'll have to wait before using it again.",
+  "Nuts: When the bar above the stats reaches full, you go back to PLAN STATE and do it over again",
+  "Bolt: If any of us was not the frontline and did not use any abilities for a turn, we become REFRESHED, becoming stronger that turn.",
+  "Bolt: If any of us is frontline for more than 2 turns, we become TIRED, so switch between which one of us being the frontline often!",
+  "Nuts: All buffs and debuffs to our incoming and outgoing damage lasts for one turn, the same goes for the enemies.",
+  "Nuts: Using SUPPORT and COMBAT abilities as well as hitting enemies with bullets increase our ULT CHARGE.",
+  "Bolt: Once one of our ULT CHARGE is at 100%, click on our ULTIMATE ABILITY to use it. Mine is a COMBAT ABILITY while Nuts' is a SUPPORT ABILITY.",
   "Nuts and Bolt: All right! If you are ready, press Finish Tutorial to begin our quest!"
 ];
 
@@ -139,15 +146,8 @@ let pro_p_DDOS = new BulletStats(1, "origin", "straight", "enemies", [["damage",
 let pro_p_bruteForce = new BulletStats(1, "random", "straight", "enemies", [["damage", 10]], 2, [], "to be set", "to be set", "done", ["done", "nothing"], 150);
 // enemy bullets
 // agent
-let pro_e_javelin = new BulletStats(1.2, "origin", "straight", "players", [["damage", 10]], 3, [], "to be set", "done", ["done", "nothing"], 250);
-let pro_e_shield = new BulletStats(0, "origin", "stay", "players", [["damage", 10]], 2, [["size", -100, 2000]], "to be set", "done", ["done", "nothing"], 150);
-// if alone
-let pro_e_tshape = new BulletStats(0, "origin", "stay", "players", [["damage", 10]], 2, [["size", -100, 2000]], "to be set", "done", ["done", "nothing"], 150);
-// serpent
-let pro_e_splitBall = new BulletStats(0, "origin", "stay", "players", [["damage", 10]], 2, [["size", -100, 2000]], "to be set", "done", ["done", "nothing"], 150);
-let pro_e_spiral = new BulletStats(0, "origin", "stay", "players", [["damage", 10]], 2, [["size", -100, 2000]], "to be set", "done", ["done", "nothing"], 150);
-// if alone
-let pro_e_outward = new BulletStats(0, "origin", "stay", "players", [["damage", 10]], 2, [["size", -100, 2000]], "to be set", "done", ["done", "nothing"], 150);
+let pro_e_agentBullet = new BulletStats(1.2, "origin", "straight", "players", [["damage", 10]], 3, [], "to be set", "to be set", "done", ["done", "nothing"], 250);
+let pro_e_serpentBullet = new BulletStats(1.2, "origin", "straight", "players", [["damage", 10]], 3, [], "to be set", "to be set", "done", ["done", "nothing"], 250);
 
 
 
@@ -188,9 +188,9 @@ let combatButtons = [["Space", 32], ["Shift", 16], ["Ctrl", 17]];
 // enemies abilities
 // let ab_e_wallStraight = new EnemyAbility("", "", "");
 // let ab_e_inOut = new EnemyAbility("", "", "");
-let ab_e_shoot_effect = new AbilityEffect("bullet", "", 1, [pro_e_javelin], false, false, 0, 1);
+let ab_e_shoot_effect = new AbilityEffect("bullet", "", 1, [pro_e_serpentBullet], false, false, 0, 1);
 let ab_e_shoot = new EnemyAbility("noise", [ab_e_shoot_effect], [1000], "walls", 10);
-let ab_e_teleport_effect = new AbilityEffect("bullet", "", 1, [pro_e_javelin], false, false, 0, 1);
+let ab_e_teleport_effect = new AbilityEffect("bullet", "", 1, [pro_e_agentBullet], false, false, 0, 1);
 let ab_e_teleport = new EnemyAbility("line", [ab_e_teleport_effect], [2000], "through", 8);
 
 let projectilesList = [];
@@ -229,9 +229,11 @@ function preload() {
   S_AGENT_FRONT = loadImage(`assets/images/agent.png`);
   S_AGENT_LEFT = loadImage(`assets/images/agent_left.png`);
   S_AGENT_RIGHT = loadImage(`assets/images/agent_right.png`);
+  S_AGENT_BULLET = loadImage(`assets/images/agent_bullet.png`);
   S_SERPENT_FRONT = loadImage(`assets/images/serpent.png`);
   S_SERPENT_LEFT = loadImage(`assets/images/serpent_left.png`);
   S_SERPENT_RIGHT = loadImage(`assets/images/serpent_right.png`);
+  S_SERPENT_BULLET = loadImage(`assets/images/serpent_bullet.png`);
   S_LOGIC_BOMB = loadImage(`assets/images/logicBomb.png`);
   S_LOGIC_BOMB_EXPLOSION = loadImage(`assets/images/logicBombExplosion.png`);
   S_BACK_DOOR = loadImage(`assets/images/backdoor.png`);
@@ -295,7 +297,11 @@ function setup() {
   pro_p_bruteForce.sounds = A_COMBAT;
   // enemy bullets
   // agent
-  pro_e_javelin.images = S_BOLT_BULLET_BASIC;
+  pro_e_agentBullet.images = S_AGENT_BULLET;
+  pro_e_agentBullet.sounds = A_AGENT_BULLET;
+  pro_e_serpentBullet.images = S_SERPENT_BULLET;
+  console.log(pro_e_serpentBullet.images);
+  pro_e_serpentBullet.sounds = A_SERPENT_BULLET;
   // pro_e_shield[8] =
   // // if alone
   // pro_e_tshape[8] =
@@ -313,9 +319,16 @@ function setup() {
   nutsImages = new Images(S_NUTS_LEFT, S_NUTS_RIGHT, S_NUTS_FRONT, S_NUTS_FACE);
   nuts = new Player("Nuts", 300, 3, 12, [[ab_firewall, ab_targetExploits, ab_ult_vpn], [ab_DDOS, ab_bruteForce]], pro_p_nuts_basic, nutsImages);
   agentImages = new Images(S_AGENT_LEFT, S_AGENT_RIGHT, S_AGENT_FRONT, "none");
-  agent = new Enemy("Hackshield Agent", 800, width/20+height/20, 1, [ab_e_shoot, ab_e_teleport], agentImages);
+  agent = new Enemy("Hackshield Agent", 800, width/20+height/20, 5, [ab_e_shoot, ab_e_teleport], agentImages);
+  console.log(agent);
+  for (var i = 0; i < agent.abilities.length; i++) {
+    agent.abilities[i].user = agent;
+  }
   serpentImages = new Images(S_SERPENT_LEFT, S_SERPENT_RIGHT, S_SERPENT_FRONT, "none");
-  serpent = new Enemy("Serverspy Serpent", 1000, width/20+height/20, 2, [ab_e_shoot, ab_e_teleport], serpentImages);
+  serpent = new Enemy("Serverspy Serpent", 1000, width/20+height/20, 8, [ab_e_shoot, ab_e_teleport], serpentImages);
+  for (var i = 0; i < serpent.abilities.length; i++) {
+    serpent.abilities[i].user = serpent;
+  }
   playersList = [bolt, nuts];
   enemiesList = [agent, serpent];
 // set the number of steps of each ability of each player
@@ -534,12 +547,14 @@ function shootBullets(effect, ability) {
           angleOfBullet = random(0, 2*PI);
           break;
         case "angles":
-
+          console.log("angle");
           break;
         default:
 
       }
       let newAbilityBullet = new Bullet(theAbility.user, theAbility.user.x, theAbility.user.y, width*(theEffect.bullet.speed/2)/100+height*(theEffect.bullet.speed/2)/100, angleOfBullet, theEffect.bullet.moveType, theEffect.bullet.targets, theEffect.bullet.effects, width*(theEffect.bullet.size/2)/100+height*(theEffect.bullet.size/2)/100, theEffect.bullet.changes, theEffect.bullet.images, theEffect.bullet.sounds, theEffect.bullet.wall, theEffect.bullet.ifHit, theEffect.bullet.timer);
+      console.log(theEffect.bullet);
+      console.log(newAbilityBullet);
       newAbilityBullet.sounds.play();
       // start the interval for changes of each bullet
       for (let i = 0; i < newAbilityBullet.changes.length; i++) {
@@ -690,4 +705,6 @@ function nextDialog() {
 function skipDialog() {
   tutorial = false;
   $(`#skipButton`).remove();
+  $(`#previousButton`).remove();
+  $(`#nextButton`).remove();
 }

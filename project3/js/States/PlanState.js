@@ -446,7 +446,7 @@ class PlanState {
         enemiesList[i].angle = random(0, 360);
       }
       // let currentAbilityEffects = enemiesList[i].currentAbility.effects;
-      // for (let i2 = 0; i2 < currentAbilityEffects.length; i++) {
+      // for (let i2 = 0; i2 < currentAbilityEffects.length; i2++) {
       //   let whichEnemy = i;
       //   let whichEffect = i2;
       //   let whichAbility = enemiesList[whichEnemy].currentAbility;
@@ -454,7 +454,7 @@ class PlanState {
       //   console.log(whichAbility.loopRate);
       //   let theLoopRate = whichAbility.loopRate[whichEffect];
       //   let enemyShootLoop = setInterval(() => {
-      //     shootBullets(enemiesList[whichEnemy].currentAbility.effects[whichEffect], enemiesList[whichEnemy].currentAbility);
+      //     shootBullets(enemiesList[whichEnemy].currentAbility.effects[whichEffect], whichAbility);
       //   }, theLoopRate);
       //   intervalsList.push(enemyShootLoop);
       // }
@@ -493,17 +493,62 @@ class PlanState {
     intervalsList.push(fightTimer);
     whichScreen = FIGHT_STATE;
   }
+  // what text appears in the dialog, in order of importance (least-most) - ready - enemy almost dead - refreshed - ultimate ready - tired - almost dead
   dialogContent() {
+    // if tutorial is no longer active, give dialog based on most important thing player needs to know
     if (tutorial === false) {
+      // if chars are ready to act (nothing special happening)
       currentDialog = READY_TEXT;
       currentDialogNumber = 0;
       currentDialogText = currentDialog[currentDialogNumber];
+      // if an enemy is almost dead
+      let lowestHealthEnemy;
+      for (var i = 0; i < enemiesList.length; i++) {
+          if (enemiesList[i].hp < enemiesList[i].maxHp/5) {
+            if (lowestHealthEnemy === undefined) {
+              lowestHealthEnemy = enemiesList[i];
+            } else {
+              if (enemiesList[i].hp < lowestHealthEnemy.hp) {
+                lowestHealthEnemy = enemiesList[i];
+              }
+            }
+          currentDialogText = "Nuts:" + lowestHealthEnemy.name + "'s' health is low! Press the attack!";
+        }
+      }
+      // if a / many friendly character{s} is / are refreshed
+      let refreshedChars = [];
       for (var i = 0; i < playersList.length; i++) {
-        if (playersList[i].hp < playersList[i].maxHp/5) {
-          currentDialogText = playersList[i].name + ":" + " My health is low! Heal me and / or pick another frontline!";
+          if (playersList[i].refreshed === true) {
+            refreshedChars.push(playersList[i].name);
+          }
+        }
+      if (refreshedChars.length > 0) {
+        let refreshedCharNames = "";
+          for (var i = 0; i < refreshedChars.length; i++) {
+            if (refreshedCharNames === "") {
+              refreshedCharNames = refreshedCharNames.concat(refreshedChars[i]);
+            } else {
+              refreshedCharNames = refreshedCharNames.concat(" and ", refreshedChar[i]);
+            }
+          }
+        currentDialogText = refreshedCharNames + ": I am energized and refreshed! I will do great this turn!";
+      }
+      // if a friendly char is near death
+      let lowestHealthChar;
+      for (var i = 0; i < playersList.length; i++) {
+          if (playersList[i].hp < playersList[i].maxHp/5) {
+            if (lowestHealthChar === undefined) {
+              lowestHealthChar = playersList[i];
+            } else {
+              if (playersList[i].hp < lowestHealthChar.hp) {
+                lowestHealthChar = playersList[i];
+              }
+            }
+          currentDialogText = lowestHealthChar.name + ":" + " My health is low! Heal me and / or pick another frontline!";
         }
       }
     } else {
+      // if still in tutorial, show tutorial text
       currentDialog = TUTORIAL_TEXT;
       currentDialogText = currentDialog[currentDialogNumber];
     }
