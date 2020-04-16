@@ -38,6 +38,10 @@ button:hover {
 }
 
 #title {
+  
+}
+
+.largeText {
   font-size: 50px;
   text-align: center;
   color: #00FF00;

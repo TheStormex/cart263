@@ -388,18 +388,18 @@ class PlanState {
               }
             }
           } else if (currentAbility.currentEffect.aoe === true) {
-              // for (var i2 = 0; i2 < currentAbility.currentEffect.canTargetsList.length; i++) {
-              //   currentAbility.currentEffect.targets.push(currentAbility.currentEffect.canTargetsList[i2]);
-              // }
+              for (var i2 = 0; i2 < currentAbility.currentEffect.canTargetsList.length; i2++) {
+                currentAbility.currentEffect.targets.push(currentAbility.currentEffect.canTargetsList[i2]);
+                console.log(currentAbility.currentEffect.targets);
+              }
               currentAbility.user = currentChar;
-              // if (currentAbility.ultimate === true) {
+              if (currentAbility.ultimate === true) {
                 A_SUPPORT_ULT.play();
-              //   currentAbility.user.ultCharge -= 100;
-              // } else {
-              //   A_SUPPORT.play();
-              // }
+                currentAbility.user.ultCharge -= 100;
+              } else {
+                A_SUPPORT.play();
+              }
               currentAbility.happens();
-              console.log(playersList);
               this.situation = "choose";
           }
         }
@@ -445,19 +445,19 @@ class PlanState {
       if (enemiesList[i].currentAbility.moves === "line")  {
         enemiesList[i].angle = random(0, 360);
       }
-      let currentAbilityEffects = enemiesList[i].currentAbility.effects;
-      for (let i2 = 0; i2 < currentAbilityEffects.length; i2++) {
-        let whichEnemy = i;
-        let whichEffect = i2;
-        let whichAbility = enemiesList[whichEnemy].currentAbility;
-        console.log(enemiesList[whichEnemy].currentAbility);
-        console.log(whichAbility.loopRate);
-        let theLoopRate = whichAbility.loopRate[whichEffect];
-        let enemyShootLoop = setInterval(() => {
-          shootBullets(enemiesList[whichEnemy].currentAbility.effects[whichEffect], whichAbility);
-        }, theLoopRate);
-        intervalsList.push(enemyShootLoop);
-      }
+      // let currentAbilityEffects = enemiesList[i].currentAbility.effects;
+      // for (let i2 = 0; i2 < currentAbilityEffects.length; i2++) {
+      //   let whichEnemy = i;
+      //   let whichEffect = i2;
+      //   let whichAbility = enemiesList[whichEnemy].currentAbility;
+      //   console.log(enemiesList[whichEnemy].currentAbility);
+      //   console.log(whichAbility.loopRate);
+      //   let theLoopRate = whichAbility.loopRate[whichEffect];
+      //   let enemyShootLoop = setInterval(() => {
+      //     shootBullets(enemiesList[whichEnemy].currentAbility.effects[whichEffect], whichAbility);
+      //   }, theLoopRate);
+      //   intervalsList.push(enemyShootLoop);
+      // }
     }
     // set timer for both player and enemy sprites moving
     frontline.currentImage = frontline.images.left;
@@ -498,9 +498,15 @@ class PlanState {
     // if tutorial is no longer active, give dialog based on most important thing player needs to know
     if (tutorial === false) {
       // if chars are ready to act (nothing special happening)
-      currentDialog = READY_TEXT;
-      currentDialogNumber = 0;
-      currentDialogText = currentDialog[currentDialogNumber];
+        let allCharsNames = "";
+          for (var i = 0; i < playersList.length; i++) {
+            if (allCharsNames === "") {
+              allCharsNames = allCharsNames.concat(playersList[i].name);
+            } else {
+              allCharsNames = allCharsNames.concat(" and ", playersList[i].name);
+            }
+          }
+        currentDialogText = allCharsNames + ": I am ready to move!";
       // if an enemy is almost dead
       let lowestHealthEnemy;
       for (var i = 0; i < enemiesList.length; i++) {

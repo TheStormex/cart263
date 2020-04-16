@@ -67,7 +67,8 @@ class PlayerAbility {
           break;
         case "offense_up":
           for (let i2 = 0; i2 < theEffect.targets.length; i2++) {
-            theEffect.targets[i].offenseChange += theEffect.amount;
+            theEffect.targets[i2].offenseChange += theEffect.amount;
+            console.log(  theEffect.targets[i2]);
           }
           break;
         case "offense_down":

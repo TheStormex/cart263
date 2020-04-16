@@ -169,19 +169,19 @@ class FightState {
       currentAbility.happens();
       // if this is a combat ability with a cooldown, then after use, set the timer
       let thisAbility = currentAbility;
-      // if (thisAbility.cooldown !== 0) {
-      //   thisAbility.onCooldown = true;
-      //   thisAbility.cooldownLeft = thisAbility.cooldown;
-      //   console.log(thisAbility.cooldownLeft);
-      //   thisAbility.cooldownTimer = setInterval(function() {
-      //     thisAbility.cooldownLeft -= 1;
-      //     console.log(thisAbility);
-      //     if (thisAbility.cooldownLeft <= 0) {
-      //       thisAbility.onCooldown = false;
-      //       clearInterval(thisAbility.cooldownTimer);
-      //     }
-      //   }, 1000, thisAbility);
-      // }
+      if (thisAbility.cooldown !== 0) {
+        thisAbility.onCooldown = true;
+        thisAbility.cooldownLeft = thisAbility.cooldown;
+        console.log(thisAbility.cooldownLeft);
+        thisAbility.cooldownTimer = setInterval(function() {
+          thisAbility.cooldownLeft -= 1;
+          console.log(thisAbility);
+          if (thisAbility.cooldownLeft <= 0) {
+            thisAbility.onCooldown = false;
+            clearInterval(thisAbility.cooldownTimer);
+          }
+        }, 1000, thisAbility);
+      }
       currentCombatAbilityKey = "0";
       this.situation = "shoot";
     }

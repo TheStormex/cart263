@@ -42,11 +42,6 @@ const TUTORIAL_TEXT = [
   "Nuts and Bolt: All right! If you are ready, press Finish Tutorial to begin our quest!"
 ];
 
-const READY_TEXT = [
-  "Nuts and Bolt: We are ready to move!",
-  "Nuts and Bolt: Let's go! We are ready!"
-];
-
 const ENDING_SCREEN_TITLE = [
   "Victory for the Hacktivists!",
   "Defeat of the Hacktivists!"
@@ -148,8 +143,7 @@ let gameStarted = false;
 // change for spawn = spawn, what tp spawn, what can cause the spawn (time, hit) if time, then how long; if hit, then hit what
 let pro_p_bolt_basic = new BulletStats(1.2, "origin", "straight", "enemies", [["damage", 10], ["ultCharge", 1]], 3, [], "to be set", "to be set", "done", ["done", "nothing"], 250);
 let pro_p_nuts_basic = new BulletStats(2, "origin", "straight", "enemies", [["damage", 10], ["ultCharge", 1]], 1.5, [], "to be set", "to be set", "done", ["done", "nothing"], 150);
-let pro_p_logicBombExplosion = new BulletStats(0, "origin", "stay", "enemies", [["damage", 50]], 8, [["size", 100, 1000]], "to be set", "to be set", "done", ["done", "nothing"], 150);
-let pro_p_logicBomb = new BulletStats(0.6, "origin", "straight", "enemies", [["damage", 10]], 8, [["speed", -100, 2000], ["spawn", pro_p_logicBombExplosion, ["hit", ["targets", "walls"]], ["time", 2000]]], "to be set", "to be set", "done", ["done", "nothing"], 150);
+let pro_p_logicBomb = new BulletStats(0.6, "origin", "straight", "enemies", [["damage", 100]], 8, [["speed", -100, 1500]], "to be set", "to be set", "done", ["done", "nothing"], 150);
 let pro_p_backdoor = new BulletStats(0, "origin", "stay", "enemies", [["damage", 10]], 2, [["size", -100, 2000]], "to be set", "to be set", "done", ["done", "nothing"], 150);
 let pro_p_ult_bitRotWorm = new BulletStats(2, "origin", "straight", "enemies", [["damage", 5]], 5, [], "to be set", "to be set", "done", ["through", "nothing"], 150);
 let pro_p_DDOS = new BulletStats(1, "origin", "straight", "enemies", [["damage", 10], ["stun", 1500]], 4, [], "to be set", "to be set", "done", ["done", "nothing"], 150);
@@ -170,22 +164,20 @@ let ab_backdoor = new PlayerAbility("Backdoor", 2, [ab_backdoor_effect, ab_backd
 let ab_cleanupProtocol_effect = new AbilityEffect("heal", "players", 60, "", false, false, 0, 0);
 let ab_cleanupProtocol = new PlayerAbility("Cleanup Protocol",  3, [ab_cleanupProtocol_effect], "Heal 60 HP to a friendly character", 32, "none", false, [[5, "use"], [10, "heal"]], 0);
 let ab_signalBoost_effect = new AbilityEffect("ramp", "players", 5, "", false, false, 0, 0);
-let ab_signalBoost = new PlayerAbility("Signal Boost", 4, [ab_signalBoost_effect], "Give 5 energy to a friendly character", 32, "none", false, [[100, "use"]], 0);
+let ab_signalBoost = new PlayerAbility("Signal Boost", 4, [ab_signalBoost_effect], "Give 5 energy to a friendly character", 32, "none", false, [[10, "use"]], 0);
 let ab_ult_bitRotWorm_effect = new AbilityEffect("bullet", "", 20, pro_p_ult_bitRotWorm, false, false, 100, 1);
 let ab_ult_bitRotWorm = new PlayerAbility("Bitrot Worm", 0, [ab_ult_bitRotWorm_effect], "Shoot a powerful beam", 32, "none", true, [[5, "hit"]], 0);
 let ab_firewall_effect = new AbilityEffect("defense_up", "players", 25, "", false, false, 0);
 let ab_firewall = new PlayerAbility("Firewall", 3, [ab_firewall_effect], "Increase defense by 25% to a friendly character", 32, "none", false, [[10, "use"]], 0);
 let ab_targetExploits_effect = new AbilityEffect("defense_down", "enemies", 25, "", false, false, 0, 0);
-let ab_targetExploits = new PlayerAbility("Target Exploits", 3, [ab_targetExploits_effect], "Decrease defense by 25% to an enemy character", 32, "none", false, [[100, "use"]], 0);
+let ab_targetExploits = new PlayerAbility("Target Exploits", 3, [ab_targetExploits_effect], "Decrease defense by 25% to an enemy character", 32, "none", false, [[10, "use"]], 0);
 let ab_DOOS_effect = new AbilityEffect("bullet", "", 1, pro_p_DDOS, false, false, 0, 1);
 let ab_DDOS = new PlayerAbility("DDoS", 3, [ab_DOOS_effect], "Stun one enemy", 32, "none", false, [[5, "hit"]], 4);
 let ab_bruteForce_effect = new AbilityEffect("bullet", "", 5, pro_p_bruteForce, false, false, 20, 1);
 let ab_bruteForce_effect2 = new AbilityEffect("dash", "", 3, "", false, false, 0, 0);
 let ab_bruteForce = new PlayerAbility("Brute Force Attack", 3, [ab_bruteForce_effect, ab_bruteForce_effect2], "Dash and damage enemies", 32, "none", false, [[5, "hit"], [2, "use"]], 3);
-let ab_ult_vpn_effect = new AbilityEffect("heal", "players", 50, "", false, true, 0, 0);
-let ab_ult_vpn_effect2 = new AbilityEffect("defense_up", "players", 15, "", false, true, 0, 0);
-let ab_ult_vpn_effect3= new AbilityEffect("offense_up", "players", 15, "", false, true, 0, 0);
-let ab_ult_vpn = new PlayerAbility("Activate VPN", 0, [ab_ult_vpn_effect, ab_ult_vpn_effect2, ab_ult_vpn_effect3], "Heal all friendly characters and boost stats", 32, "none", true, [[0, "use"]], 0);
+let ab_ult_vpn_effect = new AbilityEffect("offense_up", "players", 80, "", false, true, 0, 0);
+let ab_ult_vpn = new PlayerAbility("Activate VPN", 0, [ab_ult_vpn_effect], "Increase offence by 80% to all friendly characters", 32, "none", true, [[0, "use"]], 0);
 
 // the ability that is being activated right now
 let currentAbility;
@@ -296,7 +288,6 @@ function setup() {
   pro_p_nuts_basic.sounds = A_NUTS_BASIC;
   pro_p_logicBomb.images = S_LOGIC_BOMB;
   pro_p_logicBomb.sounds = A_COMBAT;
-  pro_p_logicBombExplosion.images = S_LOGIC_BOMB_EXPLOSION;
   pro_p_backdoor.images = S_BACK_DOOR;
   pro_p_backdoor.sounds = A_COMBAT;
   pro_p_ult_bitRotWorm.images = S_BEAM;
@@ -630,8 +621,6 @@ function shootBullets(effect, ability) {
               }
               // if bullet would be too small, finish timer
               if (newAbilityBullet.speed <= 0) {
-                let index = projectilesList.indexOf(this);
-                projectilesList.splice(index, 1);
                 clearInterval(bulletSpeedInterval);
               }
 
