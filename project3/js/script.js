@@ -11,6 +11,38 @@ and free the world from tyranny?
 *********************************************************************/
 
 // constants
+// dialogue given by the hacker characters as tutorial
+const TUTORIAL_TEXT = [
+  "Bolt: Hey! Here you are!",
+  "Nuts: We've been waiting for you!",
+  "Bolt: It is time to finish this!",
+  "Nuts: OmniSyt is going down today!",
+  "Bolt: Let's help you get familiar with the interface!",
+  "Nuts: You can see the AVATARS of the two enemies on top and us under them,",
+  "Nuts: On the very bottom you can see our stats and abilities.",
+  "Bolt: Switch between which one of us you see by hovering your mouse over our AVATARS.",
+  "Bolt: You can see our stats: HEALTH, ENERGY and ULT CHARGE.",
+  "Nuts: If our HEALTH hits 0, we get disconnected! Make sure that does not happen!",
+  "Nuts: On the other hand, our goal is to make the enemies' HEALTH hit 0",
+  "Bolt: Our ENERGY is used to activate abilities, we get some ENERGY at the beginning of every turn",
+  "Bolt: You can see which turn we are on at the bottom-left corner of your screen.",
+  "Bolt: A turn goes like so: you choose if any of us uses our SUPPORT ABILITIES you see down there in this PLAN STATE,",
+  "Bolt: Then you press the Fight! button to enter FIGHT STATE.",
+  "Nuts: In the FIGHT STATE, you control one of us, the FRONTLINE that you have chosen. At the moment, Bolt is the frontline.",
+  "Nuts: You use left click on the mouse to shoot at the enemies and WASD to move around.",
+  "Nuts: Avoid enemies and their bullets, you can also press CTRL, SPACEBAR and SHIFT to activate COMBAT ABILITIES",
+  "Nuts: ",
+  "Nuts and Bolt: All right! If you are ready, press Finish Tutorial to begin our quest!"
+];
+
+const READY_TEXT = [
+  "Nuts and Bolt: We are ready to move!",
+  "Nuts and Bolt: Let's go! We are ready!"
+];
+
+let currentDialog = TUTORIAL_TEXT;
+let currentDialogNumber = 0;
+let currentDialogText;
 // sounds for P5 part
 let A_CHAR_DEATH;
 let A_BOLT_BASIC;
@@ -53,23 +85,8 @@ let S_NAME;
 // images for jquery part
 const S_OMNISYT_LOGO = 0;
 
-// non changing values
-const V_INSTRUCTIONS = [
-  "Reduce the 2 enemies' health to 0 through combat!",
-  "Click one of the two hackers to give commands in their menu!",
-  "Choose which of the two hackers to use as the front line fighter by clicking the Front line button in their menu! (Bolt is currently the frontline)",
-  "Spend energy to use support skills here in the planning phase and to use combat skills in the battle phase!",
-  "Using skills and dealing damage increases the ultimate meter!",
-  "Once it is full, that hacker can unleash either a powerful combat skill or support skill!",
-  "In combat, dodge enemy projectiles, shoot projectiles at them with the mouse and activate skills with shift, space and ctrl!",
-  "Each hacker gains energy at the beginning of turn, if it did not use a skill last turn, it gets more!",
-  "Switch between each hacker as the front line often to prevent one from becoming tired!",
-  "Good luck! The fate of humanity rests on your fingertips!",
-];
-const TITLE_STATE = new TitleState();
 const PLAN_STATE = new PlanState();
 const FIGHT_STATE = new FightState();
-const END_STATE = new EndState();
 
 // framecount
 let framecount = 0;
@@ -90,14 +107,22 @@ let nutsImages;
 let serpentImages;
 let agentImages;
 
+// arrays
 let enemiesList = [];
 let playersList = [];
 
 let timeoutsList = [];
 let intervalsList = [];
+let soundsList = [];
 
 // how many turns has past
 let turns = 1;
+
+// if the beginning tutorial is past yet
+let tutorial = true;
+
+// if the game has started
+let gameStarted = false;
 
 // bullets characteristics
 // (speed, angle, moveType, targets, effects, size, changes, image, wall, ifHit, timer)
@@ -133,17 +158,17 @@ let ab_backdoor_effect = new AbilityEffect("bullet", "", 5, pro_p_backdoor, fals
 let ab_backdoor_effect2 = new AbilityEffect("dash", "", 3, "", false, false, 0, 0);
 let ab_backdoor = new PlayerAbility("Backdoor", 2, [ab_backdoor_effect, ab_backdoor_effect2], "Dash and damage enemies", 32, "none", false, [[5, "hit"], [2, "use"]], 2);
 let ab_cleanupProtocol_effect = new AbilityEffect("heal", "players", 60, "", false, false, 0, 0);
-let ab_cleanupProtocol = new PlayerAbility("Cleanup Protocol",  3, [ab_cleanupProtocol_effect], "Heal a friendly character", 32, "none", false, [[5, "use"], [10, "heal"]], 0);
+let ab_cleanupProtocol = new PlayerAbility("Cleanup Protocol",  3, [ab_cleanupProtocol_effect], "Heal 60 HP to a friendly character", 32, "none", false, [[5, "use"], [10, "heal"]], 0);
 let ab_signalBoost_effect = new AbilityEffect("ramp", "players", 5, "", false, false, 0, 0);
 let ab_signalBoost = new PlayerAbility("Signal Boost", 4, [ab_signalBoost_effect], "Give 5 energy to a friendly character", 32, "none", false, [[100, "use"]], 0);
 let ab_ult_bitRotWorm_effect = new AbilityEffect("bullet", "", 20, pro_p_ult_bitRotWorm, false, false, 100, 1);
 let ab_ult_bitRotWorm = new PlayerAbility("Bitrot Worm", 0, [ab_ult_bitRotWorm_effect], "Shoot a powerful beam", 32, "none", true, [[5, "hit"]], 0);
 let ab_firewall_effect = new AbilityEffect("defense_up", "players", 25, "", false, false, 0);
-let ab_firewall = new PlayerAbility("Firewall", 3, [ab_firewall_effect], "Boost defenses to a friendly character", 32, "none", false, [[10, "use"]], 0);
+let ab_firewall = new PlayerAbility("Firewall", 3, [ab_firewall_effect], "Increase defense by 25% to a friendly character", 32, "none", false, [[10, "use"]], 0);
 let ab_targetExploits_effect = new AbilityEffect("defense_down", "enemies", 25, "", false, false, 0, 0);
-let ab_targetExploits = new PlayerAbility("Target Exploits", 3, [ab_targetExploits_effect], "Weaken an enemy character", 32, "none", false, [[100, "use"]], 0);
+let ab_targetExploits = new PlayerAbility("Target Exploits", 3, [ab_targetExploits_effect], "Decrease defense by 25% to an enemy character", 32, "none", false, [[100, "use"]], 0);
 let ab_DOOS_effect = new AbilityEffect("bullet", "", 1, pro_p_DDOS, false, false, 0, 1);
-let ab_DDOS = new PlayerAbility("DDoS", 3, [ab_DOOS_effect], "Stun enemies hit", 32, "none", false, [[5, "hit"]], 4);
+let ab_DDOS = new PlayerAbility("DDoS", 3, [ab_DOOS_effect], "Stun one enemy", 32, "none", false, [[5, "hit"]], 4);
 let ab_bruteForce_effect = new AbilityEffect("bullet", "", 5, pro_p_bruteForce, false, false, 20, 1);
 let ab_bruteForce_effect2 = new AbilityEffect("dash", "", 3, "", false, false, 0, 0);
 let ab_bruteForce = new PlayerAbility("Brute Force Attack", 3, [ab_bruteForce_effect, ab_bruteForce_effect2], "Dash and damage enemies", 32, "none", false, [[5, "hit"], [2, "use"]], 3);
@@ -225,16 +250,27 @@ function setup() {
 
   // load sounds
   A_CHAR_DEATH = loadSound(`assets/sounds/a_char_death.wav`);
+  soundsList.push(A_CHAR_DEATH);
   A_BOLT_BASIC = loadSound(`assets/sounds/a_bolt_basic.wav`);
+  soundsList.push(A_BOLT_BASIC);
   A_NUTS_BASIC = loadSound(`assets/sounds/a_nuts_basic.wav`);
+  soundsList.push(A_NUTS_BASIC);
   A_AGENT_BULLET = loadSound(`assets/sounds/a_agent_bullet.wav`);
-  A_HIT_PLAYER = loadSound(`assets/sounds/a_hit_player.wav`);
-  A_HIT_ENEMY = loadSound(`assets/sounds/a_hit_enemy.wav`);
+  soundsList.push(A_AGENT_BULLET);
   A_SERPENT_BULLET = loadSound(`assets/sounds/a_serpent_bullet.wav`);
+  soundsList.push(A_SERPENT_BULLET);
+  A_HIT_PLAYER = loadSound(`assets/sounds/a_hit_player.wav`);
+  soundsList.push(A_HIT_PLAYER);
+  A_HIT_ENEMY = loadSound(`assets/sounds/a_hit_enemy.wav`);
+  soundsList.push(A_HIT_ENEMY);
   A_SUPPORT = loadSound(`assets/sounds/a_support.wav`);
+  soundsList.push(A_SUPPORT);
   A_COMBAT = loadSound(`assets/sounds/a_combat.wav`);
+  soundsList.push(A_COMBAT);
   A_SUPPORT_ULT = loadSound(`assets/sounds/a_support_ult.wav`);
+  soundsList.push(A_SUPPORT_ULT);
   A_COMBAT_ULT = loadSound(`assets/sounds/a_combat_ult.wav`);
+  soundsList.push(A_COMBAT_ULT);
   // set the sounds
 
 
@@ -466,6 +502,13 @@ function fightToPlan() {
     playersList[i].currentImage = playersList[i].images.front;
   }
   projectilesList = [];
+  console.log( soundsList);
+  for (var i = 0; i < soundsList.length; i++) {
+    if (soundsList[i].isPlaying()) {
+      soundsList[i].stop();
+      console.log(  soundsList[i]);
+    }
+  }
   turns++;
   newTurn();
   whichScreen = PLAN_STATE;
@@ -598,22 +641,53 @@ function endGame() {
   for (let i = 0; i < intervalsList.length; i++) {
     clearInterval(intervalsList[i]);
   }
+  for (var i = 0; i < soundsList.length; i++) {
+    if (soundsList[i].isPlaying()) {
+      soundsList[i].stop();
+    }
+  }
+  gameScreen.style('display', 'none');
   whichScreen = END_STATE;
 }
 
 // p5 mouse is pressed
 function mousePressed() {
-  whichScreen.mouseDown();
+  if (tutorial === false) {
+    whichScreen.mouseDown();
+  }
 }
 
 // p5 key is pressed
 function keyPressed() {
-  currentKeyPressed = keyCode;
-  whichScreen.keyDown();
+  if (tutorial === false) {
+    currentKeyPressed = keyCode;
+    whichScreen.keyDown();
+  }
 }
 
 // begin the game
 function startGame() {
+  gameStarted = true;
   $(`#startScreen`).remove();
-  gameScreen.style('display', 'block');
+    gameScreen.style('display', 'block');
+  $(`#dialogBox`).css('display', 'block');
+  currentDialogNumber = 0;
+}
+
+// last dialog
+function previousDialog() {
+  currentDialogNumber -= 1;
+  currentDialogNumber = constrain(currentDialogNumber, 0, currentDialog.length-1);
+}
+
+// next dialog
+function nextDialog() {
+  currentDialogNumber += 1;
+  currentDialogNumber = constrain(currentDialogNumber, 0, currentDialog.length-1);
+}
+
+// skip tutorial
+function skipDialog() {
+  tutorial = false;
+  $(`#skipButton`).remove();
 }

@@ -16,7 +16,10 @@
     integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pizzicato/0.6.4/Pizzicato.min.js"></script>
+    <script
+      src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
+      integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="
+      crossorigin="anonymous"></script>
 
     <script src="js/libraries/p5.min.js"></script>
     <script src="js/libraries/p5.sound.min.js"></script>
@@ -27,17 +30,22 @@
     <script src="js/Enemy.js"></script>
     <script src="js/States/FightState.js"></script>
     <script src="js/States/PlanState.js"></script>
-    <script src="js/States/TitleState.js"></script>
-    <script src="js/States/EndState.js"></script>
     <script src="js/Abilities/AbilityEffect.js"></script>
     <script src="js/Abilities/PlayerAbility.js"></script>
     <script src="js/Abilities/EnemyAbility.js"></script>
     <script src="js/Abilities/Bullets/Bullet.js"></script>
     <script src="js/Abilities/Bullets/BulletStats.js"></script>
     <script src="js/script.js"></script>
+
   </head>
 
   <body>
+    <div id="dialogBox">
+      <p id="dialogText"> </p>
+      <button id="previousButton" onclick="previousDialog()"> Back </button>
+      <button id="nextButton" onclick="nextDialog()"> Next </button>
+      <button id="skipButton" onclick="skipDialog()"> Finish Tutorial </button>
+    </div>
     <div id="startScreen">
       <p id="title">
         The Last Hacktivists
@@ -58,7 +66,7 @@
           defeat the two anti-virus programs protecting OmniSyt's system. Hurry! The fate of humanity and the freedom of
           information rest upon your fingertips! Patch in now by pressing this button!
         </p>
-        <button onclick="startGame()"> Begin!  </button>
+        <button id="startButton" onclick="startGame()"> Begin!  </button>
       </div>
     </div>
   </body>

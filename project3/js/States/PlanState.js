@@ -13,6 +13,12 @@ class PlanState {
     drawCommonUI();
     this.drawPlayerMenu();
     this.drawExtraUI();
+    // show dialog
+    this.dialogContent();
+    if (gameStarted === true) {
+      $('#dialogBox').css(`display`, 'block');
+      $(`#dialogText`).text(currentDialogText);
+    }
   }
   // if the mouse is over an player avatar, that player character becomes the selected character, if not using an ability, then that character becomes the current character
   mouseOverPlayer() {
@@ -486,6 +492,21 @@ class PlanState {
     }, 10);
     intervalsList.push(fightTimer);
     whichScreen = FIGHT_STATE;
+  }
+  dialogContent() {
+    if (tutorial === false) {
+      currentDialog = READY_TEXT;
+      currentDialogNumber = 0;
+      currentDialogText = currentDialog[currentDialogNumber];
+      for (var i = 0; i < playersList.length; i++) {
+        if (playersList[i].hp < playersList[i].maxHp/5) {
+          currentDialogText = playersList[i].name + ":" + " My health is low! Heal me and / or pick another frontline!";
+        }
+      }
+    } else {
+      currentDialog = TUTORIAL_TEXT;
+      currentDialogText = currentDialog[currentDialogNumber];
+    }
   }
   // when a key is pressed
   keyDown() {

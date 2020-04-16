@@ -9,6 +9,8 @@ class FightState {
     // move, check for actions and draw frontline player, enemies, movements bullets
     this.drawSprites();
     this.drawUI();
+    // remove the dialogs
+    $(`#dialogBox`).css(`display`, `none`);
   }
   drawSprites() {
     // if screen is resized, move each char to new locations

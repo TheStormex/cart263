@@ -3,37 +3,55 @@ body {
   font-family: 'Orbitron', sans-serif;
   background-color: black;
 }
-button {
-  background-color: green;
+#startButton {
+  background-color: #00FF00;
   color: white;
   width: 20%;
   height: 20%;
   font-size: 50px;
   border-style: solid;
-  font-family: 'Orbitron', sans-serif;
   margin: auto;
+}
+
+#startButton:hover {
+  background-color: white;
+  color: #00FF00;
+}
+
+button {
+  font-family: 'Orbitron', sans-serif;
+  background-color: #00FF00;
+  color: black;
 }
 
 button:hover {
   background-color: white;
-  color: green;
+  color: #00AA00;
 }
 
 #letter {
   font-size: 30px;
   text-align: center;
   text-indent: 2em;
-  color: green;
+  color: #00FF00;
   margin: auto;
 }
 
 #title {
   font-size: 50px;
   text-align: center;
-  color: green;
+  color: #00FF00;
   margin: auto;
 }
 
 #startScreen {
-  
+
+}
+
+#dialogBox {
+  display: none;
+  background-color: black;
+  color: #00FF00;
+  margin: auto;
+  text-align: center;
 }
