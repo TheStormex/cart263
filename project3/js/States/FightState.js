@@ -167,21 +167,21 @@ class FightState {
     } else if (this.situation === "ability") {
       currentAbility.user = frontline;
       currentAbility.happens();
-      // if this is a combat ability with a cooldown, then after use, set the timer
-      let thisAbility = currentAbility;
-      if (thisAbility.cooldown !== 0) {
-        thisAbility.onCooldown = true;
-        thisAbility.cooldownLeft = thisAbility.cooldown;
-        console.log(thisAbility.cooldownLeft);
-        thisAbility.cooldownTimer = setInterval(function() {
-          thisAbility.cooldownLeft -= 1;
-          console.log(thisAbility);
-          if (thisAbility.cooldownLeft <= 0) {
-            thisAbility.onCooldown = false;
-            clearInterval(thisAbility.cooldownTimer);
-          }
-        }, 1000, thisAbility);
-      }
+      // if this is a combat ability with a cooldown, then after use, set the timer (old)
+      // let thisAbility = currentAbility;
+      // if (thisAbility.cooldown !== 0) {
+      //   thisAbility.onCooldown = true;
+      //   thisAbility.cooldownLeft = thisAbility.cooldown;
+      //   console.log(thisAbility.cooldownLeft);
+      //   thisAbility.cooldownTimer = setInterval(function() {
+      //     thisAbility.cooldownLeft -= 1;
+      //     console.log(thisAbility);
+      //     if (thisAbility.cooldownLeft <= 0) {
+      //       thisAbility.onCooldown = false;
+      //       clearInterval(thisAbility.cooldownTimer);
+      //     }
+      //   }, 1000, thisAbility);
+      // }
       currentCombatAbilityKey = "0";
       this.situation = "shoot";
     }
@@ -222,8 +222,9 @@ class FightState {
         } else {
           currentAbility = 0;
           currentCombatAbilityKey = 0;
-          console.log("not enough");
-          console.log(currentChar.energy - abilityToBeActivated.cost);
+          console.log(abilityToBeActivated.cooldownLeft);
+          console.log(currentChar.energy);
+          console.log(abilityToBeActivated.cost);
         }
       }
     }

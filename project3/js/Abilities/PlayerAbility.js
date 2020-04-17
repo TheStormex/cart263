@@ -20,8 +20,6 @@ class PlayerAbility {
     this.cooldownLeft = 0;
     // if this ability is on cooldown
     this.onCooldown = false;
-    // the ability's cooldown timer
-    this.cooldownTimer;
     // the character that is using this ability
     this.user;
     // if this ability has been used this turn so it cannot be used again
@@ -131,15 +129,16 @@ class PlayerAbility {
       // this ability is now used this turn
       this.used = true;
       // if this is a combat ability with a cooldown, then after use, set the timer
-      if (this.cooldown !== 0) {
+      if (this.cooldown !== 0 && this.onCooldown === false) {
         this.onCooldown = true;
         this.cooldownLeft = this.cooldown;
-        this.cooldownTimer = setInterval(() => {
+        let cooldownTimer = setInterval(() => {
           this.cooldownLeft -= 1;
           if (this.cooldownLeft <= 0) {
+            console.log("clear");
             this.onCooldown = false;
             this.cooldownLeft = 0;
-            clearInterval(this.cooldownTimer);
+            clearInterval(cooldownTimer);
           }
         }, 1000);
       //  intervalsList.push(this.cooldownTimer);
