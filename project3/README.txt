@@ -17,14 +17,3 @@ defeat the AI security agents patrolling the servers.
 
 The game's feedback loops are something I came up with previously for a game I would like to make
 and through this project, I want to test out if this combination of game ideas can work or not.
-
-code in:
-- ability happens for all player abilities (bomb explosion)
-- support ult not working
-- enemy abilities
-bonus:
-- slowdown enemy after hit by ability for time
-- debuff the next turn
-- multiple characters
-
-why sounds not stop?
