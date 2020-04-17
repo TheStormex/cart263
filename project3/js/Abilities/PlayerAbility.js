@@ -135,7 +135,6 @@ class PlayerAbility {
         let cooldownTimer = setInterval(() => {
           this.cooldownLeft -= 1;
           if (this.cooldownLeft <= 0) {
-            console.log("clear");
             this.onCooldown = false;
             this.cooldownLeft = 0;
             clearInterval(cooldownTimer);

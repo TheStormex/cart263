@@ -301,53 +301,9 @@ function setup() {
   pro_e_agentBullet.images = S_AGENT_BULLET;
   pro_e_agentBullet.sounds = A_AGENT_BULLET;
   pro_e_serpentBullet.images = S_SERPENT_BULLET;
-  console.log(pro_e_serpentBullet.images);
   pro_e_serpentBullet.sounds = A_SERPENT_BULLET;
-  // pro_e_shield[8] =
-  // // if alone
-  // pro_e_tshape[8] =
-  // // serpent
-  // pro_e_splitBall[8] =
-  // pro_e_spiral[8] =
-  // // if alone
-  // pro_e_outward[8] =
 
-
-
-  // create the player characters and enemy characters
-  boltImages = new Images(S_BOLT_LEFT, S_BOLT_RIGHT, S_BOLT_FRONT, S_BOLT_FACE);
-  bolt = new Player("Bolt", 200, 4, 10, [[ab_cleanupProtocol, ab_signalBoost], [ab_logicBomb, ab_backdoor, ab_ult_bitRotWorm]], pro_p_bolt_basic, boltImages);
-  nutsImages = new Images(S_NUTS_LEFT, S_NUTS_RIGHT, S_NUTS_FRONT, S_NUTS_FACE);
-  nuts = new Player("Nuts", 300, 3, 12, [[ab_firewall, ab_targetExploits, ab_ult_vpn], [ab_DDOS, ab_bruteForce]], pro_p_nuts_basic, nutsImages);
-  agentImages = new Images(S_AGENT_LEFT, S_AGENT_RIGHT, S_AGENT_FRONT, "none");
-  agent = new Enemy("Hackshield Agent", 800, width/20+height/20, 2, [ab_e_agent_shoot], agentImages);
-  console.log(agent);
-  for (var i = 0; i < agent.abilities.length; i++) {
-    agent.abilities[i].user = agent;
-  }
-  serpentImages = new Images(S_SERPENT_LEFT, S_SERPENT_RIGHT, S_SERPENT_FRONT, "none");
-  serpent = new Enemy("Serverspy Serpent", 1000, width/20+height/20, 4, [ab_e_serpent_shoot], serpentImages);
-  for (var i = 0; i < serpent.abilities.length; i++) {
-    serpent.abilities[i].user = serpent;
-  }
-  playersList = [bolt, nuts];
-  enemiesList = [agent, serpent];
-// set the number of steps of each ability of each player
-  for (let i = 0; i < playersList.length; i++) {
-    for (let i2 = 0; i2 <  playersList[i].abilities[0].length; i2++) {
-      for (let i3 = 0; i3 < playersList[i].abilities[0][i2].effects.length; i3++) {
-        if (playersList[i].abilities[0][i2].effects[i3].step === true) {
-          playersList[i].abilities[0][i2].steps++;
-        }
-      }
-    }
-  }
-  frontline = bolt;
-  currentChar = "none";
-
-  // enter the title state and starts the first turn
-  whichScreen = PLAN_STATE;
-  newTurn();
+  initialisation();
 }
 
 // p5 draw
@@ -496,11 +452,11 @@ function checkAliveAll() {
       A_CHAR_DEATH.play();
     }
   }
-  if (enemiesList.length <= 0) {
+  if (enemiesList.length <= 0 && gameStarted === true) {
     winLose = "win";
     endGame()
   }
-  if (playersList.length <= 0) {
+  if (playersList.length <= 0 && gameStarted === true) {
     winLose = "lose";
     endGame();
   }
@@ -656,26 +612,17 @@ function shootBullets(effect, ability) {
 // end the game
 function endGame() {
   gameStarted = false;
-  for (var i = 0; i < playersList.length; i++) {
-    playersList.splice([i], 1);
-  }
-  for (var i = 0; i < enemiesList.length; i++) {
-    enemiesList.splice([i], 1);
-  }
-  for (var i = 0; i < projectilesList.length; i++) {
-    projectilesList.splice([i], 1);
-  }
-  for (let i = 0; i < timeoutsList.length; i++) {
-    clearTimeout(timeoutsList[i]);
-  }
-  for (let i = 0; i < intervalsList.length; i++) {
-    clearInterval(intervalsList[i]);
-  }
+  playersList.length = 0;
+  enemiesList.length = 0;
+  projectilesList.length = 0;
+  timeoutsList.length = 0;
+  intervalsList.length = 0;
   for (var i = 0; i < soundsList.length; i++) {
     if (soundsList[i].isPlaying()) {
       soundsList[i].stop();
     }
   }
+  soundsList.length = 0;
   gameScreen.style('display', 'none');
   $(`#endScreen`).css(`display`, 'block');
   let endingScreenParts;
@@ -684,20 +631,21 @@ function endGame() {
   } else if (winLose === "lose") {
     endingScreenParts = 1;
   }
+  console.log(endingScreenParts);
   $(`#endingTitle`).text(ENDING_SCREEN_TITLE[endingScreenParts]);
   $(`#endingText`).text(ENDING_SCREEN_TEXT[endingScreenParts]);
 }
 
 // p5 mouse is pressed
 function mousePressed() {
-  if (tutorial === false) {
+  if (tutorial === false && gameStarted === true) {
     whichScreen.mouseDown();
   }
 }
 
 // p5 key is pressed
 function keyPressed() {
-  if (tutorial === false) {
+  if (tutorial === false && gameStarted === true) {
     currentKeyPressed = keyCode;
     whichScreen.keyDown();
   }
@@ -706,7 +654,7 @@ function keyPressed() {
 // begin the game
 function startGame() {
   gameStarted = true;
-  $(`#startScreen`).remove();
+  $(`#startScreen`).css(`display`, `none`);
     gameScreen.style('display', 'block');
   $(`#dialogBox`).css('display', 'block');
   currentDialogNumber = 0;
@@ -727,12 +675,66 @@ function nextDialog() {
 // skip tutorial
 function skipDialog() {
   tutorial = false;
-  $(`#skipButton`).remove();
-  $(`#previousButton`).remove();
-  $(`#nextButton`).remove();
+  $(`#skipButton`).css(`display`, `none`);
+  $(`#previousButton`).css(`display`, `none`);
+  $(`#nextButton`).css(`display`, `none`);
 }
 
 // restart game
-function restart() {
-  // reset all stats
+// function restart() {
+//   console.log("restart");
+//   $(`#endScreen`).css(`display`, 'none');
+//   $(`#endingTitle`).css(`display`, 'none');
+//   $(`#endingText`).css(`display`, 'none');
+//   turns = 1;
+//   tutorial = true;
+//   gameStarted = false;
+//   currentDialogNumber = 0;
+//   mouseOver = 0;
+//   currentKeyPressed = 0;
+//   currentCombatAbilityKey = 0;
+//   fightTime = 0;
+//   currentFightTime = 0;
+//   $(`#startScreen`).css(`display`, `block`);
+//   $(`#skipButton`).css(`display`, `inline-block`);
+//   $(`#previousButton`).css(`display`, `inline-block`);
+//   $(`#nextButton`).css(`display`, `inline-block`);
+//   initialisation();
+// }
+
+// reset all stats
+function initialisation() {
+  // reset all stats fora new game
+  // create the player characters and enemy characters
+  boltImages = new Images(S_BOLT_LEFT, S_BOLT_RIGHT, S_BOLT_FRONT, S_BOLT_FACE);
+  bolt = new Player("Bolt", 200, 4, 10, [[ab_cleanupProtocol, ab_signalBoost], [ab_logicBomb, ab_backdoor, ab_ult_bitRotWorm]], pro_p_bolt_basic, boltImages);
+  nutsImages = new Images(S_NUTS_LEFT, S_NUTS_RIGHT, S_NUTS_FRONT, S_NUTS_FACE);
+  nuts = new Player("Nuts", 300, 3, 12, [[ab_firewall, ab_targetExploits, ab_ult_vpn], [ab_DDOS, ab_bruteForce]], pro_p_nuts_basic, nutsImages);
+  agentImages = new Images(S_AGENT_LEFT, S_AGENT_RIGHT, S_AGENT_FRONT, "none");
+  agent = new Enemy("Hackshield Agent", 800, width/20+height/20, 2, [ab_e_agent_shoot], agentImages);
+  for (var i = 0; i < agent.abilities.length; i++) {
+    agent.abilities[i].user = agent;
+  }
+  serpentImages = new Images(S_SERPENT_LEFT, S_SERPENT_RIGHT, S_SERPENT_FRONT, "none");
+  serpent = new Enemy("Serverspy Serpent", 1000, width/20+height/20, 4, [ab_e_serpent_shoot], serpentImages);
+  for (var i = 0; i < serpent.abilities.length; i++) {
+    serpent.abilities[i].user = serpent;
+  }
+  playersList = [bolt, nuts];
+  enemiesList = [agent, serpent];
+// set the number of steps of each ability of each player
+  for (let i = 0; i < playersList.length; i++) {
+    for (let i2 = 0; i2 <  playersList[i].abilities[0].length; i2++) {
+      for (let i3 = 0; i3 < playersList[i].abilities[0][i2].effects.length; i3++) {
+        if (playersList[i].abilities[0][i2].effects[i3].step === true) {
+          playersList[i].abilities[0][i2].steps++;
+        }
+      }
+    }
+  }
+  frontline = bolt;
+  currentChar = "none";
+  // enter the title state and starts the first turn
+  whichScreen = PLAN_STATE;
+  newTurn();
 }

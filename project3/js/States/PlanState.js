@@ -390,7 +390,6 @@ class PlanState {
           } else if (currentAbility.currentEffect.aoe === true) {
               for (var i2 = 0; i2 < currentAbility.currentEffect.canTargetsList.length; i2++) {
                 currentAbility.currentEffect.targets.push(currentAbility.currentEffect.canTargetsList[i2]);
-                console.log(currentAbility.currentEffect.targets);
               }
               currentAbility.user = currentChar;
               if (currentAbility.ultimate === true) {
@@ -450,11 +449,8 @@ class PlanState {
         let whichEnemy = enemiesList[i];
         let whichEffectNumber = i2;
         let whichAbility = whichEnemy.currentAbility;
-        console.log(whichEnemy.currentAbility);
-        console.log(whichAbility.loopRate);
         let theLoopRate = whichAbility.loopRate[whichEffectNumber];
         let enemyShootLoop = setInterval(() => {
-          console.log(whichEnemy);
           if (whichEnemy.hp > 0) {
             shootBullets(whichEnemy.currentAbility.effects[whichEffectNumber], whichAbility);
           } else {
