@@ -6,7 +6,7 @@ class Enemy {
     this.speed = width/250+height/250;
     this.stun = false;
     this.x = width/2;
-    this.y = height/5;
+    this.y = height/4;
     this.vx = 0;
     this.vy = 0;
     this.angle = 0;
@@ -90,7 +90,7 @@ class Enemy {
           frontline.hp = constrain(frontline.hp, 0, frontline.maxHp);
           A_HIT_PLAYER.play();
           frontline.invincible = true;
-          setTimeout(function() {frontline.invincible = false}, 50);
+          setTimeout(function() {frontline.invincible = false}, 100);
       }
     }
   }

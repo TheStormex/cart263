@@ -95,7 +95,7 @@ class Bullet {
     push();
     imageMode(CENTER);
     translate(this.x, this.y);
-    rotate(this.angle-PI/2);
+    rotate(this.angle+PI/2);
     image(this.images, 0, 0, this.size, this.size);
     pop();
   }

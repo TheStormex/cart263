@@ -150,8 +150,8 @@ let pro_p_DDOS = new BulletStats(1, "origin", "straight", "enemies", [["damage",
 let pro_p_bruteForce = new BulletStats(1, "random", "straight", "enemies", [["damage", 10]], 2, [], "to be set", "to be set", "done", ["done", "nothing"], 150);
 // enemy bullets
 // agent
-let pro_e_agentBullet = new BulletStats(1.2, "origin", "straight", "players", [["damage", 10]], 3, [], "to be set", "to be set", "done", ["done", "nothing"], 250);
-let pro_e_serpentBullet = new BulletStats(1.2, "origin", "straight", "players", [["damage", 10]], 3, [], "to be set", "to be set", "done", ["done", "nothing"], 250);
+let pro_e_agentBullet = new BulletStats(0.8, "towards", "straight", "players", [["damage", 5]], 1.5, [], "to be set", "to be set", "done", ["done", "nothing"], 250);
+let pro_e_serpentBullet = new BulletStats(0.4, "towards", "straight", "players", [["damage", 8]], 2, [], "to be set", "to be set", "done", ["done", "nothing"], 250);
 
 
 
@@ -190,10 +190,10 @@ let combatButtons = [["Space", 32], ["Shift", 16], ["Ctrl", 17]];
 // enemies abilities
 // let ab_e_wallStraight = new EnemyAbility("", "", "");
 // let ab_e_inOut = new EnemyAbility("", "", "");
-let ab_e_shoot_effect = new AbilityEffect("bullet", "", 1, [pro_e_serpentBullet], false, false, 0, 1);
-let ab_e_shoot = new EnemyAbility("noise", [ab_e_shoot_effect], [1000], "walls", 10);
-let ab_e_teleport_effect = new AbilityEffect("bullet", "", 1, [pro_e_agentBullet], false, false, 0, 1);
-let ab_e_teleport = new EnemyAbility("line", [ab_e_teleport_effect], [2000], "through", 8);
+let ab_e_agent_shoot_effect = new AbilityEffect("bullet", "", 4, pro_e_agentBullet, false, false, 200, 1);
+let ab_e_agent_shoot = new EnemyAbility("noise", [ab_e_agent_shoot_effect], [1500], "walls", 10);
+let ab_e_serpent_shoot_effect = new AbilityEffect("bullet", "", 2, pro_e_serpentBullet, false, false, 500, 3);
+let ab_e_serpent_shoot = new EnemyAbility("line", [ab_e_serpent_shoot_effect], [1800], "through", 8);
 
 let projectilesList = [];
 
@@ -320,13 +320,13 @@ function setup() {
   nutsImages = new Images(S_NUTS_LEFT, S_NUTS_RIGHT, S_NUTS_FRONT, S_NUTS_FACE);
   nuts = new Player("Nuts", 300, 3, 12, [[ab_firewall, ab_targetExploits, ab_ult_vpn], [ab_DDOS, ab_bruteForce]], pro_p_nuts_basic, nutsImages);
   agentImages = new Images(S_AGENT_LEFT, S_AGENT_RIGHT, S_AGENT_FRONT, "none");
-  agent = new Enemy("Hackshield Agent", 800, width/20+height/20, 5, [ab_e_shoot, ab_e_teleport], agentImages);
+  agent = new Enemy("Hackshield Agent", 800, width/20+height/20, 2, [ab_e_agent_shoot], agentImages);
   console.log(agent);
   for (var i = 0; i < agent.abilities.length; i++) {
     agent.abilities[i].user = agent;
   }
   serpentImages = new Images(S_SERPENT_LEFT, S_SERPENT_RIGHT, S_SERPENT_FRONT, "none");
-  serpent = new Enemy("Serverspy Serpent", 1000, width/20+height/20, 8, [ab_e_shoot, ab_e_teleport], serpentImages);
+  serpent = new Enemy("Serverspy Serpent", 1000, width/20+height/20, 4, [ab_e_serpent_shoot], serpentImages);
   for (var i = 0; i < serpent.abilities.length; i++) {
     serpent.abilities[i].user = serpent;
   }
@@ -518,10 +518,8 @@ function fightToPlan() {
     playersList[i].currentImage = playersList[i].images.front;
   }
   projectilesList = [];
-  console.log( soundsList);
   for (var i = 0; i < soundsList.length; i++) {
       soundsList[i].stop();
-      console.log(  soundsList[i]);
   }
   turns++;
   newTurn();
@@ -550,11 +548,19 @@ function shootBullets(effect, ability) {
         case "angles":
           console.log("angle");
           break;
+        case "towards":
+        // for the enemy to aim at the player
+          let angleTowardsTarget;
+          let side1 = frontline.x-theAbility.user.x;
+          let side2 = frontline.y-theAbility.user.y;
+          angleTowardsTarget = atan(side2/side1);
+          if (side1 <= 0) {
+            angleTowardsTarget += PI;
+          }
+          angleOfBullet = random(angleTowardsTarget-PI/4, angleTowardsTarget+PI/4);
         default:
       }
       let newAbilityBullet = new Bullet(theAbility.user, theAbility.user.x, theAbility.user.y, width*(theEffect.bullet.speed/2)/100+height*(theEffect.bullet.speed/2)/100, angleOfBullet, theEffect.bullet.moveType, theEffect.bullet.targets, theEffect.bullet.effects, width*(theEffect.bullet.size/2)/100+height*(theEffect.bullet.size/2)/100, theEffect.bullet.changes, theEffect.bullet.images, theEffect.bullet.sounds, theEffect.bullet.wall, theEffect.bullet.ifHit, theEffect.bullet.timer);
-      console.log(theEffect.bullet);
-      console.log(newAbilityBullet);
       newAbilityBullet.sounds.play();
       // start the interval for changes of each bullet
       for (let i = 0; i < newAbilityBullet.changes.length; i++) {

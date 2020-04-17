@@ -445,19 +445,19 @@ class PlanState {
       if (enemiesList[i].currentAbility.moves === "line")  {
         enemiesList[i].angle = random(0, 360);
       }
-      // let currentAbilityEffects = enemiesList[i].currentAbility.effects;
-      // for (let i2 = 0; i2 < currentAbilityEffects.length; i2++) {
-      //   let whichEnemy = i;
-      //   let whichEffect = i2;
-      //   let whichAbility = enemiesList[whichEnemy].currentAbility;
-      //   console.log(enemiesList[whichEnemy].currentAbility);
-      //   console.log(whichAbility.loopRate);
-      //   let theLoopRate = whichAbility.loopRate[whichEffect];
-      //   let enemyShootLoop = setInterval(() => {
-      //     shootBullets(enemiesList[whichEnemy].currentAbility.effects[whichEffect], whichAbility);
-      //   }, theLoopRate);
-      //   intervalsList.push(enemyShootLoop);
-      // }
+      let currentAbilityEffects = enemiesList[i].currentAbility.effects;
+      for (let i2 = 0; i2 < currentAbilityEffects.length; i2++) {
+        let whichEnemy = i;
+        let whichEffect = i2;
+        let whichAbility = enemiesList[whichEnemy].currentAbility;
+        console.log(enemiesList[whichEnemy].currentAbility);
+        console.log(whichAbility.loopRate);
+        let theLoopRate = whichAbility.loopRate[whichEffect];
+        let enemyShootLoop = setInterval(() => {
+          shootBullets(enemiesList[whichEnemy].currentAbility.effects[whichEffect], whichAbility);
+        }, theLoopRate);
+        intervalsList.push(enemyShootLoop);
+      }
     }
     // set timer for both player and enemy sprites moving
     frontline.currentImage = frontline.images.left;

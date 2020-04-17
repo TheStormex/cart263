@@ -48,7 +48,7 @@ class FightState {
     let vector2 = createVector(mouseX - frontline.x, mouseY - frontline.y);
     frontline.angle = vector2.heading();
     imageMode(CENTER);
-    image(frontline.currentImage, frontline.x, frontline.y, width/20, width/20);
+    image(frontline.currentImage, frontline.x, frontline.y, frontline.size, frontline.size);
     pop();
   }
   drawUI() {
