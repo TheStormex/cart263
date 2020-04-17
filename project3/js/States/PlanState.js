@@ -447,14 +447,19 @@ class PlanState {
       }
       let currentAbilityEffects = enemiesList[i].currentAbility.effects;
       for (let i2 = 0; i2 < currentAbilityEffects.length; i2++) {
-        let whichEnemy = i;
-        let whichEffect = i2;
-        let whichAbility = enemiesList[whichEnemy].currentAbility;
-        console.log(enemiesList[whichEnemy].currentAbility);
+        let whichEnemy = enemiesList[i];
+        let whichEffectNumber = i2;
+        let whichAbility = whichEnemy.currentAbility;
+        console.log(whichEnemy.currentAbility);
         console.log(whichAbility.loopRate);
-        let theLoopRate = whichAbility.loopRate[whichEffect];
+        let theLoopRate = whichAbility.loopRate[whichEffectNumber];
         let enemyShootLoop = setInterval(() => {
-          shootBullets(enemiesList[whichEnemy].currentAbility.effects[whichEffect], whichAbility);
+          console.log(whichEnemy);
+          if (whichEnemy.hp > 0) {
+            shootBullets(whichEnemy.currentAbility.effects[whichEffectNumber], whichAbility);
+          } else {
+            clearInterval(enemyShootLoop);
+          }
         }, theLoopRate);
         intervalsList.push(enemyShootLoop);
       }

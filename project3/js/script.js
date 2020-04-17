@@ -650,6 +650,7 @@ function shootBullets(effect, ability) {
       clearInterval(allBulletSpawnTimer);
     }
   }, theEffect.delay);
+  intervalsList.push(allBulletSpawnTimer);
 }
 
 // end the game
