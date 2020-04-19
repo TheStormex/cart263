@@ -283,13 +283,8 @@ function setup() {
   soundsList.push(A_SUPPORT_ULT);
   A_COMBAT_ULT = loadSound(`assets/sounds/a_combat_ult.wav`);
   soundsList.push(A_COMBAT_ULT);
-  // set the sounds
-
 
   // add the image to each bullet's image slot and sounds slot
-
-
-  //console.log(pro_p_bolt_basic);
   pro_p_bolt_basic.images = S_BOLT_BULLET_BASIC;
   pro_p_bolt_basic.sounds = A_BOLT_BASIC;
   pro_p_nuts_basic.images = S_NUTS_BULLET_BASIC;
